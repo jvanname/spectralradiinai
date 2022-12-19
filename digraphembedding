@@ -22,3 +22,15 @@ for i in 1:n
 push!(matrixtable,randn(type,d,d));
 end;
 
+# Do we want the nodes to be vectors and the edges to be matrices?
+
+function gg(matrixtable,eigenvector)
+neweigenvector=eigenvector*0;
+for i in 1:n
+for j in 1:length(list[i])
+#neweigenvector[i]=neweigenvector[i]+matrixtable[*neweigenvector[list[i][j]]/length(list[i]);
+end;
+end;
+return tr(neweigenvector*adjoint(eigenvector))'
+end;
+
