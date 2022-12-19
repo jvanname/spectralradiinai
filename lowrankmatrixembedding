@@ -1,0 +1,307 @@
+using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
+
+tok=[];
+
+van=PTBLM(:train)
+
+for i in 1:length(van.features)
+for j in 1:length(van.features[i])
+push!(tok,van.features[i][j]);
+end;
+push!(tok,".");
+end;
+
+#pathname = "C://Users//Joseph Van Name/corpus/prelimtext.txt";
+
+#sd=StringDocument(read(pathname,String));
+
+type=ComplexF64;
+
+###remove_corrupt_utf8!(sd);
+###prepare!(sd, strip_numbers);
+###remove_case!(sd);
+###tok=tokens(sd);
+###wordlist=unique(tok);
+###dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
+
+timelimit=600;
+
+wordlist=unique(tok);
+dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
+
+n=length(tok);
+r=length(wordlist);
+list=Array{Int64}(undef,n);
+for i in 1:n
+list[i]=dick[tok[i]];
+end;
+
+n=length(list);
+
+r=maximum(list);
+
+pp=1;
+qq=1;
+d=30;
+# mr stands for maximum rank.
+mr=5;
+fan=true;
+
+matrixtable=[];
+
+for i in 1:r
+push!(matrixtable,randn(type,d,mr));
+push!(matrixtable,randn(type,mr,d));
+end;
+
+function dumbnorm(x)
+return norm(x,1); 
+end;
+
+bottomeigenvector=randn(type,d,d)^0;
+
+function manualgradient(leftvector,rightvector,matrixtable)
+leftlist=Array{Matrix{type}}(undef,2*n+1);
+rightlist=Array{Vector{type}}(undef,2*n+1);
+leftscalar=Array{type}(undef,2*n+1);
+rightscalar=Array{type}(undef,2*n+1);
+grad=[];
+leftlist[1]=leftvector/norm(leftvector);
+rightlist[2*n+1]=rightvector/norm(rightvector);
+leftscalar[1]=0.;
+rightscalar[2*n+1]=0.;
+	for i in 1:n
+		dd=leftlist[2*i-1]*matrixtable[2*list[i]-1];
+		fdd=dumbnorm(dd);
+		leftlist[2*i]=dd/fdd;
+		leftscalar[2*i]=leftscalar[2*i-1]+log(fdd);
+		dd=leftlist[2*i]*matrixtable[2*list[i]];
+		fdd=dumbnorm(dd);
+		leftlist[2*i+1]=dd/fdd;
+		leftscalar[2*i+1]=leftscalar[2*i]+log(fdd);
+	end;
+	for i in reverse(1:n)
+		dd=matrixtable[2*list[i]]*rightlist[2*i+1];
+		fdd=dumbnorm(dd);
+		rightlist[2*i]=dd/fdd;
+		rightscalar[2*i]=rightscalar[2*i+1]+log(fdd);
+		dd=matrixtable[2*list[i]-1]*rightlist[2*i];
+		fdd=dumbnorm(dd);
+		rightlist[2*i-1]=dd/fdd;
+		rightscalar[2*i-1]=rightscalar[2*i]+log(fdd);
+	end;
+umm=(leftlist[1]*rightlist[1])[1];
+logeval=log(abs(umm))+rightscalar[1];
+	for i in 1:r
+	push!(grad,zeros(mr,d));
+	push!(grad,zeros(d,mr));
+	end;
+
+	for i in 1:n
+	grad[2*list[i]-1]=grad[2*list[i]-1]+rightlist[2*i]*leftlist[2*i-1]*exp(leftscalar[2*i-1]+rightscalar[2*i]-logeval);
+	grad[2*list[i]]=grad[2*list[i]]+rightlist[2*i+1]*leftlist[2*i]*exp(leftscalar[2*i]+rightscalar[2*i+1]-logeval);
+	end;
+pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
+
+return pan*adjoint.(grad)/n;
+end;
+
+
+function ftopexp(leftvector,rightvector,matrixtable)
+testtopeigenvector=deepcopy(leftvector);
+for i in 1:n
+testtopeigenvector=testtopeigenvector*matrixtable[list[i]];
+end;
+
+return log(abs((testtopeigenvector*rightvector)[1]));
+end;
+
+
+
+function ftop(matrixtable)
+testtopeigenvector=deepcopy(topeigenvector);
+
+cc=0;
+for i in 1:n
+testtopeigenvector=matrixtable[list[i]]*testtopeigenvector;
+dd=norm(testtopeigenvector);
+testtopeigenvector=testtopeigenvector/dd;
+cc=cc+log(dd)/n;
+end;
+
+return cc;
+end;
+
+
+function f(matrixtable)
+testtopeigenvector=deepcopy(topeigenvector);
+testbottomeigenvector=deepcopy(bottomeigenvector);
+
+cc=0;
+for i in 1:n
+testtopeigenvector=matrixtable[list[i]]*testtopeigenvector;
+dd=norm(testtopeigenvector);
+testtopeigenvector=testtopeigenvector/dd;
+cc=cc+log(dd)/n;
+end;
+
+for kk in 1:pp
+newtestbottomeigenvector=testbottomeigenvector*0;
+
+for j in 1:r
+newtestbottomeigenvector=newtestbottomeigenvector+matrixtable[j]*testbottomeigenvector*adjoint(matrixtable[j]);
+end;
+testbottomeigenvector=newtestbottomeigenvector;
+end;
+
+return cc-log(norm(testbottomeigenvector))/(2*pp);
+end;
+
+function f(leftvector,rightvector,matrixtable)
+newleftvector=deepcopy(leftvector);
+cc=0;
+for i in 1:n
+newleftvector=newleftvector*matrixtable[2*list[i]-1];
+dd=dumbnorm(newleftvector);
+cc=cc+log(dd);
+newleftvector=newleftvector/dd;
+
+newleftvector=newleftvector*matrixtable[2*list[i]];
+dd=dumbnorm(newleftvector);
+cc=cc+log(dd);
+newleftvector=newleftvector/dd;
+end;
+return (cc+log(abs((newleftvector*rightvector)[1])))/n;
+end;
+
+
+
+function g(matrixtable)
+supertrace=0;
+for j in 1:r
+supertrace=supertrace+tr(matrixtable[2*j]*adjoint(matrixtable[2*j])*adjoint(matrixtable[2*j-1])*matrixtable[2*j-1]);
+end;
+
+return log(abs(supertrace))/2;
+end;
+
+function gg(matrixtable)
+testbottomeigenvector=zeros(d,d);
+for j in 1:r
+testbottomeigenvector=testbottomeigenvector+matrixtable[j]*adjoint(matrixtable[j]);
+end;
+return log(norm(testbottomeigenvector))/2;
+end;
+
+
+
+function h(leftvector,rightvector,matrixtable)
+return f(leftvector,rightvector,matrixtable)-g(matrixtable);
+end;
+
+# hh does not rely on the bottomeigenvector
+
+function ggrad(matrixtable)
+sumnorm=0;
+for i in 1:r
+sumnorm=sumnorm+tr((matrixtable[2i]*adjoint(matrixtable[2i]))*(adjoint(matrixtable[2*i-1])*matrixtable[2*i-1]));
+end;
+
+grad=[];
+for i in 1:r
+push!(grad,matrixtable[2*i-1]*matrixtable[2*i]*adjoint(matrixtable[2*i])/sumnorm)'
+push!(grad,adjoint(matrixtable[2*i-1])*matrixtable[2*i-1]*matrixtable[2*i]/sumnorm);
+end;
+return grad;
+end;
+
+
+
+truegrad=function(leftvector,rightvector,matrixtable)
+return manualgradient(leftvector,rightvector,matrixtable)-ggrad(matrixtable);
+end;
+
+rate=10000;
+pink=true;
+rightvector=randn(type,d);
+leftvector=adjoint(randn(type,d));
+
+leftvector=leftvector/norm(leftvector);
+rightvector=rightvector/norm(rightvector);
+
+oldtime=time();
+
+while time()-oldtime<timelimit
+	for ami in 1:qq
+       newbottomeigenvector=bottomeigenvector*0;
+       for j in 1:r
+       newbottomeigenvector=newbottomeigenvector+matrixtable[2*j-1]*(matrixtable[2*j]*adjoint(matrixtable[2*j]))*adjoint(matrixtable[2*j-1]);
+	# I need to make this more efficient.
+       end;
+       bottomeigenvector=(newbottomeigenvector+adjoint(newbottomeigenvector))/(2*norm(newbottomeigenvector));
+       bottomeigenvectorroot=sqrt(bottomeigenvector);
+       invbottomeigenvectorroot=bottomeigenvectorroot^(-1);
+       bottomeigenvector=bottomeigenvector^0;
+#	I am concerned that we may need to renormalize the factorization of the low rank matrix every once in a while. After all, the left part and the right part may be very lopsided.
+       for j in 1:r
+	matrixtable[2*j-1]=invbottomeigenvectorroot*matrixtable[2*j-1];
+	matrixtable[2*j]=matrixtable[2*j]*invbottomeigenvectorroot;
+	reno=sqrt(dumbnorm(matrixtable[2*j-1])/dumbnorm(matrixtable[2*j]));
+	matrixtable[2*j-1]=matrixtable[2*j-1]/reno;
+	matrixtable[2*j]=matrixtable[2*j]*reno;
+       end;
+       matrixtable=matrixtable/mean(norm.(matrixtable));
+	end;
+       grad=truegrad(leftvector,rightvector,matrixtable);
+       #grad=gradient(h,leftvector,rightvector,matrixtable)[3];
+
+       # I am saving the old code just in case the calculation is too unstable.
+       #old=h(leftvector,rightvector,matrixtable);
+       #matrixtable=matrixtable+rate*grad;
+       #matrixtable=matrixtable/mean(norm.(matrixtable));
+       #new=h(leftvector,rightvector,matrixtable);
+
+       old=h(leftvector,rightvector,matrixtable);
+       new=h(leftvector,rightvector,matrixtable+rate*grad);
+       if old>=new
+       # Here, we decrease the rate until we get something better.
+       while true
+       rate=rate/2;
+       if old<=h(leftvector,rightvector,matrixtable+rate*grad)
+       matrixtable=matrixtable+rate*grad;
+       matrixtable=matrixtable/mean(norm.(matrixtable));
+       display(["minus",old,new,rate]);
+       break;
+       end;
+       end;
+       else
+       tartable=[[rate,new]];
+       while true
+       rate=rate*1.4;
+       new=h(leftvector,rightvector,matrixtable+rate*grad);
+       if last(tartable)[2]<new
+       push!(tartable,[rate,new]);
+       else
+       rate=last(tartable)[1];
+       new=last(tartable)[2];
+       matrixtable=matrixtable+rate*grad;
+       matrixtable=matrixtable/mean(norm.(matrixtable));
+       display([old,new,rate]);
+       break;
+       end;
+       end;
+       end;
+
+       #tempnew=new;
+       #oldrate=rate;
+       #newrate=rate*1.4;
+       #new=h(leftvector,rightvector,matrixtable+rate*grad);
+       #if tempnew>=new
+       #rate=oldrate;
+       #matrixtable=matrixtable+rate*grad;
+       #matrixtable=matrixtable/mean(norm.(matrixtable));
+       #display([old,new,rate]);
+       #break;
+       #end;
+       #end;
+       end;
