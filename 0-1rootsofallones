@@ -1,0 +1,158 @@
+# Here is an algorithm in Julia for finding roots of the all 1's matrix using some more advanced learning.
+# Our goal is to find a 0-1 matrix A such that every entry in A^n is a 1.
+# Our algorithm starts with a suitable random matrix. We then constantly modify the matrix until every entry in A^n is 1.
+# We shall represent the matrix A as a graph and use a new link prediction algorithm for finding new links in the graph.
+
+using Random,Flux,NearestNeighbors;
+
+nn=7;
+n=2^nn;
+d=10;
+
+list=[];
+for i in 1:n
+push!(list,[i,i+1]);
+end;
+list[n][2]=1;
+
+function rootscore(mm,list)
+superlist=deepcopy(list);
+
+for i in 1:mm
+templist=[];
+for j in 1:n
+push!(templist,unique(vcat(superlist[list[j][1]],superlist[list[j][2]])));
+end;
+superlist=templist;
+end;
+return sum(length.(superlist));
+end;
+
+
+leftarray=[];
+rightarray=[];
+for i in 1:n
+push!(leftarray,randn(d));
+push!(rightarray,randn(d));
+end;
+
+
+score=function(leftarray,rightarray)
+prod=0;
+suma=zeros(d,d);
+for i in 1:n
+suma+=leftarray[i]*transpose(leftarray[i])+rightarray[i]*transpose(rightarray[i]);
+for a in list[i]
+prod+=log(abs(dot(leftarray[i],rightarray[a])));
+end;
+end;
+return exp(prod/ll)/norm(suma);
+end;
+
+rate=0.001; old=0; new=0; 
+
+level=0;
+
+ll=sum(length.(list));
+
+
+function newlistcandidates(leftarray,rightarray,list)
+mann=0;
+rate=1; 
+old=score(leftarray,rightarray);
+while true
+ amm=norm(leftarray);
+ leftarray/=amm;
+ rightarray/=amm; 
+ rate=rate*1.01;  
+ grad=gradient(score,leftarray,rightarray);
+ new=score(leftarray+rate*grad[1],rightarray+rate*grad[2]);
+if mann>0 mann=0.5*mann+0.5*abs(new-old) else mann=abs(new-old); end;
+ if old>new 
+ rate=rate/2; 
+ else 
+ leftarray+=rate*grad[1]; rightarray+=rate*grad[2]; 
+ display([new,rate,mann]); 
+ end;
+ old=new;
+ if mann<0.00001 break; end;
+end;
+leftmatrix=zeros(d,n);
+ rightmatrix=zeros(d,n);
+  for i in 1:n
+  for j in 1:d
+  leftmatrix[j,i]=leftarray[i][j];
+  rightmatrix[j,i]=rightarray[i][j];
+  end;
+  end;
+ lefttree = KDTree(leftmatrix);
+ righttree = KDTree(rightmatrix);
+ proslist=[];
+ for i in 1:n
+ push!(proslist,knn(righttree, leftarray[i], 16, true)[1]);
+ end;
+ for i in 1:n
+ mar=knn(lefttree, rightarray[i], 16, true)[1];
+ for a in mar
+ push!(proslist[a],i);
+ end;
+ end;
+ for i in 1:n
+ proslist[i]=setdiff(proslist[i],list[i]);
+ end;
+ return [leftarray,rightarray,proslist]; end;
+
+
+proslist=[];
+for i in 1:n
+push!(proslist,[rand(1:n)]);
+end;
+
+p=rootscore(level,list);
+juice=0;
+while true
+if juice<1
+tar=newlistcandidates(leftarray,rightarray,list);
+leftarray=tar[1];
+rightarray=tar[2];
+for i in 1:n
+append!(proslist[i],tar[3][i]);
+end;
+juice+=1;
+end;
+
+if p==n*2^(level+1)
+level=level+1;
+p=rootscore(level,list);
+end;
+ii=1;
+jj=1;
+while ii==jj
+ii=rand(1:n);
+jj=rand(1:n);
+end;
+list[ii]=shuffle(list[ii]);
+aa=list[ii][2];
+bb=list[jj][2];
+juice=0.9*juice+0.1*length(proslist[ii]);
+if level>=1 
+if !(bb in proslist[ii] || aa in proslist[jj])
+continue;
+end;
+proslist[ii]=setdiff(proslist[ii],[bb]);
+proslist[jj]=setdiff(proslist[jj],[aa]);
+end;
+
+newlist=deepcopy(list);
+newlist[ii][2]=bb;
+newlist[jj][2]=aa;
+q=rootscore(level,newlist);
+if q>=p
+display([level,q]);
+p=q;
+list=newlist;
+end;
+end;
+
+
+
