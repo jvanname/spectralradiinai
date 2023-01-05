@@ -1,0 +1,128 @@
+# Here is the code for computing the L_{2,d}-spectral radius dimensionality reduction for arbitrary sparse matrices.
+# This code can be applied to analyze graphs. For example, it can be used to determine which new connections in a graph are the best.
+
+n=1000;
+k=3;
+d=10;
+
+list=[];
+weights=[];
+for i in 1:k
+push!(list,[]);
+push!(weights,[]);
+for j in 1:n
+push!(list[i],[rand(1:n),rand(1:n),rand(1:n)]);
+push!(weights[i],[randn(),randn(),randn()]);
+end;
+end;
+
+
+
+bottomeigenvector=randn(d,d);
+bottomeigenvector=bottomeigenvector/norm(bottomeigenvector);
+
+topeigenvector=[];
+for i in 1:n
+push!(topeigenvector,randn(d));
+end;
+topeigenvector=topeigenvector/norm(topeigenvector);
+
+matrixnetwork=[];
+for i in 1:k
+push!(matrixnetwork,randn(d,d));
+end;
+
+pp=10;
+
+function f(matrixnetwork)
+testbottomeigenvector=deepcopy(bottomeigenvector);
+testtopeigenvector=deepcopy(topeigenvector);
+
+for jar in 1:pp
+newtestbottomeigenvector=testbottomeigenvector*0;
+ for iar in 1:k
+newtestbottomeigenvector=newtestbottomeigenvector+matrixnetwork[iar]*testbottomeigenvector*adjoint(matrixnetwork[iar]);
+ end;
+testbottomeigenvector=newtestbottomeigenvector;
+newtesttopeigenvector=testtopeigenvector*0;
+
+ for i in 1:k
+ for j in 1:n
+ for ll in 1:length(list[i][j])
+ newtesttopeigenvector[j]=newtesttopeigenvector[j]+weights[i][j][ll]*matrixnetwork[i]*testtopeigenvector[list[i][j][ll]];
+ end;
+ end;
+ end;
+testtopeigenvector=newtesttopeigenvector;
+end;
+return norm(testtopeigenvector)^(1/pp)/norm(testbottomeigenvector)^(1/(2*pp));
+end;
+
+
+rate=1;
+delta=1;
+grad=[];
+for i in 1:k
+push!(grad,zeros(d,d));
+end;
+
+while true 
+newbottomeigenvector=bottomeigenvector*0;
+
+for i in 1:k
+newbottomeigenvector=newbottomeigenvector+matrixnetwork[i]*bottomeigenvector*adjoint(matrixnetwork[i]);
+end;
+bottomeigenvector=newbottomeigenvector/norm(newbottomeigenvector);
+testtopeigenvector=topeigenvector*0;
+
+for i in 1:k
+for j in 1:n
+for ll in 1:length(list[i][j])
+testtopeigenvector[j]=testtopeigenvector[j]+weights[i][j][ll]*matrixnetwork[i]*topeigenvector[list[i][j][ll]];
+end;
+end;
+end;
+
+topeigenvector=testtopeigenvector/norm(testtopeigenvector);
+every=mean(topeigenvector);
+for i in 1:n
+topeigenvector[i]=topeigenvector[i]-every;
+end;
+
+newdiff=[];
+for i in 1:k 
+push!(newdiff,randn(d,d));
+end;
+
+if rand(1:10)==1
+der=(f(matrixnetwork+newdiff*delta)-f(matrixnetwork))/delta;
+twoder=(f(matrixnetwork+2*newdiff*delta)-f(matrixnetwork))/(2*delta);
+
+if abs(der/twoder)>1.1 || abs(twoder/der)>1.1
+delta=delta*0.50;
+end;
+delta=delta*1.01;
+end;
+
+for ark in 1:10
+newdiff=[];
+for i in 1:k 
+push!(newdiff,randn(d,d));
+end;
+
+der=(f(matrixnetwork+newdiff*delta)-f(matrixnetwork))/delta;
+grad=0.9*grad+0.1*newdiff*der;
+end;
+
+old=f(matrixnetwork);
+matrixnetwork=matrixnetwork+rate*grad;
+new=f(matrixnetwork);
+
+if old>new rate=rate*0.5; end;
+rate=rate*1.01;
+
+squag=sum(norm.(matrixnetwork));
+
+matrixnetwork=matrixnetwork*(0.9+0.1/squag);
+display([2*log(new)/log(k),rate,delta]);
+end;
