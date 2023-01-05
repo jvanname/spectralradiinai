@@ -124,5 +124,5 @@ rate=rate*1.01;
 squag=sum(norm.(matrixnetwork));
 
 matrixnetwork=matrixnetwork*(0.9+0.1/squag);
-display([2*log(new)/log(k),rate,delta]);
+display([new,rate,delta]);
 end;
