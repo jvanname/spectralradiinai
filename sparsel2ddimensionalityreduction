@@ -2,19 +2,29 @@
 # This code can be applied to analyze graphs. For example, it can be used to determine which new connections in a graph are the best.
 
 n=1000;
-k=3;
+k=1000;
 d=10;
 
 list=[];
 weights=[];
 for i in 1:k
 push!(list,[]);
-push!(weights,[]);
-for j in 1:n
-push!(list[i],[rand(1:n),rand(1:n),rand(1:n)]);
-push!(weights[i],[randn(),randn(),randn()]);
+push!(weights,randn(10));
+for j in 1:10
+push!(list[i],rand(1:n,2));
 end;
 end;
+
+#list=[];
+#weights=[];
+#for i in 1:k
+#push!(list,[]);
+#push!(weights,[]);
+#for j in 1:n
+#push!(list[i],[rand(1:n),rand(1:n),rand(1:n)]);
+#push!(weights[i],[randn(),randn(),randn()]);
+#end;
+#end;
 
 
 
@@ -25,7 +35,7 @@ topeigenvector=[];
 for i in 1:n
 push!(topeigenvector,randn(d));
 end;
-topeigenvector=topeigenvector/norm(topeigenvector);
+topeigenvector=topeigenvector/norm(topeigenvector);n
 
 matrixnetwork=[];
 for i in 1:k
@@ -46,13 +56,12 @@ newtestbottomeigenvector=newtestbottomeigenvector+matrixnetwork[iar]*testbottome
 testbottomeigenvector=newtestbottomeigenvector;
 newtesttopeigenvector=testtopeigenvector*0;
 
- for i in 1:k
- for j in 1:n
- for ll in 1:length(list[i][j])
- newtesttopeigenvector[j]=newtesttopeigenvector[j]+weights[i][j][ll]*matrixnetwork[i]*testtopeigenvector[list[i][j][ll]];
- end;
- end;
- end;
+for i in 1:k
+for j in 1:length(list[i])
+newtesttopeigenvector[list[i][j][2]]+=weights[i][j]*matrixnetwork[i]*testtopeigenvector[list[i][j][1]];
+end;
+end;
+
 testtopeigenvector=newtesttopeigenvector;
 end;
 return norm(testtopeigenvector)^(1/pp)/norm(testbottomeigenvector)^(1/(2*pp));
@@ -75,13 +84,11 @@ end;
 bottomeigenvector=newbottomeigenvector/norm(newbottomeigenvector);
 testtopeigenvector=topeigenvector*0;
 
-for i in 1:k
-for j in 1:n
-for ll in 1:length(list[i][j])
-testtopeigenvector[j]=testtopeigenvector[j]+weights[i][j][ll]*matrixnetwork[i]*topeigenvector[list[i][j][ll]];
-end;
-end;
-end;
+ for i in 1:k
+ for j in 1:length(list[i])
+ testtopeigenvector[list[i][j][2]]+=weights[i][j]*matrixnetwork[i]*topeigenvector[list[i][j][1]];
+ end;
+ end;
 
 topeigenvector=testtopeigenvector/norm(testtopeigenvector);
 every=mean(topeigenvector);
