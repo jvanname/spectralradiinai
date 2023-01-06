@@ -20,6 +20,8 @@ We say that a tuple $(X_1,\dots,X_r)$ is a $L_{2,d}$-spectral radius dimensional
 
 3. For word and graph embeddings, tokens and graphs are often represented by matrices and not just vectors. Matrices have much richer structure than vectors, and this structure can be useful in NLP and analyzing data represented as graphs. For example, in NLP, words often have multiple meanings. When one represents words as vectors, the vectors may perform well at capturing a single meaning of a word, but in order to capture multiple meanings of a word simultaneously, it is best to use multiple vectors, but matrices may be better at capturing multiple meanings of words since matrices consist of multiple vectors. In fact, in NLP when we associate tokens with matrices instead of simply vectors, these matrices can produce a contextual embedding of words without needing to use any neural networks. Since matrices can be multiplied together, one can associate sentences with products of matrices. By associating sentences with products of matrices, a computer can tell whether such a sentence is grammatically correct, and a computer can even generate new sentences just by using the word embedding and algorithms like simulated annealing and without using any neural networks.
 
+4. (low variation) If $(X_1,\dots,X_r),(Y_1,\dots,Y_r)$ are nearby, then the $L_{2,d}$-SRDRs of $(X_1,\dots,X_r),(Y_1,\dots,Y_r)$ will also be nearby.
+
 **Possible disadvantages**
 
 1. The spectral radii approach is mostly untested and not much is known about it.
