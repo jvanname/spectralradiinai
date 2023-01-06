@@ -1,5 +1,8 @@
 # Here is the code for computing the L_{2,d}-spectral radius dimensionality reduction for arbitrary sparse matrices.
 # This code can be applied to analyze graphs. For example, it can be used to determine which new connections in a graph are the best.
+# This code is still a work in progress. One moment.
+
+# I am first going to set the weights to 1.
 
 n=1000;
 k=1000;
@@ -42,31 +45,52 @@ for i in 1:k
 push!(matrixnetwork,randn(d,d));
 end;
 
-pp=10;
-
 function f(matrixnetwork)
-testbottomeigenvector=deepcopy(bottomeigenvector);
-testtopeigenvector=deepcopy(topeigenvector);
-
-for jar in 1:pp
-newtestbottomeigenvector=testbottomeigenvector*0;
- for iar in 1:k
-newtestbottomeigenvector=newtestbottomeigenvector+matrixnetwork[iar]*testbottomeigenvector*adjoint(matrixnetwork[iar]);
- end;
-testbottomeigenvector=newtestbottomeigenvector;
-newtesttopeigenvector=testtopeigenvector*0;
-
+testtopeigenvector=topeigenvector*0;
 for i in 1:k
 for j in 1:length(list[i])
-newtesttopeigenvector[list[i][j][2]]+=weights[i][j]*matrixnetwork[i]*testtopeigenvector[list[i][j][1]];
+testtopeigenvector[list[i][j][2]]+=weights[i][j]*matrixnetwork[i]*topeigenvector[list[i][j][1]];
+end;
+end;
+return log(abs(dot(topeigenvector,testtopeigenvector)));
+end;
+
+
+
+function gradf(matrixnetwork)
+
+testtopeigenvector=topeigenvector*0;
+for i in 1:k
+for j in 1:length(list[i])
+testtopeigenvector[list[i][j][2]]+=weights[i][j]*matrixnetwork[i]*topeigenvector[list[i][j][1]];
 end;
 end;
 
-testtopeigenvector=newtesttopeigenvector;
+
+gradientnetwork=matrixnetwork*0;
+for i in 1:k
+for j in 1:length(list[i])
+u=topeigenvector[list[i][j]][2]];
+v=weights[i][j]*topeigenvector[list[i][j][1]];
+gradientnetwork[i]+=
+
+
 end;
-return norm(testtopeigenvector)^(1/pp)/norm(testbottomeigenvector)^(1/(2*pp));
+end;
 end;
 
+function g(matrixnetwork)
+testbottomeigenvector=bottomeigenvector*0;
+ for iar in 1:k
+testbottomeigenvector+=matrixnetwork[iar]*bottomeigenvector*adjoint(matrixnetwork[iar]);
+ end;
+
+return log(norm(testbottomeigenvector)^(1/2));
+end;
+
+function h(matrixnetwork)
+return f(matrixnetwork)-g(matrixnetwork);
+end;
 
 rate=1;
 delta=1;
