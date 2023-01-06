@@ -10,7 +10,7 @@ We say that a tuple $(X_1,\dots,X_r)$ is a L_{2,d}-dimensionality reduction of $
 
 
 
-**Possible advantages**
+**\large Possible advantages**
 
 
 
