@@ -32,4 +32,4 @@ We say that a tuple $(X_1,\dots,X_r)$ is a $L_{2,d}$-spectral radius dimensional
 
 **Business inquiries**
 
-If you are considering using LSRDRs for your project or business but don't know where to begin, you may send a message to circcash9192020 (AT) protonmail.com.
+If you are considering using LSRDRs for your project or business but don't know where to begin, you may send a message to circcash9192020 (AT) protonmail.com. Right now, the Circcash developer is the only entity who is attempting to use spectral radii for machine learning, so you will not find anyone else who can replicate these services.
