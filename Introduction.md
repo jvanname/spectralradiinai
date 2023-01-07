@@ -5,9 +5,7 @@ Here we apply the notion of the $L_{2,d}$-spectral radius dimensionality reducti
 
 Suppose that $(A_1,\dots,A_r)$ are $n\times n$-complex matrices. Then define the $L_{2,d}$-spectral radius of $(A_1,\dots,A_r)$ denoted $\rho_{2,d}(A_1,\dots,A_r)$ to be the maximum value of $\frac{\rho(A_1\otimes X_1+\dots+A_r\otimes X_r)}{\rho(X_1\otimes\overline{X_1}+\dots+X_r\otimes\overline{X_r})}$. One should consider the $L_{2,d}$-spectral radius as a generalization of the notion of the spectral radius of a complex matrix or operator to multiple matrices or operators.
 
-We say that a tuple $(X_1,\dots,X_r)$ is a $L_{2,d}$-spectral radius dimensionality reduction (LSRDR) of $(A_1,\dots,A_r)$ if $\frac{\rho(A_1\otimes\overline{X_1}+\dots+A_r\otimes\overline{X_r})}{\rho(X_1\otimes\overline{X_1}+\dots+X_r\otimes\overline{X_r})}=\rho_{2,d}(A_1,\dots,A_r)$.
-
-
+We say that a tuple $(X_1,\dots,X_r)$ is an $L_{2,d}$-spectral radius dimensionality reduction (LSRDR) of $(A_1,\dots,A_r)$ if $\frac{\rho(A_1\otimes\overline{X_1}+\dots+A_r\otimes\overline{X_r})}{\rho(X_1\otimes\overline{X_1}+\dots+X_r\otimes\overline{X_r})}=\rho_{2,d}(A_1,\dots,A_r)$. Computer experiments show that if $(X_1,\dots,X_r)$ is an LSRDR of $(A_1,\dots,A_r)$ and $(X_1,\dots,X_r)$ have no common invariant subspace, then there are matrices $R,S$ where $A_j=RX_jS$ for $1\leq j\leq r$.
 
 
 
@@ -26,7 +24,7 @@ We say that a tuple $(X_1,\dots,X_r)$ is a $L_{2,d}$-spectral radius dimensional
 
 1. The spectral radii approach is mostly untested and not much is known about it.
 
-2. While LSRDRs are useful for a couple of niches such as analyzing simple block cipher round functions and constructing word embeddings along with graph embeddings, it is unclear how one may use LSRDRs for other tasks in machine learning. For example, it is unclear how LSRDRs may be useful for classifying images or if LSRDRs can perform as well as neural networks for classification problems.
+2. While LSRDRs are useful for a couple of niches such as analyzing simple block cipher round functions and constructing word embeddings along with graph embeddings, it is unclear how one may use LSRDRs for other tasks in machine learning. The mapping $A_j\mapsto X_j$ extends to a linear mapping whenever $(X_1,\dots,X_r)$ is a LSRDR of $(A_1,\dots,A_r)$ which means that LSRDRs do not provide any non-linearity after training.
 
 3. It is unclear as to how well LSRDRs can compete with other approaches. The $L_{2,d}$-spectral radius is necessary for measuring the security of simple block ciphers such as Circcash's Hashspin mining algorithm. On the other hand, there are plenty of graph embedding and word embedding algorithms to choose from already. It is unclear what advantage LSRDRs will have over the current state of the art.
 
