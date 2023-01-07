@@ -24,7 +24,7 @@ We say that a tuple $(X_1,\dots,X_r)$ is an $L_{2,d}$-spectral radius dimensiona
 
 1. The spectral radii approach is mostly untested and not much is known about it.
 
-2. While LSRDRs are useful for a couple of niches such as analyzing simple block cipher round functions and constructing word embeddings along with graph embeddings, it is unclear how one may use LSRDRs for other tasks in machine learning. The mapping $A_j\mapsto X_j$ extends to a linear mapping whenever $(X_1,\dots,X_r)$ is a LSRDR of $(A_1,\dots,A_r)$ which means that LSRDRs do not provide any non-linearity after training.
+2. While LSRDRs are useful for a couple of niches such as analyzing simple block cipher round functions and constructing word embeddings along with graph embeddings, it is unclear how one may use LSRDRs for other tasks in machine learning. The mapping $A_j\mapsto X_j$ extends to a linear mapping whenever $(X_1,\dots,X_r)$ is a LSRDR of $(A_1,\dots,A_r)$ which means that LSRDRs do not provide any non-linearity after the gradient descent.
 
 3. It is unclear as to how well LSRDRs can compete with other approaches. The $L_{2,d}$-spectral radius is necessary for measuring the security of simple block ciphers such as Circcash's Hashspin mining algorithm. On the other hand, there are plenty of graph embedding and word embedding algorithms to choose from already. It is unclear what advantage LSRDRs will have over the current state of the art.
 
