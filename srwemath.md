@@ -16,7 +16,7 @@ A function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding
 
 2. $N(\lambda A_1,\dots,\lambda A_r)=|\lambda|\cdot N(A_1,\dots,A_r)$ for each $\lambda\in K$, and
 
-3. $N(UA_rU^{*},\dots,UA_rU^{*})=N(A_1,\dots,A_r)$ whenever $K=\mathbb{C}$ and $U$ is unitary or $K=\mathbb{R}$ and $U$ is orthogonal.
+3. $N(UA_rU^{\ast},\dots,UA_rU^{\ast})=N(A_1,\dots,A_r)$ whenever $K=\mathbb{C}$ and $U$ is unitary or $K=\mathbb{R}$ and $U$ is orthogonal.
 
 We say that a matrix embedding potential $N$ is torus invariant if $N(\lambda_1 A_1,\dots,\lambda_r A_r)=N(A_1,\dots,A_r)$ whenever
 $|\lambda_1|=\dots=|\lambda_r|$.
