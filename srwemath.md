@@ -27,9 +27,9 @@ We have the following examples of matrix embedding potentials.
 
 Example 0: $N_0(A_1,\dots,A_r)=\rho(\Phi(A_1,\dots,A_r))^{1/2}$ is a superoperator invariant matrix embedding potential.
 
-Example 1: $N_{1,p}(A_1,\dots,A_r)=\|A_1A_1^*+\dots+A_rA_r^*\|_p^{1/2}$ is a matrix embedding potential for $1<p\leq\infty$.
+Example 1: $N_{1,p}(A_1,\dots,A_r)=\|A_1A_1^\ast+\dots+A_rA_r^\ast\|_p^{1/2}$ is a matrix embedding potential for $1<p\leq\infty$.
 
-Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\|(A_1A_1^*)^q+\dots+(A_rA_r^*)^q\|_p^{1/(2q)}$ is a matrix embedding potential for $1<p\leq\infty$ and $1\leq q<\infty.$
+Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\|(A_1A_1^\ast)^q+\dots+(A_rA_r^\ast)^q\|_p^{1/(2q)}$ is a matrix embedding potential for $1 < p\leq\infty$ and $1\leq q < \infty.$
 
 $L(N,a_1\dots a_n,f)=\frac{\rho(f(a_1)\dots f(a_n))^{1/n}}{N((f(a))_{a\in A})}$.
 
@@ -57,11 +57,11 @@ Define $\mathbf{Ag}(f,b_1\dots b_h)=\mathbf{Ag}((\infty,\dots,\infty),f,b_1\dots
 
 **Contextual embedding**
 
-Suppose that $f:A\rightarrow M_d(K)$ is a MPO word embedding. Let $b_1\dots b_h\in A^*$. Let $u,v$ be column vectors. Then whenever
-$1\leq j\leq h$, the left context vector with left bound $u$ of the $j$-th position in $b_1\dots b_h$ is $\frac{u^*f(b_1)\dots f(b_j)}{\|u^*f(b_1)\dots f(b_j)}\|$ and the right context vector with right bound $v$ of the $j$-th position in $b_1\dots b_h$ is $\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|}$. The context pair of the $j$-th position with bounds $(u,v)$ is the pair
-$(\frac{u^*f(b_1)\dots f(b_j)}{\|u^*f(b_1)\dots f(b_j)\|},\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|})$.
+Suppose that $f:A\rightarrow M_d(K)$ is a MPO word embedding. Let $b_1\dots b_h\in A^\ast$. Let $u,v$ be column vectors. Then whenever
+$1\leq j\leq h$, the left context vector with left bound $u$ of the $j$-th position in $b_1\dots b_h$ is $\frac{u^\ast f(b_1)\dots f(b_j)}{\|u^\ast f(b_1)\dots f(b_j)}\|$ and the right context vector with right bound $v$ of the $j$-th position in $b_1\dots b_h$ is $\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|}$. The context pair of the $j$-th position with bounds $(u,v)$ is the pair
+$(\frac{u^\ast f(b_1)\dots f(b_j)}{\|u^\ast f(b_1)\dots f(b_j)\|},\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|})$.
 
-Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^*$. Suppose now that the $j-1$-th left context vector is $\alpha^*$ and the $j+1$-th right context vector is $\beta$.
+Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^*$ and the $j+1$-th right context vector is $\beta$.
 
 
 
