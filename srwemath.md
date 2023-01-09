@@ -29,9 +29,9 @@ Example 0: $N_0(A_1,\dots,A_r)=\rho(\Phi(A_1,\dots,A_r))^{1/2}$ is a superoperat
 
 Example 1: $N_{1,p}(A_1,\dots,A_r)=\|A_1A_1^\ast+\dots+A_rA_r^\ast\|\_p^{1/2}$ is a matrix embedding potential for $1 < p\leq\infty$.
 
-Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\|(A_1A_1^\ast)^q+\dots+(A_rA_r^\ast)^q\|_p^{1/(2q)}$ is a matrix embedding potential for $1 < p\leq\infty$ and $1\leq q < \infty.$
+Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\|(A_1A_1^\ast)^q+\dots+(A_rA_r^\ast)^q\|\_p^{1/(2q)}$ is a matrix embedding potential for $1 < p\leq\infty$ and $1\leq q < \infty.$
 
-$L(N,a_1\dots a_n,f)=\frac{\rho(f(a_1)\dots f(a_n))^{1/n}}{N((f(a))_{a\in A})}$.
+$L(N,a_1\dots a_n,f)=\frac{\rho(f(a_1)\dots f(a_n))^{1/n}}{N((f(a))\_{a\in A})}$.
 
 We say that a function $f:A\rightarrow M_d(K)$ is a MPO word pre-embedding for the matrix embedding potential $N$ and corpus $a_1\dots a_n$ if the quantity $L(N,a_1\dots a_n,f)$ a local maximum. In a MPO word pre-embedding, the matrix embedding potential $N$ both prevents $f(a)$ from getting too large and from all of the matrices of the form $f(a)$ from being too close together. 
 
