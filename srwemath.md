@@ -80,7 +80,7 @@ Suppose that $(\mathcal{X}\_n)\_{n=0}^{\infty}$ is a Markov chain with a finite 
 
 **Limitations**
 
-MPO word embeddings 
 
 
+**Questions and further research**
 
