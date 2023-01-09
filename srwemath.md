@@ -45,11 +45,11 @@ $f(a)=\lambda_a g(a)$, then $f$ is an MPO word pre-embedding for $N$ and $a_1\do
 **A measure of local correctness**
 
 Suppose that $\frac{1}{r}+\frac{1}{s}=\frac{1}{t}$. Then recall that
-$\|RS\|_t\leq\|R\|_r\cdot\|S\|_s$. More generally, if $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{s}$, then
-$\|R_1\dots R_h\|_s\leq\|R_1\|_{r_1}\cdots\|R_h\|_{r_h}$. 
+$\|RS\|\_t\leq\|R\|\_r\cdot\|S\|\_s$. More generally, if $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{s}$, then
+$\|R_1\dots R_h\|\_s\leq\|R_1\|\_{r_1}\cdots\|R_h\|_{r_h}$. 
 
 If $f:A\rightarrow M_d(K)$ is an MPO word embedding, then define $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)=
-\frac{\|f(b_1)\dots f(b_h)\|_r}{\|f(b_1)\|_{r_1}\dots\|f(b_h)\|_{r_h}})^{1/(h-1)}$ where $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{r}$.
+\frac{\|f(b_1)\dots f(b_h)\|\_r}{\|f(b_1)\|\_{r_1}\dots\|f(b_h)\|\_{r_h}})^{1/(h-1)}$ where $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{r}$.
 
 The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ is a measure of how similar the string $b_1\dots b_h$ is to strings that appear in the corpus. The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ may even be used to compare strings of different lengths.
 
@@ -61,7 +61,7 @@ Suppose that $f:A\rightarrow M_d(K)$ is a MPO word embedding. Let $b_1\dots b_h\
 $1\leq j\leq h$, the left context vector with left bound $u$ of the $j$-th position in $b_1\dots b_h$ is $\frac{u^\ast f(b_1)\dots f(b_j)}{\|u^\ast f(b_1)\dots f(b_j)}\|$ and the right context vector with right bound $v$ of the $j$-th position in $b_1\dots b_h$ is $\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|}$. The context pair of the $j$-th position with bounds $(u,v)$ is the pair
 $(\frac{u^\ast f(b_1)\dots f(b_j)}{\|u^\ast f(b_1)\dots f(b_j)\|},\frac{f(b_j)\dots f(b_h)v}{\|f(b_j)\dots f(b_h)v\|})$.
 
-Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^*$ and the $j+1$-th right context vector is $\beta$.
+Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^\ast$ and the $j+1$-th right context vector is $\beta$.
 
 
 
