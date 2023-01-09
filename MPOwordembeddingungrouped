@@ -11,7 +11,7 @@ using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
 #push!(tok,".");
 #end;
 
-#pathname = "C://Users//Joseph Van Name/corpus/internetstuff.txt";
+pathname = "C://Users//Joseph Van Name/corpus/internetstuff.txt";
 
 power=2;
 
@@ -24,15 +24,15 @@ type=Float64;
 #remove_case!(sd);
 #tok=tokens(sd);
 
-#wordlist=unique(tok);
-#dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
+wordlist=unique(tok);
+dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
 
-#n=length(tok);
-#r=length(wordlist);
-#list=Array{Int64}(undef,n);
-#for i in 1:n
-#list[i]=dick[tok[i]];
-#end;
+n=length(tok);
+r=length(wordlist);
+list=Array{Int64}(undef,n);
+for i in 1:n
+list[i]=dick[tok[i]];
+end;
 
 r=67;
 n=100000;
@@ -161,7 +161,9 @@ end;
 function g(matrixtable)
 parttrace=zeros(type,d,d);
 for j in 1:r
-parttrace+=matrixtable[j]*adjoint(matrixtable[j]);
+parttrace+=countlist[j]*matrixtable[j]*adjoint(matrixtable[j]);
+##The above line of code is untested.
+##oldcode. parttrace+=countlist[j]*matrixtable[j]*adjoint(matrixtable[j]);
 end;
 newparttrace=(parttrace+adjoint(parttrace))/2;
 return log(abs(tr(newparttrace^power)))/(2*power);
@@ -181,7 +183,7 @@ truegrad=function(leftvector,rightvector,matrixtable)
 
 prematabstwo=zeros(type,d,d);
 for i in 1:r
-prematabstwo+=matrixtable[i]*adjoint(matrixtable[i]);
+prematabstwo+=countlist[i]*matrixtable[i]*adjoint(matrixtable[i]);
 end;
 matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
 normmat=maximum(eigvals(matabstwo));
@@ -189,7 +191,7 @@ normmatabstwo=matabstwo/normmat;
 leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
 gradtable=[];
 for i in 1:r
-push!(gradtable,leftfactor*matrixtable[i]);
+push!(gradtable,countlist[i]*leftfactor*matrixtable[i]);
 end;
 
 return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
