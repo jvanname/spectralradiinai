@@ -1,0 +1,404 @@
+using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
+
+#tok=[];
+
+#van=PTBLM(:train)
+
+#for i in 1:length(van.features)
+#for j in 1:length(van.features[i])
+#push!(tok,van.features[i][j]);
+#end;
+#push!(tok,".");
+#end;
+
+#pathname = "C://Users//Joseph Van Name/corpus/internetstuff.txt";
+
+power=2;
+
+#sd=StringDocument(read(pathname,String));
+
+type=Float64;
+
+#remove_corrupt_utf8!(sd);
+#prepare!(sd, strip_numbers);
+#remove_case!(sd);
+#tok=tokens(sd);
+
+#wordlist=unique(tok);
+#dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
+
+#n=length(tok);
+#r=length(wordlist);
+#list=Array{Int64}(undef,n);
+#for i in 1:n
+#list[i]=dick[tok[i]];
+#end;
+
+r=67;
+n=100000;
+
+list=[1];
+
+for i in 1:(n-1)
+push!(list,onemodulo(2*list[i]+rand(0:1),r));
+end;
+
+n=length(list);
+
+r=maximum(list);
+
+pp=1;
+qq=1;
+d=30;
+fan=true;
+
+matrixtable=[];
+for i in 1:r
+push!(matrixtable,rand(type,d,d));
+end;
+
+function dumbnorm(x)
+return sum(abs.(real.(x))); 
+end;
+
+
+
+
+function manualgradient(leftvector,rightvector,matrixtable)
+	leftlist=Array{Matrix{type}}(undef,n+1);
+	rightlist=Array{Vector{type}}(undef,n+1);
+	leftscalar=Array{type}(undef,n+1);
+	rightscalar=Array{type}(undef,n+1);
+	grad=[];
+	leftlist[1]=leftvector/norm(leftvector);
+	rightlist[n+1]=rightvector/norm(rightvector);
+	leftscalar[1]=0.;
+	rightscalar[n+1]=0.;
+		for i in 1:n
+		dd=leftlist[i]*matrixtable[list[i]];
+		fdd=dumbnorm(dd);
+		leftlist[i+1]=dd/fdd;
+		leftscalar[i+1]=leftscalar[i]+log(fdd);
+		end;
+		for i in reverse(1:n)
+		dd=matrixtable[list[i]]*rightlist[i+1];
+		fdd=dumbnorm(dd);
+		rightlist[i]=dd/fdd;
+		rightscalar[i]=rightscalar[i+1]+log(fdd);
+		end;
+
+	#logeval=log(abs((leftlist[1]*rightlist[1])[1]))+rightscalar[1];
+
+	umm=(leftlist[1]*rightlist[1])[1];
+	logeval=log(abs(umm))+rightscalar[1];
+
+	#logeval=log(leftlist[n+1]*rightlist[n+1])+leftscalar[n+1];
+		for i in 1:r
+		push!(grad,zeros(type,d,d));
+		end;
+
+		for i in 1:n
+		grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
+		end;
+	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
+
+	return pan*adjoint.(grad)/n;
+end;
+
+
+
+
+
+function ftopexp(leftvector,rightvector,matrixtable)
+testtopeigenvector=deepcopy(leftvector);
+for i in 1:n
+testtopeigenvector=testtopeigenvector*matrixtable[list[i]];
+end;
+
+return log(abs((testtopeigenvector*rightvector)[1]));
+end;
+
+function rad(x) return maximum(abs.(eigvals(x))); end;
+
+countlist=zeros(Int64,r);
+for i in 1:n countlist[list[i]]+=1; end;
+
+function sumrad(matrixtable)
+mat=zeros(type,d,d);
+for i in 1:r
+mat+=countlist[i]*matrixtable[i];
+end;
+return log(rad(mat));
+end;
+
+function ftop(matrixtable)
+testtopeigenvector=deepcopy(topeigenvector);
+
+cc=0;
+for i in 1:n
+testtopeigenvector=matrixtable[list[i]]*testtopeigenvector;
+dd=norm(testtopeigenvector);
+testtopeigenvector=testtopeigenvector/dd;
+cc=cc+log(dd)/n;
+end;
+
+return cc;
+end;
+
+
+function f(leftvector,rightvector,matrixtable)
+newleftvector=deepcopy(leftvector);
+cc=0;
+for i in 1:n
+newleftvector*=matrixtable[list[i]];
+dd=dumbnorm(newleftvector);
+cc+=log(dd);
+newleftvector/=dd;
+end;
+return (cc+log(abs((newleftvector*rightvector)[1])))/n;
+end;
+
+function g(matrixtable)
+parttrace=zeros(type,d,d);
+for j in 1:r
+parttrace+=matrixtable[j]*adjoint(matrixtable[j]);
+end;
+newparttrace=(parttrace+adjoint(parttrace))/2;
+return log(abs(tr(newparttrace^power)))/(2*power);
+end;
+
+# REMINDER: I added a term for the sum of the matrices.
+
+function h(leftvector,rightvector,matrixtable)
+return f(leftvector,rightvector,matrixtable)-g(matrixtable);
+end;
+
+# hh does not rely on the bottomeigenvector
+
+
+truegrad=function(leftvector,rightvector,matrixtable)
+#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
+
+prematabstwo=zeros(type,d,d);
+for i in 1:r
+prematabstwo+=matrixtable[i]*adjoint(matrixtable[i]);
+end;
+matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
+normmat=maximum(eigvals(matabstwo));
+normmatabstwo=matabstwo/normmat;
+leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
+gradtable=[];
+for i in 1:r
+push!(gradtable,leftfactor*matrixtable[i]);
+end;
+
+return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
+
+#return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
+#return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
+end;
+
+# hh does not rely on the bottomeigenvector
+
+function normalize(matrixtable)
+mar=zeros(type,d,d);
+for i in 1:r
+mar+=matrixtable[i]*adjoint(matrixtable[i]);
+end;
+eigmar=eigvecs(mar);
+inveigmar=adjoint(eigmar);
+for i in 1:r
+matrixtable[i]=inveigmar*matrixtable[i]*eigmar;
+end;
+end;
+
+#truegrad=function(leftvector,rightvector,matrixtable)
+#####display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
+#return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
+#####return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
+#end;
+
+rightvector=randn(type,d);
+leftvector=adjoint(randn(type,d));
+
+
+rate=10000;
+pink=true;
+beta=0.;
+while true
+display("new realization");
+
+leftvector=leftvector/norm(leftvector);
+rightvector=rightvector/norm(rightvector);
+
+old=h(leftvector,rightvector,matrixtable);
+new=old;
+grad=truegrad(leftvector,rightvector,matrixtable);
+ttt=time();
+counter=[];
+	while true
+	rate=rate*0.99;
+	beta=0.9*beta+(0.1)*0.9;
+	push!(counter,new);
+	marsgrad=truegrad(leftvector,rightvector,matrixtable);
+       grad=beta*grad+(1-beta)*marsgrad;
+       old=new;
+	if rand(1:30)==1
+	for i in max(1,n-2000):n
+	leftvector=leftvector*matrixtable[list[i]];
+	leftvector=leftvector/dumbnorm(leftvector);
+	end;
+	leftvector=leftvector/norm(leftvector);
+	rightvector=adjoint(leftvector);
+	old=h(leftvector,rightvector,matrixtable);
+	end;
+       new=h(leftvector,rightvector,matrixtable+rate*grad);
+       if old>=new
+       while true
+       rate=rate/2;
+       grad=beta*grad+(1-beta)*marsgrad;
+       new=h(leftvector,rightvector,matrixtable+rate*grad)
+       if old<=new
+       matrixtable+=rate*grad;
+       matrixtable=matrixtable/mean(norm.(matrixtable));
+       display(["minus",old,new,rate,length(counter)/(time()-ttt)]);
+       break;
+       end;
+       end;
+       else
+       tartable=[[rate,new]];
+       while true
+       rate=rate*1.4;
+       new=h(leftvector,rightvector,matrixtable+rate*grad);
+       if (last(tartable)[2]<new)
+       push!(tartable,[rate,new]);
+       else
+       rate=last(tartable)[1];
+       new=last(tartable)[2];
+       matrixtable+=rate*grad;
+       matrixtable=matrixtable/mean(norm.(matrixtable));
+       display([old,new,rate]);
+       break;
+       end;
+       end;
+       end;
+if time()-ttt>3600
+normalize(matrixtable);
+#for i in 1:r
+#matrixtable[i]+=0.99999999999*adjoint(transpose(matrixtable[i]));
+#end;
+matrixtable=matrixtable/mean(norm.(matrixtable));
+break;
+end;
+       end;
+break;
+
+end;
+
+function truescore(table) cc=matrixtable[1]^0; for i in 1:length(table) amp=matrixtable[list[table[i]]]; cc=cc*amp/norm(amp); end; return norm(cc)^(1/(length(table)-1)); end;
+
+function prodnorm(table) cc=matrixtable[1]^0; for i in 1:length(table) amp=matrixtable[dick[table[i]]]; cc=cc*amp/norm(amp); end; return norm(cc)^(1/(length(table)-1)); end;
+
+function supernorm(str) return prodnorm(tokens(StringDocument(str))); end;
+
+# The contextual embedding of each token in a string of tokens.
+
+function leftcontextemb(leftvector,str) amm=tokens(StringDocument(str)); mar=[]; state=copy(leftvector); for i in 1:length(amm) state=state*matrixtable[dick[amm[i]]]; state=state/norm(state); push!(mar,state); end; return mar; end;
+
+function rightcontextemb(rightvector,str) amm=tokens(StringDocument(str)); mar=Array{Vector{type}}(undef,length(amm)); state=copy(rightvector); for i in reverse(1:length(amm)) state=matrixtable[dick[amm[i]]]*state; state=state/norm(state); mar[i]=state; end; return mar; end;
+
+function totalcontextemb(leftvector,rightvector,str);
+lll=length(tokens(StringDocument(str)))'
+uuu=adjoint.(leftcontextemb(leftvector,str));
+vvv=rightcontextemb(rightvector,str);
+out=zeros(3*lll,d);
+for i in 1:lll
+for j in 1:d
+out[3*i-2,j]=abs(uuu[i][j]);
+out[3*i-1,j]=abs(vvv[i][j]);
+out[3*i,j]=0;
+end;
+end;
+return out;
+end;
+
+# For sentence generation.
+# ham=12; table=rand(1:n,ham); qh=rand(ham:n-ham); for i in 1:ham table[i]=rand(1:n); end; table[1]=56; table[ham]=56; pp=truescore(table); while true newtable=deepcopy(table); qh=rand(2:ham-2); newtable[qh]=rand(1:n); if rand(0:1)>0 newtable[qh+1]=rand(1:n); end; if rand(0:1)>0 && ham<rand(8:16) qh=rand(2:ham); push!(newtable,newtable[ham]); for i in reverse((qh+1):ham) newtable[i]=newtable[i-1]; end; newtable[qh]=rand(1:n); end; ham=length(newtable); if rand(0:7)==1 && ham>rand(8:16) qh=rand(2:ham-1); for i in qh:(ham-1) newtable[i]=newtable[i+1]; end; pop!(newtable); end; qq=truescore(newtable); if qq>pp pp=qq; table=newtable; str=[]; for i in 1:length(table) push!(str,tok[table[i]]); end; display(str); display(pp); end; ham=length(table); end;
+
+
+function slicematrix(A::AbstractMatrix{T}) where T
+           m, n = size(A)
+           B = Vector{T}[Vector{T}(undef, n) for _ in 1:m]
+           for i in 1:m
+               B[i] .= A[i, :]
+           end
+           return B
+       end
+
+# Below this point, we are going to use a neural network for the next level of analysis
+#levelnetwork=Chain(Dense(160,160,sech),Dense(160,256,tanh),Dense(256,512,tanh),Dense(512,600));
+
+
+torscore=function(x)
+mat=zeros(type,d,d);
+for i in 1:r
+mat+=countlist[i]*matrixtable[i]*exp(im*real(x[i]));
+end;
+return rad(mat);
+end;
+
+torus=rand(r); rate=0.2;
+counter=[];
+while true 
+break;
+torus=torus+rate*gradient(torscore,torus)[1]; 
+push!(counter,torscore(torus));
+display(counter[length(counter)]); 
+arr=rand(1:r);
+taa=sin(2*torus[arr]);
+tbb=cos(2*torus[arr]);
+if length(counter)>10 && counter[length(counter)]-counter[Int(round(length(counter)/2))]<0.0001
+break;
+end;
+end;
+
+function hermvec(xx) dd=size(xx)[1]; vec=Vector{Float64}(undef,Int(dd*(dd+1)/2)); for i in 1:dd for j in 1:i vec[Int(i*(i-1)/2)+j]=xx[i,j]; end; end; return vec; end;
+
+
+
+zerodata=Matrix{Float64}(undef,Int(d*(d+1)/2),r); for i in 1:r xx=matrixtable[i]*adjoint(matrixtable[i]); xx=xx/norm(xx); for j in 1:d for k in 1:j zerodata[Int(j*(j-1)/2)+k,i]=xx[j,k]; end; end; end;
+
+onedata=Matrix{Float64}(undef,Int(d*(d+1)/2),r); for i in 1:r xx=adjoint(matrixtable[i])*matrixtable[i]; xx=xx/norm(xx); for j in 1:d for k in 1:j onedata[Int(j*(j-1)/2)+k,i]=xx[j,k]; end; end; end;
+
+
+zerotree = KDTree(zerodata);
+onetree = KDTree(onedata);
+
+zeroconnections=[];
+oneconnections=[];
+for i in 1:r
+xx=matrixtable[i]*adjoint(matrixtable[i]);
+yy=adjoint(matrixtable[i])*matrixtable[i];
+xx=xx/norm(xx);
+yy=yy/norm(yy);
+zerovec=hermvec(xx);
+onevec=hermvec(yy);
+
+push!(zeroconnections,knn(zerotree,onevec, 6, true)[1]);
+push!(oneconnections,knn(onetree,zerovec, 6, true)[1]);
+
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
