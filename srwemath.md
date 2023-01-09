@@ -27,7 +27,7 @@ We have the following examples of matrix embedding potentials.
 
 Example 0: $N_0(A_1,\dots,A_r)=\rho(\Phi(A_1,\dots,A_r))^{1/2}$ is a superoperator invariant matrix embedding potential.
 
-Example 1: $N_{1,p}(A_1,\dots,A_r)=\|A_1A_1^\ast+\dots+A_rA_r^\ast\|_p^{1/2}$ is a matrix embedding potential for $1 < p\leq\infty$.
+Example 1: $N_{1,p}(A_1,\dots,A_r)=\|A_1A_1^\ast+\dots+A_rA_r^\ast\|\_p^{1/2}$ is a matrix embedding potential for $1 < p\leq\infty$.
 
 Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\|(A_1A_1^\ast)^q+\dots+(A_rA_r^\ast)^q\|_p^{1/(2q)}$ is a matrix embedding potential for $1 < p\leq\infty$ and $1\leq q < \infty.$
 
