@@ -168,6 +168,14 @@ end;
 return (cc+log(abs((newleftvector*rightvector)[1])))/nn;
 end;
 
+function ffaverage(blocksize,leftvector,rightvector,matrixtable)
+cq=0;
+for i in 1:blocksize
+cq+=ff(blocksize,(i-1),leftvector,rightvector,matrixtable);
+end;
+return cq/blocksize;
+end;
+
 function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable)
 	nn=Int((n-(n%blocksize))/blocksize)-1;
 	leftlist=Array{Matrix{type}}(undef,nn+1);
@@ -239,6 +247,12 @@ end;
 function h(leftvector,rightvector,matrixtable)
 return f(leftvector,rightvector,matrixtable)-g(matrixtable);
 end;
+
+function hh(blocksize,leftvector,rightvector,matrixtable)
+return ffaverage(blocksize,leftvector,rightvector,matrixtable)-g(matrixtable);
+end;
+
+
 
 # hh does not rely on the bottomeigenvector
 
