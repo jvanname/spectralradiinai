@@ -161,9 +161,9 @@ end;
 function g(matrixtable)
 parttrace=zeros(type,d,d);
 for j in 1:r
-parttrace+=countlist[j]*matrixtable[j]*adjoint(matrixtable[j]);
+parttrace+=countlist[j]^2*matrixtable[j]*adjoint(matrixtable[j]);
 ##The above line of code is untested.
-##oldcode. parttrace+=countlist[j]*matrixtable[j]*adjoint(matrixtable[j]);
+##oldcode. parttrace+=matrixtable[j]*adjoint(matrixtable[j]);
 end;
 newparttrace=(parttrace+adjoint(parttrace))/2;
 return log(abs(tr(newparttrace^power)))/(2*power);
@@ -183,7 +183,7 @@ truegrad=function(leftvector,rightvector,matrixtable)
 
 prematabstwo=zeros(type,d,d);
 for i in 1:r
-prematabstwo+=countlist[i]*matrixtable[i]*adjoint(matrixtable[i]);
+prematabstwo+=countlist[i]^2*matrixtable[i]*adjoint(matrixtable[i]);
 end;
 matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
 normmat=maximum(eigvals(matabstwo));
@@ -191,7 +191,7 @@ normmatabstwo=matabstwo/normmat;
 leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
 gradtable=[];
 for i in 1:r
-push!(gradtable,countlist[i]*leftfactor*matrixtable[i]);
+push!(gradtable,countlist[i]^2*leftfactor*matrixtable[i]);
 end;
 
 return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
