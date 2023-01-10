@@ -99,7 +99,7 @@ end;
 
 
 
-
+# This function is used nowhere. It is considered for deletion.
 function ftopexp(leftvector,rightvector,matrixtable)
 testtopeigenvector=deepcopy(leftvector);
 for i in 1:n
