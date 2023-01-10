@@ -34,6 +34,8 @@ for i in 1:n
 list[i]=dick[tok[i]];
 end;
 
+list=[1,1,2,1,2,3,1,2,3,4,1,2,3,1,2,1];
+
 n=length(list);
 
 r=maximum(list);
@@ -163,7 +165,7 @@ dd=dumbnorm(templeftvector);
 cc+=log(dd);
 newleftvector=templeftvector/dd;
 end;
-return (cc+log(abs((newleftvector*rightvector)[1])))/n;
+return (cc+log(abs((newleftvector*rightvector)[1])))/nn;
 end;
 
 function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable)
