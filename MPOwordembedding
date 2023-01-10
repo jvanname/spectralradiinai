@@ -228,8 +228,13 @@ function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable
 	return pan*adjoint.(grad)/nn;
 end;
 
-
-
+function blockmanualgradientaverage(blocksize,leftvector,rightvector,matrixtable)
+grad=blockmanualgradient(blocksize,0,leftvector,rightvector,matrixtable);
+for i in 2:blocksize
+grad+=blockmanualgradient(blocksize,i-1,leftvector,rightvector,matrixtable);
+end;
+return grad/blocksize;
+end;
 
 function g(matrixtable)
 parttrace=zeros(type,d,d);
@@ -255,11 +260,7 @@ end;
 
 
 # hh does not rely on the bottomeigenvector
-
-
-truegrad=function(leftvector,rightvector,matrixtable)
-#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
-
+ggrad=function(leftvector,rightvector,matrixtable)
 prematabstwo=zeros(type,d,d);
 for i in 1:r
 prematabstwo+=countlist[i]^2*matrixtable[i]*adjoint(matrixtable[i]);
@@ -273,11 +274,23 @@ for i in 1:r
 push!(gradtable,countlist[i]^2*leftfactor*matrixtable[i]);
 end;
 
-return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
+return gradtable;
+end;
 
+truegrad=function(leftvector,rightvector,matrixtable)
+#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
+return manualgradient(leftvector,rightvector,matrixtable)-ggrad(leftvector,rightvector,matrixtable);
 #return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
 #return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
 end;
+
+magicgrad=function(blocksize,leftvector,rightvector,matrixtable)
+#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
+return blockmanualgradientaverage(blocksize,leftvector,rightvector,matrixtable)-ggrad(leftvector,rightvector,matrixtable);
+#return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
+#return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
+end;
+
 
 # hh does not rely on the bottomeigenvector
 
@@ -314,7 +327,9 @@ rightvector=rightvector/norm(rightvector);
 
 old=h(leftvector,rightvector,matrixtable);
 new=old;
+
 grad=truegrad(leftvector,rightvector,matrixtable);
+#grad=magicgrad(blocksize,leftvector,rightvector,matrixtable);
 ttt=time();
 counter=[];
 	while true
@@ -332,13 +347,16 @@ grad=beta*grad+(1-beta)*marsgrad;
 	leftvector=leftvector/norm(leftvector);
 	rightvector=adjoint(leftvector);
 	old=h(leftvector,rightvector,matrixtable);
+#	old=hh(blocksize,leftvector,rightvector,matrixtable);
 	end;
        new=h(leftvector,rightvector,matrixtable+rate*grad);
+#       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad);
        if old>=new
        while true
        rate=rate/2;
        grad=beta*grad+(1-beta)*marsgrad;
        new=h(leftvector,rightvector,matrixtable+rate*grad)
+#       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad)
        if old<=new
        matrixtable+=rate*grad;
        matrixtable=matrixtable/mean(norm.(matrixtable));
