@@ -122,6 +122,7 @@ end;
 return log(rad(mat));
 end;
 
+#This function is used nowhere. I will probably delete it soon.
 function ftop(matrixtable)
 testtopeigenvector=deepcopy(topeigenvector);
 
@@ -150,7 +151,67 @@ return (cc+log(abs((newleftvector*rightvector)[1])))/n;
 end;
 
 # For the following function, words are grouped together
-function ff(blocksize,leftvector,rightvector,matrixtable)
+function ff(offset,blocksize,leftvector,rightvector,matrixtable)
+nn=Int((n-(n%blocksize))/blocksize)-1;
+
+newleftvector=deepcopy(leftvector);
+cc=0;
+for i in 1:nn
+templeftvector=adjoint(zeros(type,d));
+for j in 1:blocksize
+templeftvector+=newleftvector*matrixtable[list[blocksize*(i-1)+j+offset]];
+end;
+newleftvector*=matrixtable[list[i]];
+dd=dumbnorm(templeftvector);
+cc+=log(dd);
+newleftvector=templeftvector/dd;
+end;
+return (cc+log(abs((newleftvector*rightvector)[1])))/n;
+end;
+
+
+
+
+function blockmanualgradient(leftvector,rightvector,matrixtable)
+	nn=Int((n-(n%blocksize))/blocksize)-1;
+	leftlist=Array{Matrix{type}}(undef,nn+1);
+	rightlist=Array{Vector{type}}(undef,nn+1);
+	leftscalar=Array{type}(undef,nn+1);
+	rightscalar=Array{type}(undef,nn+1);
+	grad=[];
+	leftlist[1]=leftvector/norm(leftvector);
+	rightlist[nn+1]=rightvector/norm(rightvector);
+	leftscalar[1]=0.;
+	rightscalar[nn+1]=0.;
+		for i in 1:nn
+		dd=leftlist[i]*matrixtable[list[i]];
+		fdd=dumbnorm(dd);
+		leftlist[i+1]=dd/fdd;
+		leftscalar[i+1]=leftscalar[i]+log(fdd);
+		end;
+		for i in reverse(1:nn)
+		dd=matrixtable[list[i]]*rightlist[i+1];
+		fdd=dumbnorm(dd);
+		rightlist[i]=dd/fdd;
+		rightscalar[i]=rightscalar[i+1]+log(fdd);
+		end;
+
+	#logeval=log(abs((leftlist[1]*rightlist[1])[1]))+rightscalar[1];
+
+	umm=(leftlist[1]*rightlist[1])[1];
+	logeval=log(abs(umm))+rightscalar[1];
+
+	#logeval=log(leftlist[nn+1]*rightlist[nn+1])+leftscalar[nn+1];
+		for i in 1:r
+		push!(grad,zeros(type,d,d));
+		end;
+
+		for i in 1:nn
+		grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
+		end;
+	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
+
+	return pan*adjoint.(grad)/nn;
 end;
 
 
