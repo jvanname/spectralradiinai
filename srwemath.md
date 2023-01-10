@@ -55,6 +55,9 @@ The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ is a measure of ho
 
 Define $\mathbf{Ag}(f,b_1\dots b_h)=\mathbf{Ag}((\infty,\dots,\infty),f,b_1\dots b_h)$.
 
+Recall that Von Neumann's trace inequality states that if $R,S$ have singular values $\alpha_1\geq\dots\geq\alpha_d$ and $\beta_1\geq\dots\geq\beta_d$, then
+$|\text{Tr}(RS)|\leq\sum_{k=1}^d\alpha_k\beta_k$.
+
 **Contextual embedding**
 
 Suppose that $f:A\rightarrow M_d(K)$ is a MPO word embedding. Let $b_1\dots b_h\in A^\ast$. Let $u,v$ be column vectors. Then whenever
