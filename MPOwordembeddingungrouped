@@ -149,6 +149,13 @@ end;
 return (cc+log(abs((newleftvector*rightvector)[1])))/n;
 end;
 
+# For the following function, words are grouped together
+function ff(blocksize,leftvector,rightvector,matrixtable)
+end;
+
+
+
+
 function g(matrixtable)
 parttrace=zeros(type,d,d);
 for j in 1:r
