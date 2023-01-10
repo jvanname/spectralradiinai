@@ -15,14 +15,14 @@ pathname = "C://Users//Joseph Van Name/corpus/internetstuff.txt";
 
 power=2;
 
-#sd=StringDocument(read(pathname,String));
+sd=StringDocument(read(pathname,String));
 
 type=Float64;
 
-#remove_corrupt_utf8!(sd);
-#prepare!(sd, strip_numbers);
-#remove_case!(sd);
-#tok=tokens(sd);
+remove_corrupt_utf8!(sd);
+prepare!(sd, strip_numbers);
+remove_case!(sd);
+tok=tokens(sd);
 
 wordlist=unique(tok);
 dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
@@ -32,15 +32,6 @@ r=length(wordlist);
 list=Array{Int64}(undef,n);
 for i in 1:n
 list[i]=dick[tok[i]];
-end;
-
-r=67;
-n=100000;
-
-list=[1];
-
-for i in 1:(n-1)
-push!(list,onemodulo(2*list[i]+rand(0:1),r));
 end;
 
 n=length(list);
