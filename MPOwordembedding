@@ -150,18 +150,15 @@ end;
 return (cc+log(abs((newleftvector*rightvector)[1])))/n;
 end;
 
-# For the following function, words are grouped together
-function ff(offset,blocksize,leftvector,rightvector,matrixtable)
+function ff(blocksize,offset,leftvector,rightvector,matrixtable)
 nn=Int((n-(n%blocksize))/blocksize)-1;
-
 newleftvector=deepcopy(leftvector);
 cc=0;
 for i in 1:nn
-templeftvector=adjoint(zeros(type,d));
+templeftvector=newleftvector*0;
 for j in 1:blocksize
 templeftvector+=newleftvector*matrixtable[list[blocksize*(i-1)+j+offset]];
 end;
-newleftvector*=matrixtable[list[i]];
 dd=dumbnorm(templeftvector);
 cc+=log(dd);
 newleftvector=templeftvector/dd;
@@ -169,10 +166,7 @@ end;
 return (cc+log(abs((newleftvector*rightvector)[1])))/n;
 end;
 
-
-
-
-function blockmanualgradient(offset,blocksize,leftvector,rightvector,matrixtable)
+function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable)
 	nn=Int((n-(n%blocksize))/blocksize)-1;
 	leftlist=Array{Matrix{type}}(undef,nn+1);
 	rightlist=Array{Vector{type}}(undef,nn+1);
@@ -184,21 +178,20 @@ function blockmanualgradient(offset,blocksize,leftvector,rightvector,matrixtable
 	leftscalar[1]=0.;
 	rightscalar[nn+1]=0.;
 		for i in 1:nn
-		dd=adjoint(zeros(type,d));
+		dd=leftlist[1]*0;
 		for j in 1:blocksize
 		dd+=leftlist[i]*matrixtable[list[blocksize*(i-1)+j+offset]];
 		end;
-		dd=leftlist[i]*matrixtable[list[i]];
+		#dd=leftlist[i]*matrixtable[list[i]];
 		fdd=dumbnorm(dd);
 		leftlist[i+1]=dd/fdd;
 		leftscalar[i+1]=leftscalar[i]+log(fdd);
 		end;
 		for i in reverse(1:nn)
-		dd=zeros(type,d);
+		dd=rightlist[nn+1]*0;
 		for j in 1:blocksize
 		dd+=matrixtable[list[blocksize*(i-1)+j+offset]]*rightlist[i+1];
 		end;
-		dd=matrixtable[list[i]]*rightlist[i+1];
 		fdd=dumbnorm(dd);
 		rightlist[i]=dd/fdd;
 		rightscalar[i]=rightscalar[i+1]+log(fdd);
@@ -213,15 +206,20 @@ function blockmanualgradient(offset,blocksize,leftvector,rightvector,matrixtable
 		for i in 1:r
 		push!(grad,zeros(type,d,d));
 		end;
+
 		for i in 1:nn
 		for j in 1:blocksize
-		grad[list[blocksize*(i-1)+j+offset]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval)
+		grad[list[blocksize*(i-1)+j+offset]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
 		end;
+		#grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
 		end;
 	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
 
 	return pan*adjoint.(grad)/nn;
 end;
+
+
+
 
 function g(matrixtable)
 parttrace=zeros(type,d,d);
