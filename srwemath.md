@@ -77,6 +77,8 @@ MPO word embeddings can be
 
 Suppose that $(\mathcal{X}\_n)\_{n=0}^{\infty}$ is a Markov chain with a finite state space.
 
+****
+
 
 **Limitations**
 
