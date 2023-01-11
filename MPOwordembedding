@@ -11,13 +11,14 @@ using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
 #push!(tok,".");
 #end;
 
-pathname = "C://Users//Joseph Van Name/corpus/internetstuff.txt";
+pathname = "C://Users//Joseph Van Name/corpus/thebible.txt";
 
+blocksize=2;
 power=2;
 
 sd=StringDocument(read(pathname,String));
 
-type=Float64;
+type=ComplexF64;
 
 remove_corrupt_utf8!(sd);
 prepare!(sd, strip_numbers);
@@ -33,8 +34,6 @@ list=Array{Int64}(undef,n);
 for i in 1:n
 list[i]=dick[tok[i]];
 end;
-
-list=[1,1,2,1,2,3,1,2,3,4,1,2,3,1,2,1];
 
 n=length(list);
 
@@ -159,7 +158,7 @@ cc=0;
 for i in 1:nn
 templeftvector=newleftvector*0;
 for j in 1:blocksize
-templeftvector+=newleftvector*matrixtable[list[blocksize*(i-1)+j+offset]];
+templeftvector+=exp(1.01*2*pi*im*j/blocksize)*newleftvector*matrixtable[list[blocksize*(i-1)+j+offset]];
 end;
 dd=dumbnorm(templeftvector);
 cc+=log(dd);
@@ -190,7 +189,7 @@ function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable
 		for i in 1:nn
 		dd=leftlist[1]*0;
 		for j in 1:blocksize
-		dd+=leftlist[i]*matrixtable[list[blocksize*(i-1)+j+offset]];
+		dd+=exp(1.01*2*pi*im*j/blocksize)*leftlist[i]*matrixtable[list[blocksize*(i-1)+j+offset]];
 		end;
 		#dd=leftlist[i]*matrixtable[list[i]];
 		fdd=dumbnorm(dd);
@@ -200,7 +199,7 @@ function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable
 		for i in reverse(1:nn)
 		dd=rightlist[nn+1]*0;
 		for j in 1:blocksize
-		dd+=matrixtable[list[blocksize*(i-1)+j+offset]]*rightlist[i+1];
+		dd+=exp(1.01*2*pi*im*j/blocksize)*matrixtable[list[blocksize*(i-1)+j+offset]]*rightlist[i+1];
 		end;
 		fdd=dumbnorm(dd);
 		rightlist[i]=dd/fdd;
@@ -219,7 +218,7 @@ function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable
 
 		for i in 1:nn
 		for j in 1:blocksize
-		grad[list[blocksize*(i-1)+j+offset]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
+		grad[list[blocksize*(i-1)+j+offset]]+=exp(1.01*2*pi*im*j/blocksize)*rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
 		end;
 		#grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
 		end;
@@ -328,8 +327,8 @@ rightvector=rightvector/norm(rightvector);
 old=h(leftvector,rightvector,matrixtable);
 new=old;
 
-grad=truegrad(leftvector,rightvector,matrixtable);
-#grad=magicgrad(blocksize,leftvector,rightvector,matrixtable);
+#grad=truegrad(leftvector,rightvector,matrixtable);
+grad=magicgrad(blocksize,leftvector,rightvector,matrixtable);
 ttt=time();
 counter=[];
 	while true
@@ -346,17 +345,17 @@ grad=beta*grad+(1-beta)*marsgrad;
 	end;
 	leftvector=leftvector/norm(leftvector);
 	rightvector=adjoint(leftvector);
-	old=h(leftvector,rightvector,matrixtable);
-#	old=hh(blocksize,leftvector,rightvector,matrixtable);
+#	old=h(leftvector,rightvector,matrixtable);
+	old=hh(blocksize,leftvector,rightvector,matrixtable);
 	end;
-       new=h(leftvector,rightvector,matrixtable+rate*grad);
-#       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad);
+#       new=h(leftvector,rightvector,matrixtable+rate*grad);
+       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad);
        if old>=new
        while true
        rate=rate/2;
        grad=beta*grad+(1-beta)*marsgrad;
-       new=h(leftvector,rightvector,matrixtable+rate*grad)
-#       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad)
+#       new=h(leftvector,rightvector,matrixtable+rate*grad)
+       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad)
        if old<=new
        matrixtable+=rate*grad;
        matrixtable=matrixtable/mean(norm.(matrixtable));
