@@ -36,7 +36,7 @@ push!(leftarray,randn(d));
 push!(rightarray,randn(d));
 end;
 
-
+# It is possible to form something similar to the fitness function 'score' where the 
 score=function(leftarray,rightarray)
 prod=0;
 suma=zeros(d,d);
