@@ -12,4 +12,22 @@ for i in 1:n
 push!(matrixtable,randn(ComplexF64,d,d));
 end;
 
+
 score=function(matrixtable)
+topsum=zeros(ComplexF64,d,d);
+bottomsum=zeros(ComplexF64,d,d);
+for i in 1:n
+bottomsum+=matrixtable[i]*adjoint(matrixtable[i]);
+for a in list[i]
+topsum+=matrixtable[i]*matrixtable[a];
+end;
+end;
+return log(norm(topsum))-log(norm(bottomsum));
+end;
+
+rate=0.001;
+
+while true
+matrixtable+=rate*gradient(score,matrixtable);
+display(score(matrixtable));
+end;
