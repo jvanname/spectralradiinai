@@ -67,8 +67,6 @@ $(\frac{u^\ast f(b_1)\dots f(b_j)}{\|u^\ast f(b_1)\dots f(b_j)\|},\frac{f(b_j)\d
 Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^\ast$ and the $j+1$-th right context vector is $\beta$.
 
 
-
-
 **Low rank matrices**
 
 In practice, if $f:A\rightarrow M_d(K)$ is an MPO word embedding, then computer experiments indicate that the matrices $f(a)$ will be near matrices of low rank. One can therefore reduce the computation required to train, store, and use a word embedding. In particular, if $f:A\rightarrow M_d(K)$ is an MPO word embedding (or an MPO word embedding in training), then one factor each $f(a)$ as $f(a)=g(a)h(a)$ where $g(a)\in M_{d,d_a}(K),h(a)\in M_{d_a,d}(K)$ for some $d_a\leq d$.
@@ -80,7 +78,11 @@ MPO word embeddings can be
 
 Suppose that $(\mathcal{X}\_n)\_{n=0}^{\infty}$ is a Markov chain with a finite state space.
 
-****
+
+
+Let $(V,E)$ be a simple undirected graph.
+
+$\frac{\prod_{\{u,v\}\in E}\rho(f(u)f(v))^{1/(2|E|)}}{N((f(v))\_{v\in V})}$
 
 
 **Limitations**
