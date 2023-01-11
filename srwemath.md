@@ -82,7 +82,7 @@ Suppose that $(\mathcal{X}\_n)\_{n=0}^{\infty}$ is a Markov chain with a finite 
 
 Let $(V,E)$ be a simple undirected graph.
 
-$\frac{\prod_{\{u,v\}\in E}\rho(f(u)f(v))^{1/(2|E|)}}{N((f(v))\_{v\in V})}$
+$\frac{\prod_{\\{u,v\\}\in E}\rho(f(u)f(v))^{1/(2|E|)}}{N((f(v))\_{v\in V})}$
 
 
 **Limitations**
