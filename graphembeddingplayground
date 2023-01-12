@@ -6,10 +6,10 @@
 
 list=[];
 type=Float64;
-n=30;
+n=10;
 nn=Int(n/2);
-d=20;
-ll=100;
+d=10;
+ll=20;
 power=2;
 
 list=[];
@@ -59,10 +59,10 @@ end;
 return prod/(2*ll);
 end;
 
-specradmatscore=function(matrix)
+specradmatscore=function(matrixtable)
 prod=0;
 for i in 1:ll
-prod+=abs(dot(righteigenvector[i],matrix[list[i][1]]*matrix[list[i][2]]*righteigenvector[i]));
+prod+=abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i]));
 end;
 return prod/(2*ll);
 end;
