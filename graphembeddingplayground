@@ -18,11 +18,11 @@ for i in 1:ll
 push!(list,[rand(1:n),rand(1:n)]);
 end;
 
-lefteigenvector=[];
-righteigenvector=[];
+lefteigenvectors=[];
+righteigenvectors=[];
 for i in 1:ll
-push!(lefteigenvector,randn(type,d));
-push!(righteigenvector,randn(type,d));
+push!(lefteigenvectors,adjoint(randn(type,d)));
+push!(righteigenvectors,randn(type,d));
 end;
 
 #for i in 1:n
@@ -71,8 +71,8 @@ end;
 
 for kk in 1:100
 for i in 1:ll
-lefteigenvectors[i]=lefteigenvectors[i]*matrix[list[i][1]]*matrix[list[i][2]];
-righteigenvectors[i]=matrix[list[i][1]]*matrix[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
+righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
 lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
 righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
 end;
