@@ -51,7 +51,7 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
-slowspedradmatscore=function(matrix)
+slowspecradmatscore=function(matrix)
 prod=0;
 for i in 1:ll
 prod+=abs(rad(matrix[list[i][1]]*matrix[list[i][2]]));
