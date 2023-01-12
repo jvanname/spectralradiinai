@@ -8,22 +8,36 @@ list=[];
 type=Float64;
 n=30;
 nn=Int(n/2);
-d=40;
+d=20;
+ll=100;
 power=2;
 
-for i in 1:n
-push!(list,[]);
-end;
-for i in 1:n
-for j in 1:(i-1)
-if rand(0:1)==1
-push!(list[i],j);
-push!(list[j],i);
-end;
-end;
+list=[];
+
+for i in 1:ll
+push!(list,[rand(1:n),rand(1:n)]);
 end;
 
-ll=sum(length.(list));
+lefteigenvector=[];
+righteigenvector=[];
+for i in 1:ll
+push!(lefteigenvector,randn(type,d));
+push!(righteigenvector,randn(type,d));
+end;
+
+#for i in 1:n
+#push!(list,[]);
+#end;
+#for i in 1:n
+#for j in 1:(i-1)
+#if rand(0:1)==1
+#push!(list[i],j);
+#push!(list[j],i);
+#end;
+#end;
+#end;
+
+#ll=sum(length.(list));
 
 matscore=function(matrix)
 prod=0;
@@ -35,6 +49,27 @@ prod+=log(norm((matrix[a]*matrix[i])^power));
 end;
 end;
 return exp(prod/(ll*2*power))/norm(suma);
+end;
+
+specradmatscore=function(matrix)
+suma=zeros(d,d);
+for i in 1:n
+suma+=matrix[i]*adjoint(matrix[i]);
+end;
+prod=0;
+for i in 1:ll
+prod+=abs(dot(righteigenvector[i],matrix[list[i][1]]*matrix[list[i][2]]*righteigenvector[i]));
+end;
+return prod/(2*ll)-log(norm(suma));
+end;
+
+for kk in 1:10
+for i in 1:ll
+lefteigenvalues[i]=lefteigenvalues[i]*matrix[list[i][1]]*matrix[list[i][2]];
+righteigenvalues[i]=matrix[list[i][1]]*matrix[list[i][2]]*righteigenvalues[i];
+lefteigenvalues[i]=lefteigenvalues[i]/norm(lefteigenvalues[i]);
+righteigenvalues[i]=righteigenvalues[i]/norm(righteigenvalues[i]);
+end;
 end;
 
 gradspecradmatscore=function(lefteigenvalues,righteigenvalues,matrix)
@@ -64,8 +99,17 @@ rate=.3;
 matrixtable=[];
 leftarray=[];
 rightarray=[];
+dr=Int(d/2);
 for i in 1:n
-push!(matrixtable,randn(type,d,d));
+xx=randn(type,d,d);
+#for j in 1:dr
+#for k in 1:dr
+#xx[2*j,2*k-1]=-adjoint(xx[2*j-1,2*k]);
+#xx[2*j,2*k]=adjoint(xx[2*j-1,2*k-1]);
+#end;
+#end;
+
+push!(matrixtable,xx);
 push!(leftarray,randn(type,d,d));
 push!(rightarray,randn(type,d,d));
 end;
@@ -76,6 +120,15 @@ pp=1;
 qq=1;
 amm=0;
 while true
+#  for i in 1:n
+#  for j in 1:dr
+#  for k in 1:dr
+#  matrixtable[i][2*j,2*k-1]=-adjoint(matrixtable[i][2*j-1,2*k]);
+#  matrixtable[i][2*j,2*k]=adjoint(matrixtable[i][2*j-1,2*k-1]);
+#  end;
+#  end;
+#  end;
+
 grad=gradient(matscore,matrixtable)[1];
 matrixtable=matrixtable+rate*grad;
 matrixtable/=mean(norm.(matrixtable));
