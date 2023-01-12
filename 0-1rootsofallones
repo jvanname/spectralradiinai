@@ -1,7 +1,5 @@
-# Here is an algorithm in Julia for finding roots of the all 1's matrix using some more advanced learning.
-# Our goal is to find a 0-1 matrix A such that every entry in A^n is a 1.
-# Our algorithm starts with a suitable random matrix. We then constantly modify the matrix until every entry in A^n is 1.
-# We shall represent the matrix A as a graph and use a new link prediction algorithm for finding new links in the graph.
+# Gradient descent does not do a very good job at predicting discrete jumps, but I had to try anyways.
+# I am going to delete this soon since it does not seem like a worthwhile idea.
 
 using Random,Flux,NearestNeighbors;
 
@@ -15,10 +13,25 @@ push!(list,[i,i+1]);
 end;
 list[n][2]=1;
 
-function rootscore(mm,list)
+for i in 1:1000
+newlist=deepcopy(list);
+a=rand(1:n);
+b=rand(1:n);
+c=rand(1:2);
+d=rand(1:2);
+rr=newlist[a][c];
+ss=newlist[b][d];
+newlist[a][c]=ss;
+newlist[b][d]=rr;
+if length(unique(newlist[a]))==2 && length(unique(newlist[b]))==2
+list=newlist;
+end;
+end;
+
+function rootscore(list)
 superlist=deepcopy(list);
 
-for i in 1:mm
+for i in 1:(nn-1)
 templist=[];
 for j in 1:n
 push!(templist,unique(vcat(superlist[list[j][1]],superlist[list[j][2]])));
@@ -27,6 +40,81 @@ superlist=templist;
 end;
 return sum(length.(superlist));
 end;
+
+function score(x) return norm(x^nn-ones(n,n))^2; end;
+
+stride=1;
+while true
+if pp<=arr stride=Int(min(65536,2*stride));
+else stride=Int(max(1,stride/2));
+end;
+arr=pp;
+pp=rootscore(list);
+display([stride,pp]);
+x=zeros(n,n);
+for i in 1:n
+for j in 1:2
+x[i,list[i][j]]=1;
+end;
+end;
+grad=gradient(score,x)[1];
+
+lam=[];
+mantable=[];
+for i in 1:n
+push!(mantable,[]);
+for j in 1:n
+push!(mantable[i],[]);
+if i==j continue; end;
+for k in 1:2
+push!(mantable[i][j],[]);
+for l in 1:2
+push!(mantable[i][j][k],[]);
+aa=list[i][k];
+bb=list[j][l];
+up=(grad[i,aa]+grad[j,bb]-grad[i,bb]-grad[j,aa]);
+mantable[i][j][k][l]=up;
+push!(lam,up);
+end;
+end;
+end;
+end;
+lam=sort(lam);
+threshold=lam[max(1,length(lam)-stride)];
+
+pile=[];
+for i in 1:n
+for j in 1:n
+if i==j continue; end;
+for k in 1:2
+for l in 1:2
+if mantable[i][j][k][l]>=threshold && rand(0:1)==0
+push!(pile,[i,j,k,l]);
+end;
+end;
+end;
+end;
+end;
+
+pile=shuffle(pile);
+for qq in pile
+if rand(0:1)==0 continue; end;
+i=qq[1];
+j=qq[2];
+k=qq[3];
+l=qq[4];
+newlist=deepcopy(list);
+aa=newlist[i][k];
+bb=newlist[j][l];
+newlist[i][k]=bb;
+newlist[j][l]=aa;
+qq=rootscore(newlist);
+if qq>=pp pp=qq; list=newlist; end;
+end;
+
+end;
+
+
 
 
 leftarray=[];
