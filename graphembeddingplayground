@@ -1,5 +1,9 @@
 # Here we give examples of graph embeddings constructed using ideas similar to L_{2,d}-spectral radius dimensionality reduction.
 
+# I am going to have to write the code for when the matrix is factored as a product of low rank matrices.
+
+#gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
+
 list=[];
 type=Float64;
 n=30;
