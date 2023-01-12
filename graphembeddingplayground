@@ -51,34 +51,45 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
-specradmatscore=function(matrix)
-suma=zeros(d,d);
-for i in 1:n
-suma+=matrix[i]*adjoint(matrix[i]);
+slowspedradmatscore=function(matrix)
+prod=0;
+for i in 1:ll
+prod+=abs(rad(matrix[list[i][1]]*matrix[list[i][2]]));
 end;
+return prod/(2*ll);
+end;
+
+specradmatscore=function(matrix)
 prod=0;
 for i in 1:ll
 prod+=abs(dot(righteigenvector[i],matrix[list[i][1]]*matrix[list[i][2]]*righteigenvector[i]));
 end;
-return prod/(2*ll)-log(norm(suma));
+return prod/(2*ll);
 end;
 
-for kk in 1:10
+
+
+for kk in 1:100
 for i in 1:ll
-lefteigenvalues[i]=lefteigenvalues[i]*matrix[list[i][1]]*matrix[list[i][2]];
-righteigenvalues[i]=matrix[list[i][1]]*matrix[list[i][2]]*righteigenvalues[i];
-lefteigenvalues[i]=lefteigenvalues[i]/norm(lefteigenvalues[i]);
-righteigenvalues[i]=righteigenvalues[i]/norm(righteigenvalues[i]);
+lefteigenvectors[i]=lefteigenvectors[i]*matrix[list[i][1]]*matrix[list[i][2]];
+righteigenvectors[i]=matrix[list[i][1]]*matrix[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
 end;
 end;
 
-gradspecradmatscore=function(lefteigenvalues,righteigenvalues,matrix)
+gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 grad=[];
 for i in 1:n
-lambda=dot(righteigenvalues[i],matrix[i]*righteigenvalues[i]);
-cc=lefteigenvalues[i]*righteigenvalues[i];
-push!(grad,adjoint(lefteigenvalues[i])*adjoint(righteigenvalues[i])*(cc*lambda/abs(cc*lambda)^2));
+push!(grad,zeros(type,d,d));
 end;
+for i in 1:ll
+lambda=dot(righteigenvectors[i],matrix[list[i][1]]*matrix[list[i][2]]*righteigenvectors[i]);
+cc=lefteigenvectors[i]*righteigenvectors[i];
+grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*adjoint(matrix[list[i][2]]))*(cc*lambda/abs(cc*lambda)^2);
+grad[list[i][2]]+=(adjoint(matrix[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
+end;
+
 end;
 
 
