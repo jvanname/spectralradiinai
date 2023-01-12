@@ -1,4 +1,4 @@
-# Here we give examples of digraph embedding constructed using ideas similar to L_{2,d}-spectral radius dimensionality reduction.
+# Here we give examples of graph embeddings constructed using ideas similar to L_{2,d}-spectral radius dimensionality reduction.
 
 list=[];
 type=Float64;
