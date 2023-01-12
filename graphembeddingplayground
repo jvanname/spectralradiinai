@@ -5,7 +5,7 @@
 #gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
 
 list=[];
-type=Float64;
+type=ComplexF64;
 n=10;
 nn=Int(n/2);
 d=10;
@@ -39,6 +39,8 @@ end;
 
 #ll=sum(length.(list));
 
+
+
 matscore=function(matrix)
 prod=0;
 suma=zeros(d,d);
@@ -51,10 +53,23 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
+bottommatscore=function(matrix)
+prod=0;
+suma=zeros(d,d);
+for i in 1:n
+suma+=matrix[i]*adjoint(matrix[i]);
+end;
+return log(norm(suma));
+end;
+
+totalspecradmatscore=function(matrixtable)
+return specradmatscore(matrixtable)-bottommatscore(matrixtable);
+end;
+
 slowspecradmatscore=function(matrix)
 prod=0;
 for i in 1:ll
-prod+=abs(rad(matrix[list[i][1]]*matrix[list[i][2]]));
+prod+=log(rad(matrix[list[i][1]]*matrix[list[i][2]]));
 end;
 return prod/(2*ll);
 end;
@@ -62,20 +77,9 @@ end;
 specradmatscore=function(matrixtable)
 prod=0;
 for i in 1:ll
-prod+=abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i]));
+prod+=log(abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i])));
 end;
 return prod/(2*ll);
-end;
-
-
-
-for kk in 1:100
-for i in 1:ll
-lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
-righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
-lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
-righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
-end;
 end;
 
 gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
@@ -89,9 +93,20 @@ cc=lefteigenvectors[i]*righteigenvectors[i];
 grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*adjoint(matrix[list[i][2]]))*(cc*lambda/abs(cc*lambda)^2);
 grad[list[i][2]]+=(adjoint(matrix[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
 end;
-
+return grad/(2*ll);
 end;
 
+
+
+
+for kk in 1:1000
+for i in 1:ll
+lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
+righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+end;
+end;
 
 arrayscore=function(leftarray,rightarray)
 prod=0;
@@ -123,6 +138,21 @@ xx=randn(type,d,d);
 push!(matrixtable,xx);
 push!(leftarray,randn(type,d,d));
 push!(rightarray,randn(type,d,d));
+end;
+
+while true
+
+
+for kk in 1:2
+for i in 1:ll
+lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
+righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+end;
+end;
+
+
 end;
 
 
