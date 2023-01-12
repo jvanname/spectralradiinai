@@ -37,7 +37,17 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
-score=function(leftarray,rightarray)
+gradspecradmatscore=function(lefteigenvalues,righteigenvalues,matrix)
+grad=[];
+for i in 1:n
+lambda=dot(righteigenvalues[i],matrix[i]*righteigenvalues[i]);
+cc=lefteigenvalues[i]*righteigenvalues[i];
+push!(grad,adjoint(lefteigenvalues[i])*adjoint(righteigenvalues[i])*(cc*lambda/abs(cc*lambda)^2));
+end;
+end;
+
+
+arrayscore=function(leftarray,rightarray)
 prod=0;
 suma=zeros(d,d);
 for i in 1:n
