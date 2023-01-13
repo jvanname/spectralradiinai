@@ -18,13 +18,6 @@ for i in 1:ll
 push!(list,[rand(1:n),rand(1:n)]);
 end;
 
-lefteigenvectors=[];
-righteigenvectors=[];
-for i in 1:ll
-push!(lefteigenvectors,adjoint(randn(type,d)));
-push!(righteigenvectors,randn(type,d));
-end;
-
 #for i in 1:n
 #push!(list,[]);
 #end;
@@ -59,7 +52,7 @@ suma=zeros(d,d);
 for i in 1:n
 suma+=matrix[i]*adjoint(matrix[i]);
 end;
-return log(norm(suma));
+return log(norm(suma))/2;
 end;
 
 slowspecradmatscore=function(matrix)
@@ -82,6 +75,11 @@ totalspecradmatscore=function(matrixtable)
 return specradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
 
+slowtotalspecradmatscore=function(matrixtable)
+return slowspecradmatscore(matrixtable)-bottommatscore(matrixtable);
+end;
+
+
 gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 grad=[];
 for i in 1:n
@@ -96,8 +94,22 @@ end;
 return grad/(2*ll);
 end;
 
-gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
+
+
+totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 return gradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
+end;
+
+matrixtable=[];
+for i in 1:n
+push!(matrixtable,randn(type,d,d));
+end;
+
+lefteigenvectors=[];
+righteigenvectors=[];
+for i in 1:ll
+push!(lefteigenvectors,adjoint(randn(type,d)));
+push!(righteigenvectors,randn(type,d));
 end;
 
 
@@ -109,6 +121,35 @@ lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
 righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
 end;
 end;
+
+rate=0.01;
+pp=0;
+qq=0;
+while true
+
+for kk in 1:10
+for i in 1:ll
+lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
+righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+end;
+end;
+
+grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,matrixtable)
+pp=totalspecradmatscore(matrixtable);
+qq=totalspecradmatscore(matrixtable+rate*grad);
+if pp>qq rate/=2; 
+else
+matrixtable+=rate*grad;
+end;
+
+display([rate,pp]);
+rate*=1.01;
+qq=pp;
+end;
+
+
 
 arrayscore=function(leftarray,rightarray)
 prod=0;
@@ -124,23 +165,6 @@ end;
 qq=0;
 rate=.3;
 
-matrixtable=[];
-leftarray=[];
-rightarray=[];
-dr=Int(d/2);
-for i in 1:n
-xx=randn(type,d,d);
-#for j in 1:dr
-#for k in 1:dr
-#xx[2*j,2*k-1]=-adjoint(xx[2*j-1,2*k]);
-#xx[2*j,2*k]=adjoint(xx[2*j-1,2*k-1]);
-#end;
-#end;
-
-push!(matrixtable,xx);
-push!(leftarray,randn(type,d,d));
-push!(rightarray,randn(type,d,d));
-end;
 
 while true
 
