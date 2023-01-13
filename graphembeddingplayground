@@ -165,6 +165,11 @@ qq=0;
 rate=.3;
 
 
+# The algorithm for finding the gradient of the spectral radius requires one to have a good approximation for a single dominant eigenvalue.
+# For real matrices, the dominant eigenvalues may be of the form a+bi,a-bi with a,b real. We either need to use complex matrices during training or change the code so
+# that it can better compute the gradient of the spectral radius of real matrices. Another problem is that the dominant eigenvectors of a real matrix may be complex
+# Since we are using complex matrices for the dominant eigenvectors, we might as well use complex matrices during the training.
+
 while true
 
 
