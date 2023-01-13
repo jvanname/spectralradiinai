@@ -6,10 +6,10 @@
 
 list=[];
 type=ComplexF64;
-n=10;
+n=30;
 nn=Int(n/2);
 d=10;
-ll=20;
+ll=100;
 power=2;
 
 list=[];
@@ -126,14 +126,13 @@ rate=0.01;
 pp=0;
 qq=0;
 while true
+matrixtable=matrixtable/mean(norm.(matrixtable));
 
-for kk in 1:10
 for i in 1:ll
 lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
 righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
 lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
 righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
-end;
 end;
 
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,matrixtable)
