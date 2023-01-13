@@ -85,6 +85,5 @@ $\mathcal{X}\_n=(\\{a,b\\},a)$ for some $\\{a,b\\}\in E$ with probability $1$. T
 **Limitations**
 
 
-
 **Questions and further research**
 
