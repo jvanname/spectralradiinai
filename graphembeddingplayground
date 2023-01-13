@@ -6,10 +6,10 @@
 
 list=[];
 type=ComplexF64;
-n=30;
+n=200;
 nn=Int(n/2);
-d=10;
-ll=100;
+d=30;
+ll=2000;
 power=2;
 
 list=[];
@@ -113,14 +113,14 @@ push!(righteigenvectors,randn(type,d));
 end;
 
 
-for kk in 1:1000
-for i in 1:ll
-lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
-righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
-lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
-righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
-end;
-end;
+#for kk in 1:1000
+#for i in 1:ll
+#lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
+#righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
+#lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+#righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+#end;
+#end;
 
 rate=0.01;
 pp=0;
