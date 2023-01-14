@@ -6,15 +6,14 @@
 
 list=[];
 type=ComplexF64;
-n=56;
-d=2;
+n=200;
+d=4;
 power=6;
 list=[];
 
-
 for i in 1:n
 for j in 1:(i-1)
-if (100*abs(i-100)+100*abs(j-100)-(i-100)^2-(j-100)^2)%1000>500 && rand(0:1)==0
+if 10*j<
 push!(list,[i,j]); 
 end;
 end;
@@ -44,8 +43,8 @@ prod=0;
 suma=zeros(d,d);
 for i in 1:n
 suma+=matrix[i]*adjoint(matrix[i]);
-for a in list[i]
-prod+=log(norm((matrix[a]*matrix[i])^power));
+for i in 1:ll
+prod+=log(norm((matrix[list[i][1]]*matrix[list[i][2]])^power));
 end;
 end;
 return exp(prod/(ll*2*power))/norm(suma);
@@ -107,8 +106,8 @@ end;
 
 matrixtable=[];
 for i in 1:n
-xx=randn(type,d,d);
-push!(matrixtable,xx);
+xx=randn(type,d,d)/d^2;
+push!(matrixtable,xx+xx^0);
 end;
 
 lefteigenvectors=[];
@@ -128,29 +127,42 @@ end;
 #end;
 #end;
 
-rate=0.01;
+rate=1;
 pp=0;
 qq=0;
+
+ham=1;
+mash=0;
+cle=0;
 while true
 matrixtable=matrixtable/mean(norm.(matrixtable));
 
+for kk in 1:ham
 for i in 1:ll
 lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
 righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
 lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
 righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
 end;
+end;
 
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,matrixtable)
 pp=totalspecradmatscore(matrixtable);
 qq=totalspecradmatscore(matrixtable+rate*grad);
+if mash>pp ham+=1;
+cle=0;
+elseif cle>4
+ham=max(1,ham-1);
+end;
+cle+=1;
+mash=pp;
 if pp>qq rate/=2; 
 else
 matrixtable+=rate*grad;
 end;
 
-display([rate,pp]);
-rate*=1.01;
+display([rate,ham,pp]);
+rate*=1.1;
 qq=pp;
 end;
 
