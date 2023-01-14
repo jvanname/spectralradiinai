@@ -6,20 +6,22 @@
 
 list=[];
 type=ComplexF64;
-n=80;
+n=56;
 d=2;
 power=6;
-
 list=[];
+
 
 for i in 1:n
 for j in 1:(i-1)
-if ((i-40)^2+(j-40)^2)&200>100
+if (100*abs(i-100)+100*abs(j-100)-(i-100)^2-(j-100)^2)%1000>500 && rand(0:1)==0
 push!(list,[i,j]); 
 end;
 end;
 end;
 ll=length(list);
+
+
 
 #for i in 1:n
 #push!(list,[]);
