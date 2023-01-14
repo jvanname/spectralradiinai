@@ -1,6 +1,5 @@
 # Here we give examples of graph embeddings constructed using ideas similar to L_{2,d}-spectral radius dimensionality reduction.
-
-# I am going to have to write the code for when the matrix is factored as a product of low rank matrices.
+#
 
 #gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
 
@@ -21,8 +20,9 @@ list=[];
 #ll=length(list);
 
 #nx and ny are the dimensions of imagemat.
-nx=512;
-ny=512;
+nx=size(imagemat)[1];
+ny=size(imagemat)[2];
+n=nx+ny;
 #imagemat is a 512 by 512 matrix.
 
 
@@ -86,8 +86,8 @@ nx=size(imagemat)[1];
 ny=size(imagemat)[2];
 for i in 1:nx
 for j in 1:ny
+if imagemat[i,j]==0 continue; end;
 prod+=log(abs(dot(righteigenvectors[i][j],matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i][j])))*imagemat[i,j];
-end;
 end;
 end;
 return prod/(2*sum(imagemat));
@@ -122,7 +122,7 @@ end;
 return grad/(2*ll);
 end;
 
-
+# Since this function is similar to gradspecradmatscore, I can probably combine these functions to save space.
 compbipgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
 grad=[];
 for i in 1:n
@@ -130,10 +130,12 @@ push!(grad,zeros(type,d,d));
 end;
 for i in 1:nx
 for j in 1:ny
+if imagemat[i,j]==0 continue; end;
 lambda=dot(righteigenvectors[i][j],matrix[i]*matrix[nx+j]*righteigenvectors[i][j]);
 cc=lefteigenvectors[i][j]*righteigenvectors[i][j];
 grad[i]+=adjoint(lefteigenvectors[i][j])*(adjoint(righteigenvectors[i][j])*adjoint(matrix[nx+j]))*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
 grad[nx+j]+=(adjoint(matrix[i])*adjoint(lefteigenvectors[i][j]))*adjoint(righteigenvectors[i][j])*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
+end;
 end;
 return grad/(2*sum(imagemat));
 end;
@@ -176,8 +178,8 @@ cle=0;
 while true
 matrixtable=matrixtable/mean(norm.(matrixtable));
 
-for kk in 1:ham
-for i in 1:ll
+for i in 1:nx
+for j in 1:ny
 lefteigenvectors[i][j]=lefteigenvectors[i][j]*matrixtable[i]*matrixtable[nx+j];
 righteigenvectors[i][j]=matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i][j];
 lefteigenvectors[i][j]=lefteigenvectors[i][j]/norm(lefteigenvectors[i][j]);
@@ -187,8 +189,8 @@ end;
 
 ##### GO HERE
 grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
-pp=compbiptotalgradspecradmatscore(imagemat,matrixtable);
-qq=compbiptotalgradspecradmatscore(imagemat,matrixtable+rate*grad);
+pp=compbipspecradmatscore(imagemat,matrixtable);
+qq=compbipspecradmatscore(imagemat,matrixtable+rate*grad);
 if mash>pp ham+=1;
 cle=0;
 elseif cle>4
