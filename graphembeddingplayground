@@ -86,7 +86,7 @@ nx=size(imagemat)[1];
 ny=size(imagemat)[2];
 for i in 1:nx
 for j in 1:ny
-prod+=log(abs(dot(righteigenvectors[i],matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i])))*imagemat[i,j];
+prod+=log(abs(dot(righteigenvectors[i][j],matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i][j])))*imagemat[i,j];
 end;
 end;
 end;
@@ -130,19 +130,90 @@ push!(grad,zeros(type,d,d));
 end;
 for i in 1:nx
 for j in 1:ny
-lambda=dot(righteigenvectors[i][j],matrix[i]*matrix[j]*righteigenvectors[i][j]);
+lambda=dot(righteigenvectors[i][j],matrix[i]*matrix[nx+j]*righteigenvectors[i][j]);
 cc=lefteigenvectors[i][j]*righteigenvectors[i][j];
-grad[i]+=adjoint(lefteigenvectors[i][j])*(adjoint(righteigenvectors[i][j])*adjoint(matrix[j]))*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
-grad[j]+=(adjoint(matrix[i])*adjoint(lefteigenvectors[i][j]))*adjoint(righteigenvectors[i][j])*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
+grad[i]+=adjoint(lefteigenvectors[i][j])*(adjoint(righteigenvectors[i][j])*adjoint(matrix[nx+j]))*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
+grad[nx+j]+=(adjoint(matrix[i])*adjoint(lefteigenvectors[i][j]))*adjoint(righteigenvectors[i][j])*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
 end;
 return grad/(2*sum(imagemat));
 end;
 
+compbiptotalgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
+return gradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
+end;
 
 
 totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 return gradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
 end;
+
+matrixtable=[];
+for i in 1:(nx+ny)
+xx=randn(type,d,d)/d^2;
+push!(matrixtable,xx+xx^0);
+end;
+
+lefteigenvectors=[];
+righteigenvectors=[];
+for i in 1:nx
+push!(lefteigenvectors,[]);
+push!(righteigenvectors,[]);
+for j in 1:ny
+push!(lefteigenvectors[i],adjoint(randn(type,d)));
+push!(righteigenvectors[i],randn(type,d));
+end;
+end;
+
+
+
+rate=1;
+pp=0;
+qq=0;
+
+ham=1;
+mash=0;
+cle=0;
+while true
+matrixtable=matrixtable/mean(norm.(matrixtable));
+
+for kk in 1:ham
+for i in 1:ll
+lefteigenvectors[i][j]=lefteigenvectors[i][j]*matrixtable[i]*matrixtable[nx+j];
+righteigenvectors[i][j]=matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i][j];
+lefteigenvectors[i][j]=lefteigenvectors[i][j]/norm(lefteigenvectors[i][j]);
+righteigenvectors[i][j]=righteigenvectors[i][j]/norm(righteigenvectors[i][j]);
+end;
+end;
+
+##### GO HERE
+grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
+pp=compbiptotalgradspecradmatscore(imagemat,matrixtable);
+qq=compbiptotalgradspecradmatscore(imagemat,matrixtable+rate*grad);
+if mash>pp ham+=1;
+cle=0;
+elseif cle>4
+ham=max(1,ham-1);
+end;
+cle+=1;
+mash=pp;
+if pp>qq rate/=2; 
+else
+matrixtable+=rate*grad;
+end;
+
+display([rate,ham,pp]);
+rate*=1.1;
+qq=pp;
+end;
+
+
+
+
+
+##################
+##################
+##################
+##################
 
 matrixtable=[];
 for i in 1:n
@@ -156,16 +227,6 @@ for i in 1:ll
 push!(lefteigenvectors,adjoint(randn(type,d)));
 push!(righteigenvectors,randn(type,d));
 end;
-
-
-#for kk in 1:1000
-#for i in 1:ll
-#lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
-#righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
-#lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
-#righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
-#end;
-#end;
 
 rate=1;
 pp=0;
