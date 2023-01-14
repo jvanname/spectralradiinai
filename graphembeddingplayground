@@ -11,14 +11,19 @@ d=4;
 power=6;
 list=[];
 
-for i in 1:n
-for j in 1:(i-1)
-if 10*j<
-push!(list,[i,j]); 
-end;
-end;
-end;
-ll=length(list);
+#for i in 1:n
+#for j in 1:(i-1)
+#if 10*j<
+#push!(list,[i,j]); 
+#end;
+#end;
+#end;
+#ll=length(list);
+
+#nx and ny are the dimensions of imagemat.
+nx=512;
+ny=512;
+#imagemat is a 512 by 512 matrix.
 
 
 
@@ -75,6 +80,25 @@ end;
 return prod/(2*ll);
 end;
 
+compbipspecradmatscore=function(imagemat,matrixtable)
+prod=0;
+nx=size(imagemat)[1];
+ny=size(imagemat)[2];
+for i in 1:nx
+for j in 1:ny
+prod+=log(abs(dot(righteigenvectors[i],matrixtable[i]*matrixtable[nx+j]*righteigenvectors[i])))*imagemat[i,j];
+end;
+end;
+end;
+return prod/(2*sum(imagemat));
+end;
+
+
+combbiptotalspecradmatscore=function(imagemat,matrixtable)
+return specradmatscore(imagemat,matrixtable)-bottommatscore(matrixtable);
+end;
+
+
 totalspecradmatscore=function(matrixtable)
 return specradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
@@ -96,6 +120,22 @@ grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*ad
 grad[list[i][2]]+=(adjoint(matrix[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
 end;
 return grad/(2*ll);
+end;
+
+
+compbipgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
+grad=[];
+for i in 1:n
+push!(grad,zeros(type,d,d));
+end;
+for i in 1:nx
+for j in 1:ny
+lambda=dot(righteigenvectors[i][j],matrix[i]*matrix[j]*righteigenvectors[i][j]);
+cc=lefteigenvectors[i][j]*righteigenvectors[i][j];
+grad[i]+=adjoint(lefteigenvectors[i][j])*(adjoint(righteigenvectors[i][j])*adjoint(matrix[j]))*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
+grad[j]+=(adjoint(matrix[i])*adjoint(lefteigenvectors[i][j]))*adjoint(righteigenvectors[i][j])*(imagemat[i,j]*cc*lambda/abs(cc*lambda)^2);
+end;
+return grad/(2*sum(imagemat));
 end;
 
 
