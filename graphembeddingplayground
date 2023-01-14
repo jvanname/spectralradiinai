@@ -6,7 +6,7 @@
 
 list=[];
 type=ComplexF64;
-n=200;
+n=1024;
 d=4;
 power=6;
 list=[];
