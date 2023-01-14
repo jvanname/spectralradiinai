@@ -6,17 +6,20 @@
 
 list=[];
 type=ComplexF64;
-n=200;
-nn=Int(n/2);
-d=30;
-ll=2000;
-power=2;
+n=80;
+d=2;
+power=6;
 
 list=[];
 
-for i in 1:ll
-push!(list,[rand(1:n),rand(1:n)]);
+for i in 1:n
+for j in 1:(i-1)
+if ((i-40)^2+(j-40)^2)&200>100
+push!(list,[i,j]); 
 end;
+end;
+end;
+ll=length(list);
 
 #for i in 1:n
 #push!(list,[]);
@@ -102,7 +105,8 @@ end;
 
 matrixtable=[];
 for i in 1:n
-push!(matrixtable,randn(type,d,d));
+xx=randn(type,d,d);
+push!(matrixtable,xx);
 end;
 
 lefteigenvectors=[];
@@ -173,13 +177,11 @@ rate=.3;
 while true
 
 
-for kk in 1:2
 for i in 1:ll
 lefteigenvectors[i]=lefteigenvectors[i]*matrixtable[list[i][1]]*matrixtable[list[i][2]];
 righteigenvectors[i]=matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i];
 lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
 righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
-end;
 end;
 
 
