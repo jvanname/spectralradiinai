@@ -5,14 +5,16 @@
 
 list=[];
 type=ComplexF64;
-n=1024;
-d=3;
+n=512;
+d=2;
 power=6;
 list=[];
 
-for i in 1:512
-for j in 1:512
-if img[i,j]>0 push!(list,[i,j+512]); end;
+for i in 1:256
+for j in 1:256
+if rand()<exp(-(i-j)^2/20^2)
+push!(list,[i,j+256]);
+end;
 end;
 end;
 
