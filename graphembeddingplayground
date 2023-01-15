@@ -5,15 +5,14 @@
 
 list=[];
 type=ComplexF64;
-n=512;
+n=1024;
 d=3;
 power=6;
 list=[];
 
-for i in 1:256
-for j in 1:256
-if (i*j) % 256 == 1 || (i^2+j^2)%256==13 || (i+j+i^2*j+i*j^2)%256==17 || i-j==45
-push!(list,[i,j+256]); end;
+for i in 1:512
+for j in 1:512
+if img[i,j]>0 push!(list,[i,j+512]); end;
 end;
 end;
 
@@ -101,8 +100,8 @@ return prod/(2*sum(imagemat));
 end;
 
 
-combbiptotalspecradmatscore=function(imagemat,matrixtable)
-return specradmatscore(imagemat,matrixtable)-bottommatscore(matrixtable);
+compbiptotalspecradmatscore=function(imagemat,matrixtable)
+return compbipspecradmatscore(imagemat,matrixtable)-bottommatscore(matrixtable);
 end;
 
 
