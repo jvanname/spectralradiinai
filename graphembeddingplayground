@@ -5,21 +5,28 @@
 
 list=[];
 type=ComplexF64;
-n=1024;
-d=4;
+n=512;
+d=3;
 power=6;
 list=[];
 
-#for i in 1:n
-#for j in 1:(i-1)
-#if 10*j<
-#push!(list,[i,j]); 
-#end;
-#end;
-#end;
-#ll=length(list);
+for i in 1:256
+for j in 1:256
+if (i*j) % 256 == 1 || (i^2+j^2)%256==13 || (i+j+i^2*j+i*j^2)%256==17 || i-j==45
+push!(list,[i,j+256]); end;
+end;
+end;
+
+ll=length(list);
 
 #nx and ny are the dimensions of imagemat.
+imagemat=zeros(256,256);
+for i in 1:256
+for j in 1:256
+imagemat[i,j]=exp(-((i-128)^2+(j-128)^2)/10000);
+end;
+end;
+
 nx=size(imagemat)[1];
 ny=size(imagemat)[2];
 n=nx+ny;
@@ -141,7 +148,7 @@ return grad/(2*sum(imagemat));
 end;
 
 compbiptotalgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
-return gradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
+return compbipgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
 end;
 
 
