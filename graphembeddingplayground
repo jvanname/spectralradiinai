@@ -6,13 +6,16 @@
 list=[];
 type=ComplexF64;
 n=512;
-d=2;
+nx=256;
+ny=256;
+d=16;
+e=3;
 power=6;
 list=[];
 
 for i in 1:256
 for j in 1:256
-if rand()<exp(-(i-j)^2/20^2)
+if rand(0:1)==0
 push!(list,[i,j+256]);
 end;
 end;
@@ -28,8 +31,8 @@ imagemat[i,j]=exp(-((i-128)^2+(j-128)^2)/10000);
 end;
 end;
 
-nx=size(imagemat)[1];
-ny=size(imagemat)[2];
+#nx=size(imagemat)[1];
+#ny=size(imagemat)[2];
 n=nx+ny;
 #imagemat is a 512 by 512 matrix.
 
@@ -63,13 +66,35 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
-bottommatscore=function(matrix)
+bottommatscore=function(matrixtable)
+if d==e
 prod=0;
 suma=zeros(d,d);
 for i in 1:n
-suma+=matrix[i]*adjoint(matrix[i]);
+suma+=matrixtable[i]*adjoint(matrixtable[i]);
 end;
 return log(norm(suma))/2;
+else
+
+prod=0;
+suma=zeros(d,d);
+sumb=zeros(d,d);
+sumc=zeros(e,e);
+sumd=zeros(e,e);
+for i in 1:nx
+suma+=adjoint(matrixtable[i])*matrixtable[i];
+end;
+for i in nx+1:nx+ny
+sumb+=matrixtable[i]*adjoint(matrixtable[i]);
+end;
+for i in 1:nx
+sumc+=matrixtable[i]*adjoint(matrixtable[i]);
+end;
+for i in nx+1:nx+ny
+sumd+=adjoint(matrixtable[i])*matrixtable[i];
+end;
+return (log(norm(suma)^2+norm(sumb)^2)+log(norm(sumc)^2+norm(sumd)^2))/8;
+end;
 end;
 
 slowspecradmatscore=function(matrix)
@@ -118,11 +143,14 @@ end;
 
 gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 grad=[];
-for i in 1:n
-push!(grad,zeros(type,d,d));
+for i in 1:nx
+push!(grad,zeros(type,e,d));
+end;
+for i in 1:ny
+push!(grad,zeros(type,d,e));
 end;
 for i in 1:ll
-lambda=dot(righteigenvectors[i],matrix[list[i][1]]*matrix[list[i][2]]*righteigenvectors[i]);
+lambda=dot(righteigenvectors[i],matrix[list[i][1]]*(matrix[list[i][2]]*righteigenvectors[i]));
 cc=lefteigenvectors[i]*righteigenvectors[i];
 grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*adjoint(matrix[list[i][2]]))*(cc*lambda/abs(cc*lambda)^2);
 grad[list[i][2]]+=(adjoint(matrix[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
@@ -225,17 +253,29 @@ end;
 ##################
 ##################
 
+#matrixtable=[];
+#for i in 1:n
+#xx=randn(type,d,d)/d^2;
+#push!(matrixtable,xx+xx^0);
+#end;
+
 matrixtable=[];
-for i in 1:n
-xx=randn(type,d,d)/d^2;
-push!(matrixtable,xx+xx^0);
+for i in 1:nx
+xx=randn(type,e,d);
+push!(matrixtable,xx);
 end;
+for i in 1:ny
+xx=randn(type,d,e);
+push!(matrixtable,xx);
+end;
+
+
 
 lefteigenvectors=[];
 righteigenvectors=[];
 for i in 1:ll
-push!(lefteigenvectors,adjoint(randn(type,d)));
-push!(righteigenvectors,randn(type,d));
+push!(lefteigenvectors,adjoint(randn(type,e)));
+push!(righteigenvectors,randn(type,e));
 end;
 
 rate=1;
