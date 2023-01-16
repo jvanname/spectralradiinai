@@ -5,18 +5,18 @@
 
 list=[];
 type=ComplexF64;
-n=512;
-nx=256;
-ny=256;
-d=16;
-e=3;
+n=200;
+nx=100;
+ny=100;
+d=48;
+e=2;
 power=6;
 list=[];
 
-for i in 1:256
-for j in 1:256
-if rand(0:1)==0
-push!(list,[i,j+256]);
+for i in 1:nx
+for j in 1:ny
+if rand(0:1)==1
+push!(list,[i,j+nx]);
 end;
 end;
 end;
