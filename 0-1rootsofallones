@@ -1,5 +1,8 @@
 # Gradient descent does not do a very good job at predicting discrete jumps, but I had to try anyways.
 # I am going to delete this soon since it does not seem like a worthwhile idea.
+# It looks like the algorithm for predicting the hidden nodes in a graph is a special case of a more general algorithm that I had.
+# I will therefore delete this soon because there does not seem to be much novelty in this post.
+
 
 using Random,Flux,NearestNeighbors;
 
