@@ -66,6 +66,14 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
+bottommatscore=function(leftmatrixtable,rightmatrixtable)
+suma=zeros(d,d);
+for i in 1:n
+supa+=leftmatrixtable[i]*(rightmatrixtable[i]*adjoint(rightmatrixtable[i]))*adjoint(leftmatrixtable[i])
+end;
+return log(norm(suma))/2;
+end;
+
 bottommatscore=function(matrixtable)
 if d==e
 prod=0;
