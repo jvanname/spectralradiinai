@@ -370,6 +370,8 @@ end;
 
 
 
+# The arrayscore function is probably obsolete since we have more advanced functions that do the same thing.
+
 arrayscore=function(leftarray,rightarray)
 prod=0;
 suma=zeros(d,d);
