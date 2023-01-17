@@ -21,19 +21,21 @@ type=ComplexF64;
 #end;
 #end;
 
-n=100;
+n=4;
 d=10;
 e=2;
 
 list=[];
 
-for i in 1:n
-for j in 1:(i-1)
-if rand(0:10)==0
-push!(list,[i,j]);
-end;
-end;
-end;
+list=[[1,2],[3,4]];
+
+#for i in 1:n
+#for j in 1:(i-1)
+#if rand(0:10)==0
+#push!(list,[i,j]);
+#end;
+#end;
+#end;
 
 ll=length(list);
 
@@ -149,7 +151,7 @@ end;
 slowspecradmatscore=function(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
-prod+=log(rad(leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][2]]*rightmatrixtable[list[i][2]]));
+prod+=log(rad(leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*rightmatrixtable[list[i][2]]));
 end;
 return prod/(2*ll);
 end;
