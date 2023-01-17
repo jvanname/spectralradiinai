@@ -167,7 +167,7 @@ return slowspecradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
 
 
-gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
+gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrixtable)
 grad=[];
 for i in 1:nx
 push!(grad,zeros(type,e,d));
@@ -176,13 +176,38 @@ for i in 1:ny
 push!(grad,zeros(type,d,e));
 end;
 for i in 1:ll
-lambda=dot(righteigenvectors[i],matrix[list[i][1]]*(matrix[list[i][2]]*righteigenvectors[i]));
+lambda=dot(righteigenvectors[i],matrixtable[list[i][1]]*(matrixtable[list[i][2]]*righteigenvectors[i]));
 cc=lefteigenvectors[i]*righteigenvectors[i];
-grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*adjoint(matrix[list[i][2]]))*(cc*lambda/abs(cc*lambda)^2);
-grad[list[i][2]]+=(adjoint(matrix[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
+grad[list[i][1]]+=adjoint(lefteigenvectors[i])*(adjoint(righteigenvectors[i])*adjoint(matrixtable[list[i][2]]))*(cc*lambda/abs(cc*lambda)^2);
+grad[list[i][2]]+=(adjoint(matrixtable[list[i][1]])*adjoint(lefteigenvectors[i]))*adjoint(righteigenvectors[i])*(cc*lambda/abs(cc*lambda)^2);
 end;
 return grad/(2*ll);
 end;
+
+function gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
+leftgrad=[];
+rightgrad=[];
+for i in 1:length(leftmatrixtable)
+push!(leftgrad,zeros(type,size(leftmatrixtable[i])));
+end;
+for i in 1:length(rightmatrixtable)
+push!(rightgrad,zeros(type,size(rightmatrixtable[i])));
+end;
+for i in 1:ll
+lambda=dot(righteigenvectors[i],rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i]);
+cc=lefteigenvectors[i]*righteigenvectors[i];
+cons=cc*lambda/abs(cc*lambda)^2;
+leftgrad[list[i][1]]+=adjoint(rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]])*cons*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i]);
+rightgrad[list[i][1]]+=adjoint(rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]])*cons*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i])*adjoint(leftmatrixtable[list[i][2]]);
+leftgrad[list[i][2]]+=adjoint(rightmatrixtable[list[i][2]])*cons*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i])*adjoint(rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]);
+rightgrad[list[i][2]]+=cons*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i])*adjoint(leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]);
+#rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]
+end;
+
+
+#FINISH THIS!!!
+end;
+
 
 # Since this function is similar to gradspecradmatscore, I can probably combine these functions to save space.
 compbipgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
