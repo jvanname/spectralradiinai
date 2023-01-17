@@ -145,6 +145,14 @@ end;
 return prod/(2*ll);
 end;
 
+#specradmatscore and slowspecradmatscore are giving different values.
+slowspecradmatscore=function(leftmatrixtable,rightmatrixtable)
+prod=0;
+for i in 1:ll
+prod+=log(rad(leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][2]]*rightmatrixtable[list[i][2]]));
+end;
+return prod/(2*ll);
+end;
 
 
 
@@ -494,5 +502,13 @@ push!(lefteigenvectors,adjoint(randn(type,e)));
 push!(righteigenvectors,randn(type,e));
 end;
 
+#rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]
 
-
+for kk in 1:1000
+for i in 1:ll
+lefteigenvectors[i]=lefteigenvectors[i]*rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]];
+righteigenvectors[i]=rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i];
+lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
+righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+end;
+end;
