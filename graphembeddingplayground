@@ -121,6 +121,16 @@ end;
 return prod/(2*ll);
 end;
 
+#UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS 
+#specradmatscore=function(leftmatrixtable,rightmatrixtable)
+#prod=0;
+#for i in 1:ll
+#prod+=log(abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i])));
+#end;
+#return prod/(2*ll);
+#end;
+
+
 compbipspecradmatscore=function(imagemat,matrixtable)
 prod=0;
 nx=size(imagemat)[1];
