@@ -122,13 +122,16 @@ return prod/(2*ll);
 end;
 
 #UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS 
-#specradmatscore=function(leftmatrixtable,rightmatrixtable)
-#prod=0;
-#for i in 1:ll
+specradmatscore=function(leftmatrixtable,rightmatrixtable)
+prod=0;
+for i in 1:ll
+prod+=log(abs(dot(righteigenvectors[i],rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i]);
 #prod+=log(abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i])));
-#end;
-#return prod/(2*ll);
-#end;
+end;
+return prod/(2*ll);
+end;
+
+
 
 
 compbipspecradmatscore=function(imagemat,matrixtable)
@@ -153,6 +156,11 @@ end;
 totalspecradmatscore=function(matrixtable)
 return specradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
+
+totalspecradmatscore=function(leftmatrixtable,rightmatrixtable)
+return specradmatscore(leftmatrixtable,rightmatrixtable)-bottommatscore(leftmatrixtable,rightmatrixtable);
+end;
+
 
 slowtotalspecradmatscore=function(matrixtable)
 return slowspecradmatscore(matrixtable)-bottommatscore(matrixtable);
