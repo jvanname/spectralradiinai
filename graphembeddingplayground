@@ -54,13 +54,13 @@ n=nx+ny;
 
 
 
-matscore=function(matrix)
+matscore=function(matrixtable)
 prod=0;
 suma=zeros(d,d);
 for i in 1:n
-suma+=matrix[i]*adjoint(matrix[i]);
+suma+=matrixtable[i]*adjoint(matrixtable[i]);
 for i in 1:ll
-prod+=log(norm((matrix[list[i][1]]*matrix[list[i][2]])^power));
+prod+=log(norm((matrixtable[list[i][1]]*matrixtable[list[i][2]])^power));
 end;
 end;
 return exp(prod/(ll*2*power))/norm(suma);
