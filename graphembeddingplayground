@@ -3,20 +3,34 @@
 
 #gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
 
-list=[];
+#list=[];
 type=ComplexF64;
-n=200;
-nx=100;
-ny=100;
-d=48;
+#n=200;
+#nx=100;
+#ny=100;
+#d=48;
+#e=2;
+#power=6;
+#list=[];
+
+#for i in 1:nx
+#for j in 1:ny
+#if rand(0:1)==1
+#push!(list,[i,j+nx]);
+#end;
+#end;
+#end;
+
+n=100;
+d=10;
 e=2;
-power=6;
+
 list=[];
 
-for i in 1:nx
-for j in 1:ny
-if rand(0:1)==1
-push!(list,[i,j+nx]);
+for i in 1:n
+for j in 1:(i-1)
+if rand(0:10)==0
+push!(list,[i,j]);
 end;
 end;
 end;
@@ -125,7 +139,7 @@ end;
 specradmatscore=function(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
-prod+=log(abs(dot(righteigenvectors[i],rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i]);
+prod+=log(abs(dot(righteigenvectors[i],rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i])));
 #prod+=log(abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i])));
 end;
 return prod/(2*ll);
@@ -167,7 +181,7 @@ return slowspecradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
 
 
-gradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrixtable)
+function gradspecradmatscore(lefteigenvectors,righteigenvectors,matrixtable)
 grad=[];
 for i in 1:nx
 push!(grad,zeros(type,e,d));
@@ -204,6 +218,7 @@ rightgrad[list[i][2]]+=cons*adjoint(lefteigenvectors[i])*adjoint(righteigenvecto
 #rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]
 end;
 
+return [leftgrad,rightgrad];
 
 #FINISH THIS!!!
 end;
@@ -452,5 +467,32 @@ display([rate,pp,(pp-qq)/amm]);
 #rate*=1.01;
 qq=pp;
 end;
+
+####################################
+####################################
+####################################
+####################################
+####################################
+
+leftmatrixtable=[];
+rightmatrixtable=[];
+for i in 1:n
+xx=randn(type,d,e);
+push!(leftmatrixtable,xx);
+end;
+for i in 1:n
+xx=randn(type,e,d);
+push!(rightmatrixtable,xx);
+end;
+
+
+
+lefteigenvectors=[];
+righteigenvectors=[];
+for i in 1:ll
+push!(lefteigenvectors,adjoint(randn(type,e)));
+push!(righteigenvectors,randn(type,e));
+end;
+
 
 
