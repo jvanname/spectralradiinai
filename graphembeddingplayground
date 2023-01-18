@@ -548,7 +548,8 @@ cle+=1;
 mash=pp;
 if pp>qq rate/=2; 
 else
-matrixtable+=rate*grad;
+leftmatrixtable+=rate*grad[1];
+rightmatrixtable+=rate*grad[2];
 end;
 
 display([rate,ham,pp]);
