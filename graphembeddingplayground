@@ -258,7 +258,10 @@ return gradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)-gradient(b
 end;
 
 totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
-return gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable)-gradient(bottommatscore,rightmatrixtable)[1];
+ork=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable)
+urk=gradient(bottommatscore,leftmatrixtable,rightmatrixtable)
+return [ork[1]-urk[1],ork[2]-urk[2]];
+#return gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable)-gradient(bottommatscore,leftmatrixtable,rightmatrixtable)[1];
 end;
 
 
@@ -529,8 +532,8 @@ righteigenvectors[i]/=norm(righteigenvectors[i]);
 end;
 
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
-pp=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
-qq=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
+pp=totalspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
+qq=totalspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
 
 ##### GO HERE
 #grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
