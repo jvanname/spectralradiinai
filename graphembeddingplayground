@@ -532,8 +532,8 @@ righteigenvectors[i]/=norm(righteigenvectors[i]);
 end;
 
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
-pp=totalspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
-qq=totalspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
+pp=totalspecradmatscore(leftmatrixtable,rightmatrixtable);
+qq=totalspecradmatscore(leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
 
 ##### GO HERE
 #grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
