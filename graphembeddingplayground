@@ -21,14 +21,14 @@ type=ComplexF64;
 #end;
 #end;
 
-n=200;
-d=20;
+n=512;
+d=2;
 e=2;
 
 
 for i in 1:n
 for j in 1:(i-1)
-if sin(sqrt((i-n/2)^2+(j-n/2)^2)/2)>0
+if ((i-n/2)^2+(j-n/2)^2)%1000>500
 push!(list,[i,j]);
 end;
 end;
