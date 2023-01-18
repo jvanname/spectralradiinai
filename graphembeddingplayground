@@ -70,7 +70,7 @@ n=nx+ny;
 
 
 
-matscore=function(matrixtable)
+function matscore(matrixtable)
 prod=0;
 suma=zeros(d,d);
 for i in 1:n
@@ -82,7 +82,7 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
-bottommatscore=function(leftmatrixtable,rightmatrixtable)
+function bottommatscore(leftmatrixtable,rightmatrixtable)
 suma=zeros(d,d);
 for i in 1:n
 supa+=leftmatrixtable[i]*(rightmatrixtable[i]*adjoint(rightmatrixtable[i]))*adjoint(leftmatrixtable[i])
@@ -90,7 +90,7 @@ end;
 return log(norm(suma))/2;
 end;
 
-bottommatscore=function(matrixtable)
+function bottommatscore(matrixtable)
 if d==e
 prod=0;
 suma=zeros(d,d);
