@@ -257,6 +257,12 @@ totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
 return gradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
 end;
 
+totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
+return gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable)-gradient(bottommatscore,rightmatrixtable)[1];
+end;
+
+
+
 matrixtable=[];
 for i in 1:(nx+ny)
 xx=randn(type,d,d)/d^2;
@@ -502,11 +508,50 @@ end;
 
 #rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]
 
-for kk in 1:1000
+
+
+rate=1;
+pp=0;
+qq=0;
+
+ham=1;
+mash=0;
+cle=0;
+while true
+leftmatrixtable=leftmatrixtable/mean(norm.(leftmatrixtable));
+rightmatrixtable=rightmatrixtable/mean(norm.(rightmatrixtable));
+
 for i in 1:ll
 lefteigenvectors[i]=lefteigenvectors[i]*rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]];
 righteigenvectors[i]=rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i];
-lefteigenvectors[i]=lefteigenvectors[i]/norm(lefteigenvectors[i]);
-righteigenvectors[i]=righteigenvectors[i]/norm(righteigenvectors[i]);
+lefteigenvectors[i]/=norm(lefteigenvectors[i]);
+righteigenvectors[i]/=norm(righteigenvectors[i]);
 end;
+
+grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
+pp=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
+qq=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
+
+##### GO HERE
+#grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
+#pp=compbipspecradmatscore(imagemat,matrixtable);
+#qq=compbipspecradmatscore(imagemat,matrixtable+rate*grad);
+if mash>pp ham+=1;
+cle=0;
+elseif cle>4
+ham=max(1,ham-1);
 end;
+cle+=1;
+mash=pp;
+if pp>qq rate/=2; 
+else
+matrixtable+=rate*grad;
+end;
+
+display([rate,ham,pp]);
+rate*=1.1;
+qq=pp;
+end;
+
+
+
