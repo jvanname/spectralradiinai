@@ -137,7 +137,6 @@ end;
 return prod/(2*ll);
 end;
 
-#UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS UPDATE THIS 
 specradmatscore=function(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
@@ -147,7 +146,6 @@ end;
 return prod/(2*ll);
 end;
 
-#specradmatscore and slowspecradmatscore are giving different values.
 slowspecradmatscore=function(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
