@@ -170,21 +170,21 @@ return prod/(2*sum(imagemat));
 end;
 
 
-compbiptotalspecradmatscore=function(imagemat,matrixtable)
+function compbiptotalspecradmatscore(imagemat,matrixtable)
 return compbipspecradmatscore(imagemat,matrixtable)-bottommatscore(matrixtable);
 end;
 
 
-totalspecradmatscore=function(matrixtable)
+function totalspecradmatscore(matrixtable)
 return specradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
 
-totalspecradmatscore=function(leftmatrixtable,rightmatrixtable)
+function totalspecradmatscore(leftmatrixtable,rightmatrixtable)
 return specradmatscore(leftmatrixtable,rightmatrixtable)-bottommatscore(leftmatrixtable,rightmatrixtable);
 end;
 
 
-slowtotalspecradmatscore=function(matrixtable)
+function slowtotalspecradmatscore(matrixtable)
 return slowspecradmatscore(matrixtable)-bottommatscore(matrixtable);
 end;
 
