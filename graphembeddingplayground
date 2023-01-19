@@ -5,39 +5,39 @@
 
 list=[];
 type=ComplexF64;
-nx=256;
-ny=256;
-n=nx+ny
-d=48;
-e=2;
-power=6;
-list=[];
-
-
-for i in 1:nx
-for j in 1:ny
-if (i-1)|(j-1)==i-1
-push!(list,[i,j+nx]);
-end;
-end;
-end;
-
-#n=512;
-#d=150;
+#nx=256;
+#ny=256;
+#n=nx+ny
+#d=48;
 #e=2;
+#power=6;
+#list=[];
+
+
+#for i in 1:nx
+#for j in 1:ny
+#if (i-1)|(j-1)==i-1
+#push!(list,[i,j+nx]);
+#end;
+#end;
+#end;
+
+n=1024;
+d=10;
+e=2;
 
 #tam=xar[1][1];
 
-#list=[];
-#for i in 1:n  
-#for j in 1:(i-1)
-#if (((i-1)&~(j-1))|((j-1)&~(i-1)) in can)
-#push!(list,[i,j]);
-#end;
-#end;
-#end;
+list=[];
+for i in 1:512
+for j in 1:512
+if i%j==0
+push!(list,[i,j+512]);
+end;
+end;
+end;
 
-#ll=length(list);
+ll=length(list);
 
 #nx and ny are the dimensions of imagemat.
 imagemat=zeros(256,256);
