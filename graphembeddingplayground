@@ -3,38 +3,41 @@
 
 #gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
 
-#list=[];
+list=[];
 type=ComplexF64;
-#n=200;
-#nx=100;
-#ny=100;
-#d=48;
-#e=2;
-#power=6;
-#list=[];
-
-#for i in 1:nx
-#for j in 1:ny
-#if rand(0:1)==1
-#push!(list,[i,j+nx]);
-#end;
-#end;
-#end;
-
-n=512;
-d=2;
+nx=256;
+ny=256;
+n=nx+ny
+d=48;
 e=2;
+power=6;
+list=[];
 
 
-for i in 1:n
-for j in 1:(i-1)
-if ((i-n/2)^2+(j-n/2)^2)%1000>500
-push!(list,[i,j]);
+for i in 1:nx
+for j in 1:ny
+if (i-1)|(j-1)==i-1
+push!(list,[i,j+nx]);
 end;
 end;
 end;
 
-ll=length(list);
+#n=512;
+#d=150;
+#e=2;
+
+#tam=xar[1][1];
+
+#list=[];
+#for i in 1:n  
+#for j in 1:(i-1)
+#if (((i-1)&~(j-1))|((j-1)&~(i-1)) in can)
+#push!(list,[i,j]);
+#end;
+#end;
+#end;
+
+#ll=length(list);
 
 #nx and ny are the dimensions of imagemat.
 imagemat=zeros(256,256);
@@ -126,7 +129,7 @@ end;
 return prod/(2*ll);
 end;
 
-specradmatscore=function(matrixtable)
+function specradmatscore(matrixtable)
 prod=0;
 for i in 1:ll
 prod+=log(abs(dot(righteigenvectors[i],matrixtable[list[i][1]]*matrixtable[list[i][2]]*righteigenvectors[i])));
@@ -134,7 +137,7 @@ end;
 return prod/(2*ll);
 end;
 
-specradmatscore=function(leftmatrixtable,rightmatrixtable)
+function specradmatscore(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
 prod+=log(abs(dot(righteigenvectors[i],rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*righteigenvectors[i])));
@@ -143,7 +146,7 @@ end;
 return prod/(2*ll);
 end;
 
-slowspecradmatscore=function(leftmatrixtable,rightmatrixtable)
+function slowspecradmatscore(leftmatrixtable,rightmatrixtable)
 prod=0;
 for i in 1:ll
 prod+=log(rad(leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]*rightmatrixtable[list[i][2]]));
