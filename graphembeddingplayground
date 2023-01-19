@@ -248,16 +248,16 @@ end;
 return grad/(2*sum(imagemat));
 end;
 
-compbiptotalgradspecradmatscore=function(imagemat,lefteigenvectors,righteigenvectors,matrix)
+function compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrix)
 return compbipgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
 end;
 
 
-totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,matrix)
+function totalgradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)
 return gradspecradmatscore(lefteigenvectors,righteigenvectors,matrix)-gradient(bottommatscore,matrix)[1];
 end;
 
-totalgradspecradmatscore=function(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
+function totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
 ork=gradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable)
 urk=gradient(bottommatscore,leftmatrixtable,rightmatrixtable)
 return [ork[1]-urk[1],ork[2]-urk[2]];
