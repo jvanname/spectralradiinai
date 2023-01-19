@@ -121,7 +121,7 @@ return (log(norm(suma)^2+norm(sumb)^2)+log(norm(sumc)^2+norm(sumd)^2))/8;
 end;
 end;
 
-slowspecradmatscore=function(matrix)
+function slowspecradmatscore(matrix)
 prod=0;
 for i in 1:ll
 prod+=log(rad(matrix[list[i][1]]*matrix[list[i][2]]));
