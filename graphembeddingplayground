@@ -22,20 +22,30 @@ type=ComplexF64;
 #end;
 #end;
 
-n=1024;
-d=10;
-e=2;
+n=7;
+d=100;
+e=20;
 
 #tam=xar[1][1];
 
 list=[];
-for i in 1:512
-for j in 1:512
-if i%j==0
-push!(list,[i,j+512]);
+for i in 1:n
+for j in 1:(i-1)
+if rand(0:1)==1 
+push!(list,[i,j]);
 end;
 end;
 end;
+ll=length(list);
+amp=zeros(n,n); for a in list amp[a[1],a[2]]=1; amp[a[2],a[1]]=1; end; d=Int(sum(amp)); e=Int(maximum(amp*ones(n)));
+
+#for i in 1:512
+#for j in 1:512
+#if i%j==0
+#push!(list,[i,j+512]);
+#end;
+#end;
+#end;
 
 ll=length(list);
 
@@ -491,13 +501,16 @@ end;
 
 leftmatrixtable=[];
 rightmatrixtable=[];
+
+#xx=randn(type,d,e);
+yy=randn(type,e);
 for i in 1:n
-xx=randn(type,d,e);
-push!(leftmatrixtable,xx);
+#xx=randn(type,d,e);
+push!(leftmatrixtable,randn(type,d,e));
 end;
 for i in 1:n
-xx=randn(type,e,d);
-push!(rightmatrixtable,xx);
+#xx=randn(type,e,d);
+push!(rightmatrixtable,adjoint(leftmatrixtable[i]));
 end;
 
 
@@ -505,8 +518,8 @@ end;
 lefteigenvectors=[];
 righteigenvectors=[];
 for i in 1:ll
-push!(lefteigenvectors,adjoint(randn(type,e)));
-push!(righteigenvectors,randn(type,e));
+push!(lefteigenvectors,adjoint(yy));
+push!(righteigenvectors,yy);
 end;
 
 #rightmatrixtable[list[i][2]]*leftmatrixtable[list[i][1]]*rightmatrixtable[list[i][1]]*leftmatrixtable[list[i][2]]
