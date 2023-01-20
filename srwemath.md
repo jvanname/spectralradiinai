@@ -85,7 +85,7 @@ $\mathcal{X}\_n=(\\{a,b\\},a)$ for some $\\{a,b\\}\in E$ with probability $1$. T
 For bipartite graphs, we generalize the limit induced MPO embedding to the case when the matrices associated with each vertex are rectangular and non-square matrices. In this generalization, the non-square matrices cannot be approximated by matrices of lower rank. In other words, these rectangular matrices do not need to be compressed by factoring any further in order to save space.
 
 If $(V,E)$ is a bipartite graph with bipartition $A,B$, then let $e\leq d$. Let $f:A\rightarrow M_{d,e}(K),g:A\rightarrow M_{e,d}(K)$ be functions. Then we say that $(f,g)$ is a RBLIMPO (rectangular bipartite limit induced matrix product optimized) pre-embedding if the quantity
-$\frac{(\prod_{a\in A,b\in B,\{a,b\}\in E}\rho(f(a)g(b)))^{1/|E|}}{N((f(a))_{a\in A},(g(b))_{b\in B})}$ is locally maximized.
+$\frac{(\prod_{a\in A,b\in B,\{a,b\}\in E}\rho(f(a)g(b)))^{1/|E|}}{N((f(a))\_{a\in A},(g(b))\_{b\in B})}$ is locally maximized.
 
 We say that a RBLIMPO pre-embedding is in-phase if $\lambda_a=1,\mu_b=1$ for $a\in A,b\in B$ is a local maximum on the set $S_1^A\times S_1^B$ of the function
 $\rho(\sum_{a\in A}\lambda_a f(a)\sum_{b\in B}\mu_bg(b))$, and an in-phase RBLIMPO pre-embedding shall be called an RBLIMPO embedding.
