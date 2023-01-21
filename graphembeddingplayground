@@ -23,8 +23,8 @@ type=ComplexF64;
 #end;
 
 n=40;
-d=40;
-e=10;
+d=30;
+e=3;
 
 #tam=xar[1][1];
 
@@ -585,7 +585,7 @@ ham=max(1,ham-1);
 end;
 cle+=1;
 mash=pp;
-if pp>qq && taz>7
+if pp>qq && taz>5
 rate/=2; 
 taz=0;
 else
