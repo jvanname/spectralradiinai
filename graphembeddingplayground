@@ -92,6 +92,8 @@ end;
 return exp(prod/(ll*2*power))/norm(suma);
 end;
 
+
+
 function bottommatscore(leftmatrixtable,rightmatrixtable)
 suma=zeros(d,d);
 for i in 1:n
@@ -99,6 +101,24 @@ suma+=leftmatrixtable[i]*(rightmatrixtable[i]*adjoint(rightmatrixtable[i]))*adjo
 end;
 return log(norm(suma))/2;
 end;
+
+## I also need to define logbottommatscore(matrixtable), but that is for later.
+function gradbottommatscore(leftmatrixtable,rightmatrixtable)
+suma=zeros(d,d);
+for i in 1:n
+suma+=leftmatrixtable[i]*(rightmatrixtable[i]*adjoint(rightmatrixtable[i]))*adjoint(leftmatrixtable[i])
+end;
+nn=norm(suma)^2;
+leftgrad=[];
+rightgrad=[];
+for i in 1:n
+push!(leftgrad,suma*(leftmatrixtable[i]*(rightmatrixtable[i]*adjoint(rightmatrixtable[i])))/nn);
+push!(rightgrad,(adjoint(leftmatrixtable[i])*suma*leftmatrixtable[i])*rightmatrixtable[i]/nn);
+end;
+return [leftgrad,rightgrad];
+end;
+
+
 
 function bottommatscore(matrixtable)
 if d==e
