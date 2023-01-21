@@ -22,22 +22,21 @@ type=ComplexF64;
 #end;
 #end;
 
-n=15;
-d=100;
-e=20;
+n=256;
+d=40;
+e=10;
 
 #tam=xar[1][1];
 
 list=[];
 for i in 1:n
 for j in 1:(i-1)
-if rand(0:1)==1 
+if rand(0:31)==1 
 push!(list,[i,j]);
 end;
 end;
 end;
 ll=length(list);
-amp=zeros(n,n); for a in list amp[a[1],a[2]]=1; amp[a[2],a[1]]=1; end; d=Int(sum(amp)); e=Int(maximum(amp*ones(n)));
 
 #for i in 1:512
 #for j in 1:512
@@ -548,13 +547,15 @@ end;
 
 
 
-rate=1;
+rate=600;
 pp=0;
 qq=0;
 
+taz=0;
 ham=1;
 mash=0;
 cle=0;
+grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
 while true
 leftmatrixtable=leftmatrixtable/mean(norm.(leftmatrixtable));
 rightmatrixtable=rightmatrixtable/mean(norm.(rightmatrixtable));
@@ -566,7 +567,10 @@ lefteigenvectors[i]/=norm(lefteigenvectors[i]);
 righteigenvectors[i]/=norm(righteigenvectors[i]);
 end;
 
-grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
+newgrad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
+grad[1]=0.9*grad[1]+0.1*newgrad[1];
+grad[2]=0.9*grad[2]+0.1*newgrad[2];
+
 pp=totalspecradmatscore(leftmatrixtable,rightmatrixtable);
 qq=totalspecradmatscore(leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[2]);
 
@@ -581,15 +585,18 @@ ham=max(1,ham-1);
 end;
 cle+=1;
 mash=pp;
-if pp>qq rate/=2; 
+if pp>qq && taz>5
+rate/=2; 
+taz=0;
 else
 leftmatrixtable+=rate*grad[1];
 rightmatrixtable+=rate*grad[2];
 end;
 
 display([rate,ham,pp]);
-rate*=1.1;
+rate*=1.05;
 qq=pp;
+taz+=1;
 end;
 
 
