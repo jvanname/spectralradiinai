@@ -585,8 +585,8 @@ ham=max(1,ham-1);
 end;
 cle+=1;
 mash=pp;
-if pp>qq && taz>5
-rate/=2; 
+if pp>qq
+#rate/=2; 
 taz=0;
 else
 leftmatrixtable+=rate*grad[1];
@@ -594,7 +594,7 @@ rightmatrixtable+=rate*grad[2];
 end;
 
 display([rate,ham,pp]);
-rate*=1.05;
+#rate*=1.05;
 qq=pp;
 taz+=1;
 end;
