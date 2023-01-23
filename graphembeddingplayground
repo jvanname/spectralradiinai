@@ -22,7 +22,7 @@ type=ComplexF64;
 #end;
 #end;
 
-n=80;
+n=512;
 d=6;
 e=6;
 
@@ -31,7 +31,7 @@ e=6;
 list=[];
 for i in 1:n
 for j in 1:(i-1)
-if rand(0:1)==1 
+if rand(0:16)==1 
 push!(list,[i,j]);
 end;
 end;
@@ -578,15 +578,16 @@ qq=totalspecradmatscore(leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[
 #grad=compbiptotalgradspecradmatscore(imagemat,lefteigenvectors,righteigenvectors,matrixtable)
 #pp=compbipspecradmatscore(imagemat,matrixtable);
 #qq=compbipspecradmatscore(imagemat,matrixtable+rate*grad);
-if mash>pp ham+=1;
-cle=0;
-elseif cle>4
-ham=max(1,ham-1);
-end;
+
+#if mash>pp ham+=1;
+#cle=0;
+#elseif cle>4
+#ham=max(1,ham-1);
+#end;
 cle+=1;
 mash=pp;
 if pp>qq
-#rate/=2; 
+rate*=0.9; 
 taz=0;
 else
 leftmatrixtable+=rate*grad[1];
@@ -594,7 +595,7 @@ rightmatrixtable+=rate*grad[2];
 end;
 
 display([rate,ham,pp]);
-#rate*=1.05;
+rate*=1.01;
 qq=pp;
 taz+=1;
 end;
