@@ -22,9 +22,9 @@ type=ComplexF64;
 #end;
 #end;
 
-n=40;
-d=30;
-e=3;
+n=80;
+d=6;
+e=6;
 
 #tam=xar[1][1];
 
@@ -547,7 +547,7 @@ end;
 
 
 
-rate=600;
+rate=100;
 pp=0;
 qq=0;
 
