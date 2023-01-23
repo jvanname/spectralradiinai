@@ -547,7 +547,7 @@ end;
 
 
 
-rate=100;
+rate=1;
 pp=0;
 qq=0;
 
@@ -557,6 +557,7 @@ mash=0;
 cle=0;
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
 while true
+rate=400*0.05+0.95*rate;
 leftmatrixtable=leftmatrixtable/mean(norm.(leftmatrixtable));
 rightmatrixtable=rightmatrixtable/mean(norm.(rightmatrixtable));
 
@@ -587,7 +588,7 @@ qq=totalspecradmatscore(leftmatrixtable+rate*grad[1],rightmatrixtable+rate*grad[
 cle+=1;
 mash=pp;
 if pp>qq
-rate*=0.9; 
+#rate*=0.9; 
 taz=0;
 else
 leftmatrixtable+=rate*grad[1];
@@ -595,7 +596,7 @@ rightmatrixtable+=rate*grad[2];
 end;
 
 display([rate,ham,pp]);
-rate*=1.01;
+#rate*=1.01;
 qq=pp;
 taz+=1;
 end;
