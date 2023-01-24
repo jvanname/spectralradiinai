@@ -1,1 +1,13 @@
+n=50;
+
+ll=50;
+
+list=[];
+for i in 1:ll
+push!(list,[]);
+for j in 1:n
+if rand(0:1)==0 push!(list[i],j); end;
+end;
+end;
+
 
