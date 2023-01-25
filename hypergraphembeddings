@@ -94,7 +94,7 @@ end;
 rate=0.2
 while true
 grad=gradscore(multiplicity,list,vectors);
-vectors/=norm(vectors);
+vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
 display(score(multiplicity,list,vectors));
 end;
