@@ -11,13 +11,6 @@ if rand(0:10)==0 push!(list[i],j); end;
 end;
 end;
 
-multiplicity=zeros(n);
-for i in 1:ll
-for a in list[i]
-multiplicity[a]+=1;
-end;
-end;
-
 vectors=[];
 for i in 1:n
 push!(vectors,randn(type,d));
@@ -87,6 +80,17 @@ end;
 type=Float64;
 
 vectors=[];
+
+ll=length(list);
+n=maximum(maximum(list));
+
+
+multiplicity=zeros(n);
+for i in 1:ll
+for a in list[i]
+multiplicity[a]+=1;
+end;
+end;
 
 for i in 1:n
 push!(vectors,randn(type,d));
