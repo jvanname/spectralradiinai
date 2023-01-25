@@ -22,7 +22,7 @@ type=ComplexF64;
 #end;
 #end;
 
-n=512;
+n=100;
 d=6;
 e=6;
 
@@ -31,7 +31,7 @@ e=6;
 list=[];
 for i in 1:n
 for j in 1:(i-1)
-if rand(0:16)==1 
+if rand(0:1)==1 
 push!(list,[i,j]);
 end;
 end;
@@ -547,7 +547,7 @@ end;
 
 
 
-rate=1;
+rate=100;
 pp=0;
 qq=0;
 
@@ -557,7 +557,7 @@ mash=0;
 cle=0;
 grad=totalgradspecradmatscore(lefteigenvectors,righteigenvectors,leftmatrixtable,rightmatrixtable);
 while true
-rate=400*0.05+0.95*rate;
+#rate=0.95*rate+1000*0.05;
 leftmatrixtable=leftmatrixtable/mean(norm.(leftmatrixtable));
 rightmatrixtable=rightmatrixtable/mean(norm.(rightmatrixtable));
 
@@ -599,7 +599,35 @@ display([rate,ham,pp]);
 #rate*=1.01;
 qq=pp;
 taz+=1;
+
 end;
 
 
 
+
+
+
+
+
+function unorderedaccuracycoefficient(list,leftmatrixtable,rightmatrixtable)
+
+amp=zeros(n,n); for i in 1:n for j in 1:n amp[i,j]=rad((rightmatrixtable[i]*leftmatrixtable[j])*(rightmatrixtable[j]*leftmatrixtable[i])); end; end;
+can=sort(vec(amp));
+omm=can[n^2-2*ll]
+cc=0; for i in 1:n for j in 1:n if amp[i,j]>omm && ([i,j] in list || [j,i] in list) cc+=1; end; end; end;
+return cc/(2*ll); 
+end;
+
+
+
+
+function unorderedsvdaccuracycoefficient(rank,list)
+xx=zeros(n,n); for a in list xx[a[1],a[2]]=1; xx[a[2],a[1]]=1; end;
+T=svd(xx)
+amm=deepcopy(T.S); for j in rank+1:n amm[j]=0; end;
+y=T.U*Diagonal(amm)*T.Vt;
+can=sort(vec(y));
+omm=can[n^2-2*ll]
+cc=0; for i in 1:n for j in 1:n if y[i,j]>omm && ([i,j] in list || [j,i] in list) cc+=1; end; end; end;
+return cc/(2*ll);
+end;
