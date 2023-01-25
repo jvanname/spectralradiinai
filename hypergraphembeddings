@@ -1,5 +1,5 @@
 n=50;
-d=10;
+d=5;
 
 ll=60;
 
@@ -7,7 +7,7 @@ list=[];
 for i in 1:ll
 push!(list,[]);
 for j in 1:n
-if rand(0:1)==0 push!(list[i],j); end;
+if rand(0:10)==0 push!(list[i],j); end;
 end;
 end;
 
@@ -84,14 +84,14 @@ function gradscore(multiplicity,list,vectors)
 return gradtopscore(list,vectors)-gradbottomscore(multiplicity,vectors);
 end;
 
+type=Float64;
 
 vectors=[];
 
 for i in 1:n
 push!(vectors,randn(type,d));
 end;
-
-rate=1;
+rate=0.2
 while true
 grad=gradscore(multiplicity,list,vectors);
 vectors/=norm(vectors);
