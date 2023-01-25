@@ -20,13 +20,13 @@ end;
 
 vectors=[];
 for i in 1:n
-push!(vectors,randn(ComplexF64,d));
+push!(vectors,randn(type,d));
 end;
 
 function topscore(list,vectors)
 cc=0;
 for i in 1:ll
-dd=zeros(ComplexF64,d);
+dd=zeros(type,d);
 for a in list[i]
 dd+=vectors[a];
 end;
@@ -36,7 +36,7 @@ return cc/ll;
 end;
 
 function bottomscore(multiplicity,vectors)
-mat=zeros(ComplexF64,d,d);
+mat=zeros(type,d,d);
 for i in 1:n
 mat+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
 end;
@@ -46,10 +46,10 @@ end;
 function gradtopscore(list,vectors)
 grad=[];
 for i in 1:n
-push!(grad,zeros(ComplexF64,d));
+push!(grad,zeros(type,d));
 end;
 for i in 1:ll
-dd=zeros(ComplexF64,d);
+dd=zeros(type,d);
 for a in list[i]
 dd+=vectors[a];
 end;
@@ -60,20 +60,41 @@ end;
 return grad/ll;
 end;
 
+score=function(multiplicity,list,vectors)
+return topscore(list,vectors)-bottomscore(multiplicity,vectors);
+end;
+
 function gradbottomscore(multiplicity,vectors)
 grad=[];
 for i in 1:n
-push!(grad,zeros(ComplexF64,d));
+push!(grad,zeros(type,d));
 end;
-cc=zeros(ComplexF64,d,d);
+cc=zeros(type,d,d);
 for i in 1:n
 cc+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
 end;
-cc/=ll;
 mash=[];
 for i in 1:n
-push!(mash,cc*vectors[i]);
+push!(mash,cc*multiplicity[i]*vectors[i]);
 end;
-return mash;
+return mash/norm(cc)^2;
 end;
 
+function gradscore(multiplicity,list,vectors)
+return gradtopscore(list,vectors)-gradbottomscore(multiplicity,vectors);
+end;
+
+
+vectors=[];
+
+for i in 1:n
+push!(vectors,randn(type,d));
+end;
+
+rate=1;
+while true
+grad=gradscore(multiplicity,list,vectors);
+vectors/=norm(vectors);
+vectors+=rate*grad;
+display(score(multiplicity,list,vectors));
+end;
