@@ -1,6 +1,7 @@
 n=50;
+d=10;
 
-ll=50;
+ll=60;
 
 list=[];
 for i in 1:ll
@@ -10,4 +11,69 @@ if rand(0:1)==0 push!(list[i],j); end;
 end;
 end;
 
+multiplicity=zeros(n);
+for i in 1:ll
+for a in list[i]
+multiplicity[a]+=1;
+end;
+end;
+
+vectors=[];
+for i in 1:n
+push!(vectors,randn(ComplexF64,d));
+end;
+
+function topscore(list,vectors)
+cc=0;
+for i in 1:ll
+dd=zeros(ComplexF64,d);
+for a in list[i]
+dd+=vectors[a];
+end;
+cc+=log(norm(dd));
+end;
+return cc/ll;
+end;
+
+function bottomscore(multiplicity,vectors)
+mat=zeros(ComplexF64,d,d);
+for i in 1:n
+mat+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
+end;
+return log(norm(mat))/2;
+end;
+
+function gradtopscore(list,vectors)
+grad=[];
+for i in 1:n
+push!(grad,zeros(ComplexF64,d));
+end;
+for i in 1:ll
+dd=zeros(ComplexF64,d);
+for a in list[i]
+dd+=vectors[a];
+end;
+for a in list[i]
+grad[a]+=dd/norm(dd)^2;
+end;
+end;
+return grad/ll;
+end;
+
+function gradbottomscore(multiplicity,vectors)
+grad=[];
+for i in 1:n
+push!(grad,zeros(ComplexF64,d));
+end;
+cc=zeros(ComplexF64,d,d);
+for i in 1:n
+cc+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
+end;
+cc/=ll;
+mash=[];
+for i in 1:n
+push!(mash,cc*vectors[i]);
+end;
+return mash;
+end;
 
