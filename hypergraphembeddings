@@ -1,7 +1,7 @@
-n=50;
+n=1000;
 d=10;
 
-ll=60;
+ll=100;
 
 list=[];
 for i in 1:ll
@@ -95,8 +95,9 @@ end;
 for i in 1:n
 push!(vectors,randn(type,d));
 end;
+grad=vectors*0;
 while true
-grad=gradscore(multiplicity,list,vectors);
+grad=0.95*grad+0.05*gradscore(multiplicity,list,vectors);
 vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
 display(score(multiplicity,list,vectors));
