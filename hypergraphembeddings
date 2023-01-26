@@ -82,7 +82,7 @@ type=Float64;
 vectors=[];
 
 ll=length(list);
-n=maximum(maximum(list));
+n=maximum(maximum.(list));
 
 
 multiplicity=zeros(n);
