@@ -77,6 +77,35 @@ function gradvecscore(multiplicity,list,vectors)
 return gradtopvecscore(list,vectors)-gradbottomscore(multiplicity,vectors);
 end;
 
+function topmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+cc=0;
+for i in 1:ll
+dd=zeros(type,d);
+for a in list[i]
+dd+=matrixtable[a]*righteigenvectors[i];
+end;
+cc+=log(norm(dd));
+end;
+return cc/ll;
+end;
+
+function slowtopmatscore(list,matrixtable)
+cc=0;
+for i in 1:ll
+dd=zeros(type,d,d);
+for a in list[i]
+dd+=matrixtable[a];
+end;
+cc+=log(rad(dd));
+end;
+return cc/ll;
+end;
+
+function gradtopmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+
+end;
+
+
 type=Float64;
 
 vectors=[];
