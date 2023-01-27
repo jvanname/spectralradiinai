@@ -28,7 +28,7 @@ end;
 return cc/ll;
 end;
 
-function bottomvecscore(multiplicity,vectors)
+function bottomscore(multiplicity,vectors)
 mat=zeros(type,d,d);
 for i in 1:n
 mat+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
@@ -54,10 +54,10 @@ return grad/ll;
 end;
 
 vecscore=function(multiplicity,list,vectors)
-return topvecscore(list,vectors)-bottomvecscore(multiplicity,vectors);
+return topvecscore(list,vectors)-bottomscore(multiplicity,vectors);
 end;
 
-function gradbottomvecscore(multiplicity,vectors)
+function gradbottomscore(multiplicity,vectors)
 grad=[];
 for i in 1:n
 push!(grad,zeros(type,d));
@@ -74,7 +74,7 @@ return mash/norm(cc)^2;
 end;
 
 function gradvecscore(multiplicity,list,vectors)
-return gradtopvecscore(list,vectors)-gradbottomvecscore(multiplicity,vectors);
+return gradtopvecscore(list,vectors)-gradbottomscore(multiplicity,vectors);
 end;
 
 type=Float64;
