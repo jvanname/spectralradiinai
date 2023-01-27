@@ -16,7 +16,7 @@ for i in 1:n
 push!(vectors,randn(type,d));
 end;
 
-function topscore(list,vectors)
+function topvecscore(list,vectors)
 cc=0;
 for i in 1:ll
 dd=zeros(type,d);
@@ -28,7 +28,7 @@ end;
 return cc/ll;
 end;
 
-function bottomscore(multiplicity,vectors)
+function bottomvecscore(multiplicity,vectors)
 mat=zeros(type,d,d);
 for i in 1:n
 mat+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
@@ -36,7 +36,7 @@ end;
 return log(norm(mat))/2;
 end;
 
-function gradtopscore(list,vectors)
+function gradtopvecscore(list,vectors)
 grad=[];
 for i in 1:n
 push!(grad,zeros(type,d));
@@ -53,11 +53,11 @@ end;
 return grad/ll;
 end;
 
-score=function(multiplicity,list,vectors)
-return topscore(list,vectors)-bottomscore(multiplicity,vectors);
+vecscore=function(multiplicity,list,vectors)
+return topvecscore(list,vectors)-bottomvecscore(multiplicity,vectors);
 end;
 
-function gradbottomscore(multiplicity,vectors)
+function gradbottomvecscore(multiplicity,vectors)
 grad=[];
 for i in 1:n
 push!(grad,zeros(type,d));
@@ -73,8 +73,8 @@ end;
 return mash/norm(cc)^2;
 end;
 
-function gradscore(multiplicity,list,vectors)
-return gradtopscore(list,vectors)-gradbottomscore(multiplicity,vectors);
+function gradvecscore(multiplicity,list,vectors)
+return gradtopvecscore(list,vectors)-gradbottomvecscore(multiplicity,vectors);
 end;
 
 type=Float64;
@@ -101,10 +101,10 @@ pp=1;
 qq=1;
 while true
 rate=rate*1.05;
-grad=0.95*grad+0.05*gradscore(multiplicity,list,vectors);
+grad=0.95*grad+0.05*gradvecscore(multiplicity,list,vectors);
 vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
-pp=score(multiplicity,list,vectors);
+pp=vecscore(multiplicity,list,vectors);
 display([pp,rate]);
 if qq>pp rate*=0.5; end;
 qq=pp;
