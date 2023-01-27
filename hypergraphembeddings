@@ -87,8 +87,9 @@ n=maximum(maximum.(list));
 
 multiplicity=zeros(n);
 for i in 1:ll
+ccq=1/length(list[i]);
 for a in list[i]
-multiplicity[a]+=1;
+multiplicity[a]+=1/ccq;
 end;
 end;
 
@@ -96,9 +97,15 @@ for i in 1:n
 push!(vectors,randn(type,d));
 end;
 grad=vectors*0;
+pp=1;
+qq=1;
 while true
+rate=rate*1.05;
 grad=0.95*grad+0.05*gradscore(multiplicity,list,vectors);
 vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
-display(score(multiplicity,list,vectors));
+pp=score(multiplicity,list,vectors);
+display([pp,rate]);
+if qq>pp rate*=0.5; end;
+qq=pp;
 end;
