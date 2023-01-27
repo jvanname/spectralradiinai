@@ -40,7 +40,7 @@ function gradtopvecscore(list,vectors)
 grad=[];
 for i in 1:n
 #push!(grad,zeros(type,d));
-#push!(grad,vectors[i]*0);
+push!(grad,vectors[i]*0);
 end;
 for i in 1:ll
 dd=zeros(type,d);
@@ -62,7 +62,7 @@ function gradbottomscore(multiplicity,vectors)
 grad=[];
 for i in 1:n
 #push!(grad,zeros(type,d));
-#push!(grad,vectors[i]*0);
+push!(grad,vectors[i]*0);
 end;
 cc=zeros(type,d,d);
 for i in 1:n
