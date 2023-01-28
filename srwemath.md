@@ -69,7 +69,7 @@ Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\as
 
 **Low rank matrices**
 
-In practice, if $f:A\rightarrow M_d(K)$ is an MPO word embedding, then computer experiments indicate that the matrices $f(a)$ will be near matrices of low rank. One can therefore reduce the computation required to train, store, and use a word embedding. In particular, if $f:A\rightarrow M_d(K)$ is an MPO word embedding (or an MPO word embedding in training), then one factor each $f(a)$ as $f(a)=g(a)h(a)$ where $g(a)\in M_{d,d_a}(K),h(a)\in M_{d_a,d}(K)$ for some $d_a\leq d$.
+In practice, if $f:A\rightarrow M_d(K)$ is an MPO word embedding, then computer experiments indicate that the matrices $f(a)$ will be near matrices of rank lower than $d$. One can therefore reduce the computation required to train, store, and use a word embedding. In particular, if $f:A\rightarrow M_d(K)$ is an MPO word embedding (or an MPO word embedding in training), then can approximate each $f(a)$ as $f(a)=g(a)h(a)$ where $g(a)\in M_{d,d_a}(K),h(a)\in M_{d_a,d}(K)$ for some $d_a\leq d$. 
 
 **Non-randomness detection**
 
@@ -94,9 +94,6 @@ $\frac{(\prod_{a\in A,b\in B,\{a,b\}\in E}\rho(f(a)g(b)))^{1/|E|}}{N((f(a))\_{a\
 We say that a RBLIMPO pre-embedding is in-phase if $\lambda_a=1,\mu_b=1$ for $a\in A,b\in B$ is a local maximum on the set $S_1^A\times S_1^B$ of the function
 $\rho(\sum_{a\in A}\lambda_a f(a)\sum_{b\in B}\mu_bg(b))$, and an in-phase RBLIMPO pre-embedding shall be called an RBLIMPO embedding.
 
-
-**Limitations**
-
-
 **Questions and further research**
 
+It is currently unclear as to how MPO embeddings can be generalized to solve more advanced NLP tasks. Also, it is unclear how well word embeddings perform in general when the embedded words are matrices instead of vectors.
