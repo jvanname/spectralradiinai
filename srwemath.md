@@ -71,6 +71,10 @@ Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\as
 
 In practice, if $f:A\rightarrow M_d(K)$ is an MPO word embedding, then computer experiments indicate that the matrices $f(a)$ will be near matrices of low rank. One can therefore reduce the computation required to train, store, and use a word embedding. In particular, if $f:A\rightarrow M_d(K)$ is an MPO word embedding (or an MPO word embedding in training), then one factor each $f(a)$ as $f(a)=g(a)h(a)$ where $g(a)\in M_{d,d_a}(K),h(a)\in M_{d_a,d}(K)$ for some $d_a\leq d$.
 
+**Non-randomness detection**
+
+MPO word embeddings can be used in cryptography to determine that a string $a_1\dots a_n$ is non-random while $b_1\dots b_n$ is random or pseudorandom. If $a_1\dots a_n,b_1\dots b_n$ are strings, and $f,g:A\rightarrow M_d(K)$ are functions with $L(N,a_1\dots a_n,f),$L(N,b_1\dots b_n,g)$ maximized, then the value
+$L(N,a_1\dots a_n,f)$ will typically be larger than $L(N,b_1\dots b_n,f)$.
 
 **Graph and Markov chain embeddings**
 
