@@ -64,7 +64,7 @@ Suppose that $f:A\rightarrow M_d(K)$ is a MPO word embedding. Let $b_1\dots b_h\
 $1\leq j\leq h$, the left context vector with left bound $u$ of the $j$-th position in $b_1\dots b_h$ is $\frac{u^\ast f(b_1)\dots f(b_j)}{\\|u^\ast f(b_1)\dots f(b_j)\\|}$ and the right context vector with right bound $v$ of the $j$-th position in $b_1\dots b_h$ is $\frac{f(b_j)\dots f(b_h)v}{\\|f(b_j)\dots f(b_h)v\\|}$. The context pair of the $j$-th position with bounds $(u,v)$ is the pair
 $(\frac{u^\ast f(b_1)\dots f(b_j)}{\\|u^\ast f(b_1)\dots f(b_j)\\|},\frac{f(b_j)\dots f(b_h)v}{\\|f(b_j)\dots f(b_h)v\\|})$.
 
-Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^\ast$ and the $j+1$-th right context vector is $\beta$.
+Suppose that $f(a_j)$ has singular value decomposition $\sum_k\sigma_ku_kv_k^\ast$. Suppose now that the $j-1$-th left context vector is $\alpha^\ast$ and the $j+1$-th right context vector is $\beta$. Then the loss-free context vector of the $j$-th position is $(\sigma_k,\langle u_k,\alpha\rangle,\langle\beta,v_k\rangle,u_k,v_k)\_{k=1}^d.$
 
 
 **Low rank matrices**
