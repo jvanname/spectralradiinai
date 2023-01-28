@@ -10,7 +10,7 @@ Let $a_1\dots a_n$ be a string over the set $A$. The string $a_1\dots a_n$ shall
 
 A function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding potential if
 
-1. $N(A_1,\dots,A_r)=N(A_{\sigma(1)},\dots,A_{\sigma(r)})$ for all permutations $\sigma:\{1,\dots,r\}\rightarrow\{1,\dots,r\}$,
+1. $N(A_1,\dots,A_r)=N(A_{\sigma(1)},\dots,A_{\sigma(r)})$ for all permutations $\sigma:\\{1,\dots,r\\}\rightarrow\\{1,\dots,r\\}$,
 
 2. $N(\lambda A_1,\dots,\lambda A_r)=|\lambda|\cdot N(A_1,\dots,A_r)$ for each $\lambda\in K$, and
 
