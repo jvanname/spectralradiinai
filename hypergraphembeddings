@@ -105,7 +105,23 @@ return cc/ll;
 end;
 
 function gradtopmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+grad=[];
+for i in 1:n
+push!(grad,zeros(type,d,d));
+end;
 
+for i in 1:ll
+neweig=righteigenvectors[i]*0;
+for a in list[i]
+neweig+=matrixtable[a]*righteigenvectors[i];
+lambda=dot(righteigenvectors[i],neweig);
+end;
+c=lefteigenvectors[i]*righteigenvectors[i]*lambda;
+cc=c/(abs(c)^2*2*ll);
+fan=cc*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i]);
+for a in list[i]
+grad[a]+=fan;
+end;
 end;
 
 
@@ -145,3 +161,11 @@ display([pp,rate]);
 if qq>pp rate*=0.5; end;
 qq=pp;
 end;
+
+######################################
+######################################
+######################################
+
+lefteigenvectors=[];
+righteigenvectors=[];
+for i in 1:
