@@ -19,7 +19,8 @@ A function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding
 We say that a matrix embedding potential $N$ is torus invariant if $N(\lambda_1 A_1,\dots,\lambda_r A_r)=N(A_1,\dots,A_r)$ whenever
 $|\lambda_1|=\dots=|\lambda_r|$.
 
-We say that a matrix embedding potential $N$ is superoperator invariant if $N(A_1,\dots,A_r)=N(B_1,\dots,B_r)$ whenever $\Phi(A_1,\dots,A_r)=\Phi(B_1,\dots,B_r)$.
+If $A_1,\dots,A_r\in M_d(K)$, then define the completely positive superoperator $\Phi(A_1,\dots,A_r):M_d(K)\rightarrow M_d(K)$ by letting
+$\Phi(A_1,\dots,A_r)(X)=A_1XA_1^\ast+\dots+A_rXA_r^\ast$. We say that a matrix embedding potential $N$ is superoperator invariant if $N(A_1,\dots,A_r)=N(B_1,\dots,B_r)$ whenever $\Phi(A_1,\dots,A_r)=\Phi(B_1,\dots,B_r)$.
 
 We have the following examples of matrix embedding potentials.
 
