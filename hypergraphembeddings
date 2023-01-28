@@ -171,4 +171,19 @@ end;
 
 lefteigenvectors=[];
 righteigenvectors=[];
-for i in 1:
+for i in 1:ll
+push!(lefteigenvectors,adjoint(randn(type,d)));
+push!(righteigenvectors,randn(type,d));
+end;
+
+for i in 1:ll
+newlefteig=lefteigenvectors[i]*0;
+newrighteig=righteigenvectors[i]*0;
+
+for a in list[i]
+newrighteig+=matrixtable[a]*righteigenvectors[i]
+newlefteig+=lefteigenvectors[i]*matrixtable[a];
+end;
+lefteigenvectors[i]=newlefteig;
+righteigenvectors[i]=newrighteig;
+end;
