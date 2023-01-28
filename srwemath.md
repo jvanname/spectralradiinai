@@ -56,7 +56,7 @@ The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ is a measure of ho
 Define $\mathbf{Ag}(f,b_1\dots b_h)=\mathbf{Ag}((\infty,\dots,\infty),f,b_1\dots b_h)$.
 
 Recall that Von Neumann's trace inequality states that if $R,S$ have singular values $\alpha_1\geq\dots\geq\alpha_d$ and $\beta_1\geq\dots\geq\beta_d$, then
-$$|\text{Tr}(RS)|\leq\sum_{k=1}^d\alpha_k\beta_k.$$ Therefore, if $R=f(a),S=f(b)$, then $$\frac{|\text{Tr}(RS)|}{\sum_{k=1}^d\alpha_k\beta_k}$$ is a measure of how plausible it is for the tokens $ab$ to appear consecutively in the corpus.
+$$|\text{Tr}(RS)|\leq\sum_{k=1}^d\alpha_k\beta_k.$$ Therefore, if $R=f(a),S=f(b)$, then $$\frac{|\text{Tr}(RS)|}{\alpha_1\beta_1+\dots+\alpha_d\beta_d}$$ is a measure of how plausible it is for the tokens $ab$ to appear consecutively in the corpus.
 
 **Contextual embedding**
 
