@@ -19,7 +19,8 @@ end;
 function topvecscore(list,vectors)
 cc=0;
 for i in 1:ll
-dd=zeros(type,d);
+#dd=zeros(type,d);
+dd=vectors[list[i][1]]*0;
 for a in list[i]
 dd+=vectors[a];
 end;
@@ -43,7 +44,7 @@ for i in 1:n
 push!(grad,vectors[i]*0);
 end;
 for i in 1:ll
-dd=zeros(type,d);
+dd=vectors[list[i][1]]*0;
 for a in list[i]
 dd+=vectors[a];
 end;
@@ -132,7 +133,11 @@ pp=1;
 qq=1;
 while true
 rate=rate*1.05;
-grad=0.95*grad+0.05*gradvecscore(multiplicity,list,vectors);
+#grad=0.95*grad+0.05*gradvecscore(multiplicity,list,vectors);
+newgrad=gradvecscore(multiplicity,list,vectors);
+for i in 1:length(grad)
+grad[i]=0.95*grad[i]+0.05*newgrad[i];
+end;
 vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
 pp=vecscore(multiplicity,list,vectors);
