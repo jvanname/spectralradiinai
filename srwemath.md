@@ -8,7 +8,7 @@ Suppose that $A$ is a set which shall be called the set of tokens.
 
 Let $a_1\dots a_n$ be a string over the set $A$. The string $a_1\dots a_n$ shall be called the corpus.
 
-A function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding potential if
+A continuous function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding potential if
 
 1. $N(A_1,\dots,A_r)=N(A_{\sigma(1)},\dots,A_{\sigma(r)})$ for all permutations $\sigma:\\{1,\dots,r\\}\rightarrow\\{1,\dots,r\\}$,
 
@@ -17,7 +17,7 @@ A function $N:M_d(K)^r\rightarrow [0,\infty)$ shall be called a matrix embedding
 3. $N(UA_rU^{\ast},\dots,UA_rU^{\ast})=N(A_1,\dots,A_r)$ whenever $K=\mathbb{C}$ and $U$ is unitary or $K=\mathbb{R}$ and $U$ is orthogonal.
 
 We say that a matrix embedding potential $N$ is torus invariant if $N(\lambda_1 A_1,\dots,\lambda_r A_r)=N(A_1,\dots,A_r)$ whenever
-$|\lambda_1|=\dots=|\lambda_r|$.
+$|\lambda_1|=\dots=|\lambda_r|$. We say that a matrix embedding potential $N$ is a polarizer if it is not torus invariant.
 
 If $A_1,\dots,A_r\in M_d(K)$, then define the completely positive superoperator $\Phi(A_1,\dots,A_r):M_d(K)\rightarrow M_d(K)$ by letting
 $\Phi(A_1,\dots,A_r)(X)=A_1XA_1^\ast+\dots+A_rXA_r^\ast$. We say that a matrix embedding potential $N$ is superoperator invariant if $N(A_1,\dots,A_r)=N(B_1,\dots,B_r)$ whenever $\Phi(A_1,\dots,A_r)=\Phi(B_1,\dots,B_r)$.
@@ -30,15 +30,16 @@ Example 1: $N_{1,p}(A_1,\dots,A_r)=\\|A_1A_1^\ast+\dots+A_rA_r^\ast\\|\_p^{1/2}$
 
 Example 2: $N_{2,p,q}(A_1,\dots,A_r)=\\|(A_1A_1^\ast)^q+\dots+(A_rA_r^\ast)^q\\|\_p^{1/(2q)}$ is a matrix embedding potential for $1 < p\leq\infty$ and $1\leq q < \infty.$
 
+Example 4: $M_0(A_1,\dots,A_r)=\\|A_1+\dots+A_r\|\_p$ is a polarizer.
+
+Example 5: $M_1(A_1,\dots,A_r)=\rho(A_1+\dots+A_r)$ is a polarizer.
+
 $L(N,a_1\dots a_n,f)=\frac{\rho(f(a_1)\dots f(a_n))^{1/n}}{N((f(a))\_{a\in A})}$.
 
 We say that a function $f:A\rightarrow M_d(K)$ is a MPO word pre-embedding for the matrix embedding potential $N$ and corpus $a_1\dots a_n$ if the quantity $L(N,a_1\dots a_n,f)$ is a local maximum. In a MPO word pre-embedding, the matrix embedding potential $N$ both prevents $L(N,a_1\dots a_n,f)$ from being optimized simply by setting each $f(a)$ to a large value and from all of the matrices of the form $f(a)$ from being too close together. 
 
 We observe that if $N$ is a torus invariant and $f,g:A\rightarrow M_d(K)$ functions where for all $a\in A$, there is some $\lambda_a\in S^1$ with
-$f(a)=\lambda_a g(a)$, then $f$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$ if and only if $g$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$. Therefore, given a pre-word embedding $g$, we would like to select good constants $\lambda_a$ so that $f$ will be an optimal MPO word pre-embedding. We would like for the choice of system of constants $(\lambda_{a})\_{a\in A}$ to be unique and for the mapping $g\mapsto(\lambda_{a})\_{a\in A}$ to have few singularities.  For example, if $\lambda\_{a}=\frac{|\text{Tr}(g(a))|}{\text{Tr}(g(a))}$, then this choice of constants $\lambda_a$ will have a singularity of small codimension for each $a\in A$, so such a choice of $\lambda_{a}$ is unsatisfactory.
-
-**MPOs vs LSRDRs**
-
+$f(a)=\lambda_a g(a)$, then $f$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$ if and only if $g$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$. Therefore, given a pre-word embedding $g$, we would like to select good constants $\lambda_a$ so that $f$ will be an optimal MPO word pre-embedding. We would like for the choice of system of constants $(\lambda_{a})\_{a\in A}$ to be unique and for the mapping $g\mapsto(\lambda_{a})\_{a\in A}$ to have few singularities.  For example, if $\lambda\_{a}=\frac{|\text{Tr}(g(a))|}{\text{Tr}(g(a))}$, then this choice of constants $\lambda_a$ will have a singularity of small codimension for each $a\in A$, so such a choice of $\lambda_{a}$ is unsatisfactory. We say that a MPO word pre-embedding $f$ for $N$ and $a_1\dots a_n$ is a MPO word embedding if $N$ is a polarizer or there is a polarizer $M$ where if $h:S_1^A\rightarrow\mathbb{R}$ is the function defined by $h((\lambda_a)\_{a\in A})=M((\lambda_a f(a))\_{a\in A})$, then $\lambda_a=1$ for $a\in A$ is a local maximum.
 
 
 **A measure of local correctness**
