@@ -45,11 +45,11 @@ $f(a)=\lambda_a g(a)$, then $f$ is an MPO word pre-embedding for $N$ and $a_1\do
 **A measure of local correctness**
 
 Suppose that $\frac{1}{r}+\frac{1}{s}=\frac{1}{t}$. Then recall that
-$\|RS\|\_t\leq\|R\|\_r\cdot\|S\|\_s$. More generally, if $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{s}$, then
-$\|R_1\dots R_h\|\_s\leq\|R_1\|\_{r_1}\cdots\|R_h\|\_{r_h}$. 
+$\\|RS\\|\_t\leq\\|R\\|\_r\cdot\\|S\\|\_s$. More generally, if $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{s}$, then
+$\\|R_1\dots R_h\\|\_s\leq\\|R_1\\|\_{r_1}\cdots\\|R_h\\|\_{r_h}$. 
 
 If $f:A\rightarrow M_d(K)$ is an MPO word embedding, then define $Ag((r_1,\dots,r_h),f,b_1\dots b_h)$
-$=\frac{\|f(b_1)\dots f(b_h)\|\_r}{\|f(b_1)\|\_{r_1}\dots\|f(b\_h)\|\_{r_h}})^{1/(h-1)}$ where $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{r}$.
+$=\frac{\\|f(b_1)\dots f(b_h)\\|\_r}{\\|f(b_1)\\|\_{r_1}\dots\\|f(b\_h)\\|\_{r_h}})^{1/(h-1)}$ where $\frac{1}{r_1}+\dots+\frac{1}{r_h}=\frac{1}{r}$.
 
 The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ is a measure of how similar the string $b_1\dots b_h$ is to strings that appear in the corpus. The coefficient $\mathbf{Ag}((r_1,\dots,r_h),f,b_1\dots b_h)$ may even be used to compare strings of different lengths.
 
