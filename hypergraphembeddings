@@ -195,7 +195,11 @@ push!(lefteigenvectors,adjoint(randn(type,d)));
 push!(righteigenvectors,randn(type,d));
 end;
 
-for kqr in 1:10000
+grad=matrixtable*0;
+pp=1;
+qq=1;
+while true
+
 for i in 1:ll
 newlefteig=lefteigenvectors[i]*0;
 newrighteig=righteigenvectors[i]*0;
@@ -208,6 +212,18 @@ lefteigenvectors[i]=newlefteig/norm(newlefteig);
 righteigenvectors[i]=newrighteig/norm(newrighteig);
 end;
 
+
+rate=rate*1.05;
+
+newgrad=gradspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+for i in 1:length(grad)
+grad[i]=0.95*grad[i]+0.05*newgrad[i];
 end;
-
-
+matrixtable/=mean(norm.(matrixtable));
+matrixtable+=rate*grad;
+pp=specmatscore(multiplicity,list,lefteigenvectors,righteigenvectors,matrixtable)
+#pp=vecscore(multiplicity,list,vectors);
+display([pp,rate]);
+if qq>pp rate*=0.5; end;
+qq=pp;
+end;
