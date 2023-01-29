@@ -1,13 +1,13 @@
-n=1000;
+n=30;
 d=10;
 
-ll=100;
+ll=20;
 
 list=[];
 for i in 1:ll
 push!(list,[]);
 for j in 1:n
-if rand(0:10)==0 push!(list[i],j); end;
+if rand(0:1)==0 push!(list[i],j); end;
 end;
 end;
 
@@ -111,17 +111,21 @@ push!(grad,zeros(type,d,d));
 end;
 
 for i in 1:ll
+lambda=0;
 neweig=righteigenvectors[i]*0;
 for a in list[i]
 neweig+=matrixtable[a]*righteigenvectors[i];
+end;
 lambda=dot(righteigenvectors[i],neweig);
-end;
 c=lefteigenvectors[i]*righteigenvectors[i]*lambda;
-cc=c/(abs(c)^2*2*ll);
-fan=cc*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i]);
+cc=c/(abs(c)^2*ll);
+ape=cc*adjoint(lefteigenvectors[i])*adjoint(righteigenvectors[i]);
+
 for a in list[i]
-grad[a]+=fan;
+grad[a]+=ape;
 end;
+end;
+return grad;
 end;
 
 ##############################################
@@ -169,6 +173,11 @@ end;
 ######################################
 ######################################
 
+matrixtable=[];
+for i in 1:n
+push!(matrixtable,randn(type,d,d));
+end;
+
 lefteigenvectors=[];
 righteigenvectors=[];
 for i in 1:ll
@@ -176,6 +185,7 @@ push!(lefteigenvectors,adjoint(randn(type,d)));
 push!(righteigenvectors,randn(type,d));
 end;
 
+for kqr in 1:10000
 for i in 1:ll
 newlefteig=lefteigenvectors[i]*0;
 newrighteig=righteigenvectors[i]*0;
@@ -184,6 +194,10 @@ for a in list[i]
 newrighteig+=matrixtable[a]*righteigenvectors[i]
 newlefteig+=lefteigenvectors[i]*matrixtable[a];
 end;
-lefteigenvectors[i]=newlefteig;
-righteigenvectors[i]=newrighteig;
+lefteigenvectors[i]=newlefteig/norm(newlefteig);
+righteigenvectors[i]=newrighteig/norm(newrighteig);
 end;
+
+end;
+
+
