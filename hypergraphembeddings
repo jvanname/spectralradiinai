@@ -104,7 +104,7 @@ end;
 return cc/ll;
 end;
 
-function gradtopmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+function gradtopspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
 grad=[];
 for i in 1:n
 push!(grad,zeros(type,d,d));
@@ -127,6 +127,16 @@ end;
 end;
 return grad;
 end;
+
+function specmatscore(multiplicity,list,lefteigenvectors,righteigenvectors,matrixtable)
+return topspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)-bottomscore(multiplicity,matrixtable);
+end;
+
+function gradspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
+return gradtopspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)-gradbottomscore(multiplicity,matrixtable)
+end;
+
+
 
 ##############################################
 ##############################################
