@@ -1,1 +1,40 @@
 #hi
+n=10;
+d=5;
+k=3;
+aa=[];
+bb=[];
+for i in 1:k
+push!(aa,randn(ComplexF64,n,n));
+push!(bb,randn(ComplexF64,d,d));
+end;
+
+u=randn(ComplexF64,n,d);
+v=randn(ComplexF64,n,d);
+
+for iak in 1:10000
+newu=u*0;
+newv=v*0;
+for i in 1:k
+newv+=aa[i]*v*adjoint(bb[i]);
+newu+=adjoint(aa[i])*u*bb[i];
+end;
+lambda=dot(v,newv);
+u=newu/norm(newu);
+v=newv/norm(newv);
+end;
+
+ function rad(x) return maximum(abs.(eigvals(x))); end;
+ 
+ function sr(aa,bb)
+ cc=kron(aa[1],adjoint(transpose(bb[1])));
+ for i in 2:k
+ cc+=kron(aa[i],adjoint(transpose(bb[i])));
+ end;
+ return log(rad(cc));
+ end;
+ 
+gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
+gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+
+
