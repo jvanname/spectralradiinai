@@ -12,6 +12,7 @@ end;
 u=randn(ComplexF64,n,d);
 v=randn(ComplexF64,n,d);
 
+lambda=0;
 for iak in 1:10000
 newu=u*0;
 newv=v*0;
@@ -39,6 +40,9 @@ gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*
 
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
+
+bottomlefteigvec=randn(ComplexF64,d,d);
+bottomrighteigvec=randn(ComplexF64,d,d);
 
 
 while true
