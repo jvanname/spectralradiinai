@@ -1,4 +1,3 @@
-#hi
 n=10;
 d=5;
 k=3;
@@ -40,23 +39,21 @@ gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*
 
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
-
 bottomlefteigvec=randn(ComplexF64,d,d);
 bottomrighteigvec=randn(ComplexF64,d,d);
 
-rate=0.0000;
-grad=bb*0;
 while true
-
 newtoplefteigvec=toplefteigvec*0;
 newtoprighteigvec=toprighteigvec*0;
+
 newbottomlefteigvec=bottomlefteigvec*0;
 newbottomrighteigvec=bottomrighteigvec*0;
+
 for i in 1:k
-newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
 newtoplefteigvec+=adjoint(aa[i])*toplefteigvec*bb[i];
-newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i]);
+newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
 newbottomlefteigvec+=adjoint(bb[i])*bottomlefteigvec*bb[i];
+newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i])
 end;
 toplambda=dot(toprighteigvec,newtoprighteigvec);
 bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
@@ -66,21 +63,7 @@ toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
 bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
 
-for i in 1:k
-grad[i]*=0.95*grad[i];
-grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(lambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
-#grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2
-#grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(lambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2
+display([toplambda,bottomlambda]);
+if rand(1:1000)==1 break; end;
+end;
 
-#gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
-#gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
-#bb[i]+=rate*grad[i];
-end;
-bb/=mean(norm.(bb));
-display(bb)
-display(toplefteigvec);
-display(toprighteigvec);
-display(bottomlefteigvec);
-display(bottomrighteigvec);
-display(abs(toplambda/bottomlambda));
-end;
