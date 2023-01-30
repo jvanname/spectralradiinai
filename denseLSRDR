@@ -44,16 +44,21 @@ toprighteigvec=randn(ComplexF64,n,d);
 bottomlefteigvec=randn(ComplexF64,d,d);
 bottomrighteigvec=randn(ComplexF64,d,d);
 
-
 while true
 
 newtoplefteigvec=toplefteigvec*0;
-newtoprighteigvec=newtoprighteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
 for i in 1:k
 newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
 newtoplefteigvec+=adjoint(aa[i])*toplefteigvec*bb[i];
+newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i]);
+newbottomlefteigvec+=adjoint(bb[i])*bottomlefteigvec*bb[i];
 end;
-lambda=dot(toprighteigvec,newtoprighteigvec);
+toplambda=dot(toprighteigvec,newtoprighteigvec);
+bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
+
 toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
 toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 
