@@ -1,47 +1,53 @@
-n=10;
-d=5;
-k=3;
+n=200;
+d=190;
+k=10;
 aa=[];
 bb=[];
 for i in 1:k
 push!(aa,randn(ComplexF64,n,n));
+aa[i]+=adjoint(aa[i]);
 push!(bb,randn(ComplexF64,d,d));
 end;
 
-u=randn(ComplexF64,n,d);
-v=randn(ComplexF64,n,d);
+#u=randn(ComplexF64,n,d);
+#v=randn(ComplexF64,n,d);
 
-lambda=0;
-for iak in 1:10000
-newu=u*0;
-newv=v*0;
-for i in 1:k
-newv+=aa[i]*v*adjoint(bb[i]);
-newu+=adjoint(aa[i])*u*bb[i];
-end;
-lambda=dot(v,newv);
-u=newu/norm(newu);
-v=newv/norm(newv);
-end;
+#lambda=0;
+#for iak in 1:10000
+#newu=u*0;
+#newv=v*0;
+#for i in 1:k
+#newv+=aa[i]*v*adjoint(bb[i]);
+#newu+=adjoint(aa[i])*u*bb[i];
+#end;
+#lambda=dot(v,newv);
+#u=newu/norm(newu);
+#v=newv/norm(newv);
+#end;
 
- function rad(x) return maximum(abs.(eigvals(x))); end;
+# function rad(x) return maximum(abs.(eigvals(x))); end;
  
- function sr(aa,bb)
- cc=kron(aa[1],adjoint(transpose(bb[1])));
- for i in 2:k
- cc+=kron(aa[i],adjoint(transpose(bb[i])));
- end;
- return log(rad(cc));
- end;
+# function sr(aa,bb)
+# cc=kron(aa[1],adjoint(transpose(bb[1])));
+# for i in 2:k
+# cc+=kron(aa[i],adjoint(transpose(bb[i])));
+# end;
+# return log(rad(cc));
+# end;
  
-gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
-gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+#gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
+#gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
 
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
 bottomlefteigvec=randn(ComplexF64,d,d);
 bottomrighteigvec=randn(ComplexF64,d,d);
 
+rate=.2;
+grad=bb*0;
+pp=0;
+qq=-20;
+ham=0;
 while true
 newtoplefteigvec=toplefteigvec*0;
 newtoprighteigvec=toprighteigvec*0;
@@ -63,7 +69,28 @@ toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
 bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
 
-display([toplambda,bottomlambda]);
-if rand(1:1000)==1 break; end;
+# I have verified that the eigenvectors and eigenvalues are good.
+
+#slowgrad=gradient(sr,aa,bb)[2]-sum(gradient(sr,bb,bb))/2;
+
+grad*=0.95;
+for i in 1:k
+grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
+grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2/2
+grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2/2
+end;
+
+bb+=rate*grad;
+
+bb/=mean(norm.(bb));
+qq=qq*0.9+0.1*pp;
+pp=log(abs(toplambda/bottomlambda^(1/2)));
+display([pp,rate]);
+if pp<qq && ham>10 rate*=0.50; 
+ham=0;
+qq=pp;
+end;
+rate*=1.01;
+ham+=1;
 end;
 
