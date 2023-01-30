@@ -45,6 +45,7 @@ bottomlefteigvec=randn(ComplexF64,d,d);
 bottomrighteigvec=randn(ComplexF64,d,d);
 
 rate=0.01;
+grad=bb*0;
 while true
 
 newtoplefteigvec=toplefteigvec*0;
@@ -65,9 +66,12 @@ toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
 bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
 
-gradaa=[];
-gradbb=[];
 for i in 1:k
-
-
+grad[i]*=0.95*grad[i];
+grad[i]+=0.05*adjoint(toplefteigvec)*bb[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2
+grad[i]-=0.05*aa[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2;
+grad[i]-=0.05*adjoint(bottomlefteigvec)*aa[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2;
+#bb[i]+=rate*grad[i];
+end;
+bb/=mean(norm.(bb));
 end;
