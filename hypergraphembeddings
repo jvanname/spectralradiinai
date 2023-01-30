@@ -199,11 +199,9 @@ grad=matrixtable*0;
 pp=1;
 qq=1;
 while true
-
 for i in 1:ll
 newlefteig=lefteigenvectors[i]*0;
 newrighteig=righteigenvectors[i]*0;
-
 for a in list[i]
 newrighteig+=matrixtable[a]*righteigenvectors[i]
 newlefteig+=lefteigenvectors[i]*matrixtable[a];
@@ -211,9 +209,7 @@ end;
 lefteigenvectors[i]=newlefteig/norm(newlefteig);
 righteigenvectors[i]=newrighteig/norm(newrighteig);
 end;
-
-
-rate=rate*1.05;
+#rate=rate*1.05;
 
 newgrad=gradspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
 for i in 1:length(grad)
@@ -222,8 +218,8 @@ end;
 matrixtable/=mean(norm.(matrixtable));
 matrixtable+=rate*grad;
 pp=specmatscore(multiplicity,list,lefteigenvectors,righteigenvectors,matrixtable)
-#pp=vecscore(multiplicity,list,vectors);
 display([pp,rate]);
-if qq>pp rate*=0.5; end;
+#if qq>pp rate*=0.5; end;
 qq=pp;
 end;
+
