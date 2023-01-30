@@ -1,42 +1,77 @@
-n=200;
-d=190;
-k=10;
+n=10;
+d=5;
+k=3;
 aa=[];
 bb=[];
+rr=randn(ComplexF64,d,n);
+ss=randn(ComplexF64,n,d);
 for i in 1:k
 push!(aa,randn(ComplexF64,n,n));
-aa[i]+=adjoint(aa[i]);
-push!(bb,randn(ComplexF64,d,d));
+push!(bb,rr*aa[i]*ss);
 end;
 
-#u=randn(ComplexF64,n,d);
-#v=randn(ComplexF64,n,d);
+function topsuper(aa,rr,ss)
+cc=kron(aa[1],adjoint(transpose(rr*aa[1]*ss)));
+for i in 2:k
+cc+=kron(aa[i],adjoint(transpose(rr*aa[i]*ss)));
+end;
+return log(rad(cc));
+end;
 
-#lambda=0;
-#for iak in 1:10000
-#newu=u*0;
-#newv=v*0;
-#for i in 1:k
-#newv+=aa[i]*v*adjoint(bb[i]);
-#newu+=adjoint(aa[i])*u*bb[i];
-#end;
-#lambda=dot(v,newv);
-#u=newu/norm(newu);
-#v=newv/norm(newv);
-#end;
+function bottomsuper(aa,rr,ss)
+cc=kron(rr*aa[1]*ss,adjoint(transpose(rr*aa[1]*ss)));
+for i in 2:k
+cc+=kron(rr*aa[i]*ss,adjoint(transpose(rr*aa[i]*ss)));
+end;
+return log(rad(cc));
+end;
 
-# function rad(x) return maximum(abs.(eigvals(x))); end;
+function super(aa,rr,ss)
+return topsuper(aa,rr,ss)-bottomsuper(aa,rr,ss)/2; 
+end;
+
+u=randn(ComplexF64,n,d);
+v=randn(ComplexF64,n,d);
+
+lambda=0;
+for iak in 1:10000
+newu=u*0;
+newv=v*0;
+for i in 1:k
+newv+=aa[i]*v*adjoint(bb[i]);
+newu+=adjoint(aa[i])*u*bb[i];
+end;
+lambda=dot(v,newv);
+u=newu/norm(newu);
+v=newv/norm(newv);
+end;
+
+function rad(x) return maximum(abs.(eigvals(x))); end;
  
-# function sr(aa,bb)
-# cc=kron(aa[1],adjoint(transpose(bb[1])));
-# for i in 2:k
-# cc+=kron(aa[i],adjoint(transpose(bb[i])));
-# end;
-# return log(rad(cc));
-# end;
+function sr(aa,bb)
+cc=kron(aa[1],adjoint(transpose(bb[1])));
+for i in 2:k
+cc+=kron(aa[i],adjoint(transpose(bb[i])));
+end;
+return log(rad(cc));
+end;
  
-#gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
-#gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
+gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+
+# the gradient of topsuper and bottomsuper are actually sums.
+
+rrgrad=rr*0;
+ssgrad=ss*0;
+
+for i in 1:k
+rrgrad+=adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2*adjoint(aa[i]*ss);
+ssgrad+=adjoint(rr*aa[i])*adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+end;
+
+gradient(topsuper,aa,rr,ss)[2]-rrgrad;
+gradient(topsuper,aa,rr,ss)[3]-ssgrad;
+
 
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
@@ -93,4 +128,14 @@ end;
 rate*=1.01;
 ham+=1;
 end;
+
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+
+
+
+
+
 
