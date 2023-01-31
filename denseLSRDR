@@ -1,6 +1,6 @@
-n=10;
-d=5;
-k=3;
+n=200;
+d=20;
+k=20;
 aa=[];
 bb=[];
 rr=randn(ComplexF64,d,n);
@@ -10,58 +10,58 @@ push!(aa,randn(ComplexF64,n,n));
 push!(bb,rr*aa[i]*ss);
 end;
 
-function topsuper(aa,rr,ss)
-cc=kron(aa[1],adjoint(transpose(rr*aa[1]*ss)));
-for i in 2:k
-cc+=kron(aa[i],adjoint(transpose(rr*aa[i]*ss)));
-end;
-return log(rad(cc));
-end;
+#function topsuper(aa,rr,ss)
+#cc=kron(aa[1],adjoint(transpose(rr*aa[1]*ss)));
+#for i in 2:k
+#cc+=kron(aa[i],adjoint(transpose(rr*aa[i]*ss)));
+#end;
+#return log(rad(cc));
+#end;
 
-function bottomsuper(aa,rr,ss)
-cc=kron(rr*aa[1]*ss,adjoint(transpose(rr*aa[1]*ss)));
-for i in 2:k
-cc+=kron(rr*aa[i]*ss,adjoint(transpose(rr*aa[i]*ss)));
-end;
-return log(rad(cc));
-end;
+#function bottomsuper(aa,rr,ss)
+#cc=kron(rr*aa[1]*ss,adjoint(transpose(rr*aa[1]*ss)));
+#for i in 2:k
+#cc+=kron(rr*aa[i]*ss,adjoint(transpose(rr*aa[i]*ss)));
+#end;
+#return log(rad(cc));
+#end;
 
-function super(aa,rr,ss)
-return topsuper(aa,rr,ss)-bottomsuper(aa,rr,ss)/2; 
-end;
+#function super(aa,rr,ss)
+#return topsuper(aa,rr,ss)-bottomsuper(aa,rr,ss)/2; 
+#end;
 
-u=randn(ComplexF64,n,d);
-v=randn(ComplexF64,n,d);
+#u=randn(ComplexF64,n,d);
+#v=randn(ComplexF64,n,d);
 
-ubot=randn(ComplexF64,d,d);
-vbot=randn(ComplexF64,d,d);
+#ubot=randn(ComplexF64,d,d);
+#vbot=randn(ComplexF64,d,d);
 
 
-lambda=0;
-for iak in 1:10000
-newu=u*0;
-newv=v*0;
-for i in 1:k
-newv+=aa[i]*v*adjoint(bb[i]);
-newu+=adjoint(aa[i])*u*bb[i];
-end;
-lambda=dot(v,newv);
-u=newu/norm(newu);
-v=newv/norm(newv);
-end;
+#lambda=0;
+#for iak in 1:10000
+#newu=u*0;
+#newv=v*0;
+#for i in 1:k
+#newv+=aa[i]*v*adjoint(bb[i]);
+#newu+=adjoint(aa[i])*u*bb[i];
+#end;
+#lambda=dot(v,newv);
+#u=newu/norm(newu);
+#v=newv/norm(newv);
+#end;
 
-lambdabot=0;
-for iak in 1:10000
-newu=ubot*0;
-newv=vbot*0;
-for i in 1:k
-newv+=bb[i]*vbot*adjoint(bb[i]);
-newu+=adjoint(bb[i])*ubot*bb[i];
-end;
-lambdabot=dot(vbot,newv);
-ubot=newu/norm(newu);
-vbot=newv/norm(newv);
-end;
+#lambdabot=0;
+#for iak in 1:10000
+#newu=ubot*0;
+#newv=vbot*0;
+#for i in 1:k
+#newv+=bb[i]*vbot*adjoint(bb[i]);
+#newu+=adjoint(bb[i])*ubot*bb[i];
+#end;
+#lambdabot=dot(vbot,newv);
+#ubot=newu/norm(newu);
+#vbot=newv/norm(newv);
+#end;
 
 
 #function rad(x) return maximum(abs.(eigvals(x))); end;
@@ -77,94 +77,24 @@ end;
 #gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
 #gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
 
-# the gradient of topsuper and bottomsuper are actually sums.
+#rrgrad=rr*0;
+#ssgrad=ss*0;
 
-rrgrad=rr*0;
-ssgrad=ss*0;
+#for i in 1:k
+#rrgrad+=adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2*adjoint(aa[i]*ss);
+#ssgrad+=adjoint(rr*aa[i])*adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
 
-for i in 1:k
-rrgrad+=adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2*adjoint(aa[i]*ss);
-ssgrad+=adjoint(rr*aa[i])*adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+#rrgrad-=ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2*adjoint(aa[i]*ss);
+#ssgrad-=adjoint(rr*aa[i])*ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2;
 
-rrgrad-=ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2*adjoint(aa[i]*ss);
-ssgrad-=adjoint(rr*aa[i])*ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2;
+#### The following two lines are turned off since they are equal to the above two lines.
+#####rrgrad+=adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2*adjoint(aa[i]*ss);
+#####ssgrad+=adjoint(rr*aa[i])*adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2;
+#end;
 
-# The following two lines are turned off since they are equal to the above two lines.
-#rrgrad+=adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2*adjoint(aa[i]*ss);
-#ssgrad+=adjoint(rr*aa[i])*adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2;
+#gradient(super,aa,rr,ss)[2]-rrgrad;
+#gradient(super,aa,rr,ss)[3]-ssgrad;
 
-end;
-
-gradient(super,aa,rr,ss)[2]-rrgrad;
-gradient(super,aa,rr,ss)[3]-ssgrad;
-
-
-toplefteigvec=randn(ComplexF64,n,d);
-toprighteigvec=randn(ComplexF64,n,d);
-bottomlefteigvec=randn(ComplexF64,d,d);
-bottomrighteigvec=randn(ComplexF64,d,d);
-
-rate=.2;
-gradrr=rr*0;
-gradss=ss*0;
-pp=0;
-qq=-20;
-ham=0;
-while true
-newtoplefteigvec=toplefteigvec*0;
-newtoprighteigvec=toprighteigvec*0;
-
-newbottomlefteigvec=bottomlefteigvec*0;
-newbottomrighteigvec=bottomrighteigvec*0;
-
-for i in 1:k
-newtoplefteigvec+=adjoint(aa[i])*toplefteigvec*bb[i];
-newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
-newbottomlefteigvec+=adjoint(bb[i])*bottomlefteigvec*bb[i];
-newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i])
-end;
-toplambda=dot(toprighteigvec,newtoprighteigvec);
-bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
-
-toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
-toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
-bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
-bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
-
-# I have verified that the eigenvectors and eigenvalues are good.
-
-
-gradrr*=0.95;
-gradss*=0.95;
-for i in 1:k
-#gradrr+=0.05*
-#gradss+=0.05*
-#gradrr-=0.05*
-#gradss-=0.05*
-#grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
-#grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2
-###########The following line is commenting since it is equal to the above line.
-###########grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2
-end;
-
-bb+=rate*grad;
-
-bb/=mean(norm.(bb));
-qq=qq*0.9+0.1*pp;
-pp=log(abs(toplambda/bottomlambda^(1/2)));
-display([pp,rate]);
-if pp<qq && ham>10 rate*=0.50; 
-ham=0;
-qq=pp;
-end;
-rate*=1.01;
-ham+=1;
-end;
-
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
 
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
@@ -199,8 +129,6 @@ bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
 
 # I have verified that the eigenvectors and eigenvalues are good.
 
-#slowgrad=gradient(sr,aa,bb)[2]-sum(gradient(sr,bb,bb))/2;
-
 grad*=0.95;
 for i in 1:k
 grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
@@ -209,6 +137,79 @@ grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomleftei
 #grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2
 end;
 
+bb+=rate*grad;
+
+bb/=mean(norm.(bb));
+qq=qq*0.9+0.1*pp;
+pp=log(abs(toplambda/bottomlambda^(1/2)));
+display([pp,rate]);
+if pp<qq && ham>10 rate*=0.50; 
+ham=0;
+qq=pp;
+end;
+rate*=1.01;
+ham+=1;
+end;
+
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+
+toplefteigvec=randn(ComplexF64,n,d);
+toprighteigvec=randn(ComplexF64,n,d);
+bottomlefteigvec=randn(ComplexF64,d,d);
+bottomrighteigvec=randn(ComplexF64,d,d);
+rr=randn(ComplexF64,d,n);
+ss=randn(ComplexF64,n,d);
+
+rrgrad=rr*0;
+ssgrad=ss*0;
+
+rate=.2;
+pp=0;
+qq=-20;
+ham=0;
+while true
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
+
+for i in 1:k
+newtoplefteigvec+=adjoint(aa[i])*toplefteigvec*bb[i];
+newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
+newbottomlefteigvec+=adjoint(bb[i])*bottomlefteigvec*bb[i];
+newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i])
+end;
+toplambda=dot(toprighteigvec,newtoprighteigvec);
+bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
+
+toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
+toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
+bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
+bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
+
+# I have verified that the eigenvectors and eigenvalues are good.
+
+#slowgrad=gradient(sr,aa,bb)[2]-sum(gradient(sr,bb,bb))/2;
+
+rrgrad*=0.95;
+ssgrad*=0.95;
+
+for i in 1:k
+rrgrad+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2*adjoint(aa[i]*ss);
+ssgrad+=0.05*adjoint(rr*aa[i])*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
+
+rrgrad-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2*adjoint(aa[i]*ss);
+ssgrad-=0.05*adjoint(rr*aa[i])*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2;
+end;
+
+#display([gradient(super,aa,rr,ss)[2]-rrgrad,gradient(super,aa,rr,ss)[3]-ssgrad])
+
+rr+=rate*rrgrad;
+ss+=rate*ssgrad;
 
 rr/=norm(rr);
 ss/=norm(ss);
