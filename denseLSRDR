@@ -209,9 +209,14 @@ grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomleftei
 #grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2
 end;
 
-bb+=rate*grad;
 
-bb/=mean(norm.(bb));
+rr/=norm(rr);
+ss/=norm(ss);
+
+for i in 1:k
+bb[i]=rr*aa[i]*ss;
+end;
+
 qq=qq*0.9+0.1*pp;
 pp=log(abs(toplambda/bottomlambda^(1/2)));
 display([pp,rate]);
