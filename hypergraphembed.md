@@ -9,3 +9,10 @@ Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that
 
 Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$.
 
+Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings.
+
+**Other properties**
+
+Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean $0$.
+
+Dimension filling:
