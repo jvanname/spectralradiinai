@@ -136,6 +136,14 @@ function gradspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)
 return gradtopspecmatscore(list,lefteigenvectors,righteigenvectors,matrixtable)-gradbottomscore(multiplicity,matrixtable)
 end;
 
+function normalize(a,vectors);
+mar=zeros(ComplexF64,d,d); for i in 1:n mar+=vectors[i]*adjoint(vectors[i]); end;
+env=adjoint(eigvecs(mar))
+for i in 1:n vectors[i]=env*vectors[i]; end;
+
+refl=[]; for j in 1:d push!(refl,abs(vectors[a][j])/vectors[a][j]); end; for i in 1:n for j in 1:d vectors[i][j]*=refl[j]; end; end;
+end;
+
 
 
 ##############################################
