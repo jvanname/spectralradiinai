@@ -1,7 +1,12 @@
 Let $V$ be a set, and let $w:P(V)\setminus\{\emptyset\}\rightarrow[0,1]$ be a function with $\sum_{R\subseteq V,R\neq\emptyset}w(R)=1$. Suppose that $m:V\rightarrow\[0,\infty)$ is a function. Then define $L(f,m,w)=\sum_{R\subseteq V,R\neq\emptyset}w(R)\cdot\log(\\|\sum_{v\in R}f(v)\\|)-\log(\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|)/2$.
 Let $K$ denote either the field of real or complex numbers. Let $d$ be a natural number. We say that a function $f:V\rightarrow K^d$ is a geometric mean of norm optimized (GMNO) hypergraph pre-embedding of the weighted hypergraph $w$ with multiplicity function $m$ if the quantity $L(f,m,w)$ is locally maximized. We say that a GMNO hypergraph pre-embedding $f$ is a GMNO hypergraph embedding if the matrix $\sum_{v\in V}m(v)m(v)f(v)^\ast$ is a diagonal matrix with increasing diagonal entries. Of $v_0\in V$, then we say that a GMNO hypergraph embedding $f$ is positive for $v_0$ if each entry in $f(v_0)$ is positive.
 
+**Desirable properties**
+
 Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\|f(v_0)\|=1$ is typically unique in the sense that if $f:V\rightarrow K_1^d,g:V\rightarrow K_2^d$ are two GMNO hypergraph embeddings with multiplicity functions $m$ that are positive for $v_0$ with $\|f(v_0)\|=\|g(v_0)\|=1$ and which have been trained with gradient descent but which have different initial conditions and possibly different optimizers, then we would typically have $f=g$. If $K_1=\mathbb{C},K_2=\mathbb{R}$, then by uniqueness, the GMNO hypergraph embedding $f$ will automatically be a real-valued function.
 
-Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\|f(v_0)\|=1$ changes only a little bit as one changes the hypergraph $f$.
+Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\|f(v_0)\|=1$ changes moderately one changes the hypergraph $f$ slightly. 
 
+**Limitations**
+
+Overdimensionality: The dimension of $$
