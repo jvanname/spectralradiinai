@@ -7,3 +7,5 @@ Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that
 
 Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ changes moderately one changes the hypergraph $f$ slightly. Furthermore, the Gram matrix of $f$ will change even less since the process of selecting a canonical basis of $f$ is discontinuous. The quantity $L(f,m,w)$ will change even less as one modifies the hypergraph $f$.
 
+Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$.
+
