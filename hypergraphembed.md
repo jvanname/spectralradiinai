@@ -7,6 +7,3 @@ Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that
 
 Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\|f(v_0)\|=1$ changes moderately one changes the hypergraph $f$ slightly. Furthermore, the Gram matrix of $f$ will change even less since the process of selecting a canonical basis of $f$ is discontinuous. The quantity $L(f,m,w)$ will change even less as one modifies the hypergraph $f$.
 
-**Other properties**
-
-Overdimensionality: The GMNO hypergraph embedding $f$ tends to be a function where $\sum_{v\in V}m(v)f(v)f(v)^\ast$ is very close to the identity function. This is not a 
