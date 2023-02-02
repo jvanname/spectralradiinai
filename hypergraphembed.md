@@ -13,6 +13,8 @@ Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singulariti
 
 **Other properties**
 
-Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean $0$.
+Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean near $0$.
 
-Dimension filling:
+Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|$, the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ will be near a constant multiple of the identity matrix. In other words, the function $f$ will want to use all of the available dimensions nearly equally. This may result in the GMNO hypergraph embedding using dimensions when it is not necessary for hypergraph embeddings to use such dimensions. This characteristic should not be considered a bug or a drawback. For example, positional encodings in transformers embed linearly ordered sets into a high dimensional space.
+
+Non-repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together since GMNO hypergraph embeddings repel nodes away from each other only by requiring all dimensions to be used nearly equally. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
