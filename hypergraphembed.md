@@ -23,7 +23,7 @@ Non-repulsion: For GMNO hypergraph embeddings, it is feasible that there are dif
 
 **Applications**
 
-Positional embeddings: GMNO hypergraph embeddings may be used in convolutional neural networks to encode location. Let $V=\{1,\dots, m\}\times\{1,\dots,n\}$. Let $E=\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i<m,1\leq j<n\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\{1,\dots,n\},\{\{i,i+1\}\mid 1\leq i<n\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
+Positional embeddings: GMNO hypergraph embeddings may be used in convolutional neural networks to encode location. Let $V=\\{1,\dots, m\\}\times\\{1,\dots,n\\}$. Let $E=\\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i<m,1\leq j<n\\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\\{1,\dots,n\\},\\{\\{i,i+1\\}\mid 1\leq i<n\\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
 
 Recommender systems: 
 
