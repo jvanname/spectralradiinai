@@ -15,8 +15,17 @@ Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singulariti
 
 Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean near $0$.
 
-Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|$, the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ will sometimes be near a constant multiple of the identity matrix. In other words, the function $f$ will want to use all of the available dimensions nearly equally. This may result in the GMNO hypergraph embedding using dimensions when it is not necessary for hypergraph embeddings to use such dimensions. This characteristic should not be considered a bug or a drawback. For example, positional encodings in transformers embed linearly ordered sets into a high dimensional space.
+Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|$, the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ will sometimes be near a constant multiple of the identity matrix. In other words, the function $f$ will want to use all of the available dimensions nearly equally. This may result in the GMNO hypergraph embedding using dimensions when it is not necessary for hypergraph embeddings to use such dimensions.
 
 Flat embedding: Sometimes the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ can be approximated by a low rank matrix. This means that not all the dimensions in $K^d$ are adequately used.
 
 Non-repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together since GMNO hypergraph embeddings repel nodes away from each other only by requiring all dimensions to be used nearly equally. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
+
+**Applications**
+
+Positional embeddings: GMNO hypergraph embeddings may be used in convolutional neural networks to encode location. Let $V=\{1,\dots, m\}\times\{1,\dots,n\}$. Let $E=\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i<m,1\leq j<n\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\{1,\dots,n\},\{\{i,i+1\}\mid 1\leq i<n\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
+
+Recommender systems: 
+
+
+
