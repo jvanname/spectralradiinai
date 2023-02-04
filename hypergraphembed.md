@@ -1,7 +1,7 @@
 Let $V$ be a set, and let $w:P(V)\setminus\{\emptyset\}\rightarrow[0,1]$ be a function with $\sum_{R\subseteq V,R\neq\emptyset}w(R)=1$. Suppose that $m:V\rightarrow\[0,\infty)$ is a function. Then define $L(f,m,w)=\sum_{R\subseteq V,R\neq\emptyset}w(R)\cdot\log(\\|\sum_{v\in R}f(v)\\|)-\log(\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|)/2$.
 Let $K$ denote either the field of real or complex numbers. Let $d$ be a natural number. We say that a function $f:V\rightarrow K^d$ is a geometric mean of norm optimized (GMNO) hypergraph pre-embedding of the weighted hypergraph $w$ with multiplicity function $m$ if the quantity $L(f,m,w)$ is locally maximized. We say that a GMNO hypergraph pre-embedding $f$ is a GMNO hypergraph embedding if the matrix $\sum_{v\in V}m(v)m(v)f(v)^\ast$ is a diagonal matrix with increasing diagonal entries. Of $v_0\in V$, then we say that a GMNO hypergraph embedding $f$ is positive for $v_0$ if each entry in $f(v_0)$ is positive.
 
-We observe that $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2=\sum_{u,v\in V}|\langle\sqrt{m(u)}f(u),\sqrt{m(v)}f(v)\rangle|^2$ [1].
+We observe that $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2=\sum_{u,v\in V}|\langle\sqrt{m(u)}f(u),\sqrt{m(v)}f(v)\rangle|^2$.
 
 
 **Desirable properties**
@@ -12,7 +12,7 @@ Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that
 
 Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$.
 
-Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings.
+Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings. The lack of singularities in the expression $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ also helps ensure that the hypergraph embedding $f$ is unique since singularities produce many local maxima.
 
 Interpretability: The GMNO hypergraph embedding $f$ is often highly interpretable. One can visually represent GMNO hypergraph embeddings using the compositions
 $\pi\circ f:V\rightarrow K^n$ where $\pi:K^d\rightarrow K^n$ is a projection onto $n$ of $d$ coordinates and where $n\in\\{2,3\\}$. If the original hypergraph has geometric structure, then it is often easy to visually see this geometric structure from the plot of $\pi\circ f$.
@@ -25,7 +25,7 @@ Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum
 
 Flat embedding: Sometimes the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ can be approximated by a low rank matrix. This means that not all the dimensions in $K^d$ are adequately used.
 
-Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
+Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together. This is because the denominator $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ that repels $f(u)$ from $f(v)$ whenever $u\neq v$ has no singularities. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
 
 **Applications**
 
