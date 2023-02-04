@@ -11,6 +11,9 @@ Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity fu
 
 Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings.
 
+Interpretability: The GMNO hypergraph embedding $f$ is often highly interpretable. One can visually represent GMNO hypergraph embeddings using the compositions
+$\pi\circ f:V\rightarrow K^n$ where $\pi:K^d\rightarrow K^n$ is a projection onto $n$ of $d$ coordinates and where $n\in\\{2,3\\}$. If the original hypergraph has geometric structure, then it is often easy to visually see this geometric structure from the plot of $\pi\circ f$.
+
 **Other properties**
 
 Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean near $0$.
@@ -23,7 +26,7 @@ Non-repulsion: For GMNO hypergraph embeddings, it is feasible that there are dif
 
 **Applications**
 
-Positional embeddings: GMNO hypergraph embeddings may be used in convolutional neural networks to encode location. Let $V=\\{1,\dots, m\\}\times\\{1,\dots,n\\}$. Let $E=\\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i < m,1\leq j < n\\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\\{1,\dots,n\\},\\{\\{i,i+1\\}\mid 1\leq i < n\\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
+Positional embeddings: GMNO hypergraph embeddings may be used with convolutional neural networks to encode location. Let $V=\\{1,\dots, m\\}\times\\{1,\dots,n\\}$. Let $E=\\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i < m,1\leq j < n\\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\\{1,\dots,n\\},\\{\\{i,i+1\\}\mid 1\leq i < n\\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
 
 Recommender systems: 
 
