@@ -1,6 +1,9 @@
 Let $V$ be a set, and let $w:P(V)\setminus\{\emptyset\}\rightarrow[0,1]$ be a function with $\sum_{R\subseteq V,R\neq\emptyset}w(R)=1$. Suppose that $m:V\rightarrow\[0,\infty)$ is a function. Then define $L(f,m,w)=\sum_{R\subseteq V,R\neq\emptyset}w(R)\cdot\log(\\|\sum_{v\in R}f(v)\\|)-\log(\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|)/2$.
 Let $K$ denote either the field of real or complex numbers. Let $d$ be a natural number. We say that a function $f:V\rightarrow K^d$ is a geometric mean of norm optimized (GMNO) hypergraph pre-embedding of the weighted hypergraph $w$ with multiplicity function $m$ if the quantity $L(f,m,w)$ is locally maximized. We say that a GMNO hypergraph pre-embedding $f$ is a GMNO hypergraph embedding if the matrix $\sum_{v\in V}m(v)m(v)f(v)^\ast$ is a diagonal matrix with increasing diagonal entries. Of $v_0\in V$, then we say that a GMNO hypergraph embedding $f$ is positive for $v_0$ if each entry in $f(v_0)$ is positive.
 
+We observe that $\|\sum_{v\in V}m(v)f(v)f(v)^\ast\|^2=\sum_{u,v\in V}|\langle\sqrt{m(u)}f(u),\sqrt{m(v)}f(v)\rangle|^2$ [1].
+
+
 **Desirable properties**
 
 Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ is typically unique in the sense that if $f:V\rightarrow K_1^d,g:V\rightarrow K_2^d$ are two GMNO hypergraph embeddings with multiplicity functions $m$ that are positive for $v_0$ with $\\|f(v_0)\\|=\\|g(v_0)\\|=1$ and which have been trained with gradient descent but which have different initial conditions and possibly different optimizers, then we would typically have $f=g$. If $K_1=\mathbb{C},K_2=\mathbb{R}$, then by uniqueness, the GMNO hypergraph embedding $f$ will automatically be a real-valued function.
@@ -22,7 +25,7 @@ Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum
 
 Flat embedding: Sometimes the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ can be approximated by a low rank matrix. This means that not all the dimensions in $K^d$ are adequately used.
 
-Non-repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together since GMNO hypergraph embeddings repel nodes away from each other only by requiring all dimensions to be used nearly equally. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
+Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
 
 **Applications**
 
@@ -32,3 +35,4 @@ Recommender systems:
 
 
 
+1. Benedetto, J.J., Fickus, M. Finite Normalized Tight Frames. Advances in Computational Mathematics 18, 357–385 (2003). https://doi.org/10.1023/A:1021323312367
