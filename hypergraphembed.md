@@ -28,7 +28,7 @@ Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are di
 
 **Further analysis**
 
-Dimensionality reduction: Suppose that $f:V\rightarrow\mathbb{R}^d$ is a GMNO hypergraph embedding. Since $f[V]$ is near the $d-1$-dimensional manifold $S^{d-1}$, one is able to obtain a hypergraph embedding $g:V\rightarrow M$ where $M$ is a $d-1$-dimensional Euclidean space. For example, if $M$ is the space spanned from the top $d-1$ eigenvectors of the covariance matrix of $f$, and $\pi:\mathbb{R}^d\rightarrow M$ is the orthogonal projection, then $\pi\circ f:V\rightarrow M$ is a reasonable hypergraph embedding. 
+Dimensionality reduction: Suppose that $f:V\rightarrow\mathbb{R}^d$ is a GMNO hypergraph embedding. Since $f[V]$ is near the $d-1$-dimensional manifold $S^{d-1}$, one is able to obtain a hypergraph embedding $g:V\rightarrow M$ where $M$ is a $d-1$-dimensional Euclidean space. For example, if $M$ is the space spanned from the top $d-1$ eigenvectors of the covariance matrix of $f$, and $\pi:\mathbb{R}^d\rightarrow M$ is the orthogonal projection, then $\pi\circ f:V\rightarrow M$ is a reasonable hypergraph embedding. We observe that the covariance matrix of $f$ typically has one eigenvalue that is much smaller than  all the other eigenvalues, so the composition $\pi\circ f$ retains most of the information from the original embedding $f$.
 
 **Applications**
 
