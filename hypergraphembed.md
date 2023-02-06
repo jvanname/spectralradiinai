@@ -3,14 +3,13 @@ Let $K$ denote either the field of real or complex numbers. Let $d$ be a natural
 
 We observe that $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2=\sum_{u,v\in V}|\langle\sqrt{m(u)}f(u),\sqrt{m(v)}f(v)\rangle|^2$.
 
-
 **Desirable properties**
 
 Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ is typically unique in the sense that if $f:V\rightarrow K_1^d,g:V\rightarrow K_2^d$ are two GMNO hypergraph embeddings with multiplicity functions $m$ that are positive for $v_0$ with $\\|f(v_0)\\|=\\|g(v_0)\\|=1$ and which have been trained with gradient descent but which have different initial conditions and possibly different optimizers, then we would typically have $f=g$. If $K_1=\mathbb{C},K_2=\mathbb{R}$, then by uniqueness, the GMNO hypergraph embedding $f$ will automatically be a real-valued function.
 
 Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ changes moderately one changes the hypergraph $f$ slightly. Furthermore, the Gram matrix of $f$ will change even less since the process of selecting a canonical basis of $f$ is discontinuous. The quantity $L(f,m,w)$ will change even less as one modifies the hypergraph $f$.
 
-Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$.
+Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$. 
 
 Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings. The lack of singularities in the expression $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ also helps ensure that the hypergraph embedding $f$ is unique since singularities produce many local maxima.
 
@@ -26,6 +25,10 @@ Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum
 Flat embedding: Sometimes the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ can be approximated by a low rank matrix. This means that not all the dimensions in $K^d$ are adequately used.
 
 Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are different nodes $u,v$ where $f(u)$ and $f(v)$ are extremely close together. This is because the denominator $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ that repels $f(u)$ from $f(v)$ whenever $u\neq v$ has no singularities. Of course, this characteristic can be ameliorated by increasing the dimension $d$ of the vector space $K^d$.
+
+**Further analysis**
+
+Dimensionality reduction: Suppose that $f:V\rightarrow\mathbb{R}^d$ is a GMNO hypergraph embedding. Since $f[V]$ is near the $d-1$-dimensional manifold $S^{d-1}$, one is able to obtain a hypergraph embedding $g:V\rightarrow M$ where $M$ is a $d-1$-dimensional Euclidean space. For example, if $M$ is the space spanned from the top $d-1$ eigenvectors of the covariance matrix of $f$, and $\pi:\mathbb{R}^d\rightarrow M$ is the orthogonal projection, then $\pi\circ f:V\rightarrow M$ is a reasonable hypergraph embedding.
 
 **Applications**
 
