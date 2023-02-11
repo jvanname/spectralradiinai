@@ -30,11 +30,11 @@ Weak repulsion: For GMNO hypergraph embeddings, it is feasible that there are di
 
 Dimensionality reduction: Suppose that $f:V\rightarrow\mathbb{R}^d$ is a GMNO hypergraph embedding. Since $f[V]$ is near the $d-1$-dimensional manifold $S^{d-1}$, one is able to obtain a hypergraph embedding $g:V\rightarrow M$ where $M$ is a $d-1$-dimensional Euclidean space. For example, if $M$ is the space spanned from the top $d-1$ eigenvectors of the covariance matrix of $f$, and $\pi:\mathbb{R}^d\rightarrow M$ is the orthogonal projection, then $\pi\circ f:V\rightarrow M$ is a reasonable hypergraph embedding. We observe that the covariance matrix of $f$ typically has one eigenvalue that is much smaller than  all the other eigenvalues, so the composition $\pi\circ f$ retains most of the information from the original embedding $f$.
 
+Sphericity: By letting the multiplicity function $m$ be a trainable parameter, it is possible to have $\\|f(v)\\|=1$ for each $v\in V$.
+
 **Applications**
 
 Positional embeddings: GMNO hypergraph embeddings may be used with convolutional neural networks to encode location. Let $V=\\{1,\dots, m\\}\times\\{1,\dots,n\\}$. Let $E=\\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\mid 1\leq i < m,1\leq j < n\\}.$ Then a GMNO hypergraph embedding $f:V\rightarrow K^d$ maps a position $(i,j)$ to information $f(i,j)$ about the position $(i,j)$. It is less clear how one may use GMNO hypergraph embeddings as positional embeddings for transformers in natural language processing. While each dimension in GMNO hypergraph embeddings for the graph $(\\{1,\dots,n\\},\\{\\{i,i+1\\}\mid 1\leq i < n\\})$ resemble a sinusoid, the frequencies do not form a geometric distribution.
-
-Recommender systems:  
 
 
 
