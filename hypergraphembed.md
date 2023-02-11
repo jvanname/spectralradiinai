@@ -18,7 +18,7 @@ $\pi\circ f:V\rightarrow K^n$ where $\pi:K^d\rightarrow K^n$ is a projection ont
 
 **Other properties**
 
-Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean near $0$.
+Uncentered: GMNO hypergraph embeddings $f$ typically do not have mean near $0$. Of course, we may restrict the domain of the fitness function to the collection of all functions with mean zero, but in this case, the gradient ascent algorithm will no longer converge to a unique optimum.
 
 Dimension filling: In order for a GMNO hypergraph embedding to minimize $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|$, the matrix $\sum_{v\in V}m(v)f(v)f(v)^\ast$ will sometimes be near a constant multiple of the identity matrix. In other words, the function $f$ will want to use all of the available dimensions nearly equally. This may result in the GMNO hypergraph embedding using dimensions when it is not necessary for hypergraph embeddings to use such dimensions.
 
