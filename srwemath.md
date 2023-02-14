@@ -42,6 +42,16 @@ We observe that if $N$ is a torus invariant and $f,g:A\rightarrow M_d(K)$ functi
 $f(a)=\lambda_a g(a)$, then $f$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$ if and only if $g$ is an MPO word pre-embedding for $N$ and $a_1\dots a_n$. Therefore, given a pre-word embedding $g$, we would like to select good constants $\lambda_a$ so that $f$ will be an optimal MPO word pre-embedding. We would like for the choice of system of constants $(\lambda_{a})\_{a\in A}$ to be unique and for the mapping $g\mapsto(\lambda_{a})\_{a\in A}$ to have few singularities.  For example, if $\lambda\_{a}=\frac{|\text{Tr}(g(a))|}{\text{Tr}(g(a))}$, then this choice of constants $\lambda_a$ will have a singularity of small codimension for each $a\in A$, so such a choice of $\lambda_{a}$ is unsatisfactory. We say that a MPO word pre-embedding $f$ for $N$ and $a_1\dots a_n$ is a MPO word embedding if $N$ is a polarizer or there is a polarizer $M$ where if $h:S_1^A\rightarrow\mathbb{R}$ is the function defined by $h((\lambda_a)\_{a\in A})=M((\lambda_a f(a))\_{a\in A})$, then $\lambda_a=1$ for $a\in A$ is a local maximum.
 
 
+**Escaping low local maxima with simulated annealing**
+
+By combining gradient ascent with simulated annealing, one can improve MPO word pre-embeddings by going from one local optima to a higher local optima. Suppose that $f:A\rightarrow M_d(K)$. Then define $f_{a,X}:A\rightarrow M_d(K)$ to be the function where $f_{a,X}(a)=X$ and where $f_{a,X}(b)=f(b)$ whenever $b\neq a$.
+
+Round of optimization: In one round of optimization, we select an $a\in A$ at random according to some probability distribution. We use a version of gradient ascent to find an $X_0$ that locally maximizes the function $X\mapsto L(N,a_1\dots a_n,f_{a,X})$. If $L(N,a_1\dots a_n,f_{a,X_0})\geq L(N,a_1\dots a_n,f)$, then we update the function $f$ with $f_{a,X_0}$. We otherwise do not change $f$.
+
+The computational complexity of this optimization algorithm should not be an issue: $L(N,a_1\dots a_n,f_{a,X_0})$ can be efficiently approximated from
+$N((f(a))\_{a\in A})$ and $f(a_1)\dots f(a_n)$ for most reasonable matrix embedding potentials $N$.
+
+
 **A measure of local correctness**
 
 Suppose that $\frac{1}{r}+\frac{1}{s}=\frac{1}{t}$. Then recall that
