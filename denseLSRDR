@@ -122,6 +122,10 @@ end;
 toplambda=dot(toprighteigvec,newtoprighteigvec);
 bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
 
+#The following two lines of code are needed if we want the average of the toplefteigvec and toprighteigvec to be zero. This is useful for cryptography applications.
+#toplefteigvec-=ones(n)*(adjoint(ones(n))*(toplefteigvec/n));
+#toprighteigvec-=ones(n)*(adjoint(ones(n))*(toprighteigvec/n));
+
 toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
 toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
