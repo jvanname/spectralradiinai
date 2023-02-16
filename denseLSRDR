@@ -122,17 +122,14 @@ end;
 toplambda=dot(toprighteigvec,newtoprighteigvec);
 bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
 
+ #The following two lines of code are needed if we want the average of the toplefteigvec and toprighteigvec to be zero. This is useful for cryptography applications.
+ #newtoplefteigvec-=ones(n)*(adjoint(ones(n))*(newtoplefteigvec/n));
+ #newtoprighteigvec-=ones(n)*(adjoint(ones(n))*(newtoprighteigvec/n));
+
 toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
 toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
 bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
-
-#The following two lines of code are needed if we want the average of the toplefteigvec and toprighteigvec to be zero. This is useful for cryptography applications.
-#toplefteigvec-=ones(n)*(adjoint(ones(n))*(toplefteigvec/n));
-#toprighteigvec-=ones(n)*(adjoint(ones(n))*(toprighteigvec/n));
-
-
-
 # I have verified that the eigenvectors and eigenvalues are good.
 
 grad*=0.95;
