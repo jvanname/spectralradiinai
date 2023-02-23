@@ -29,12 +29,13 @@ end;
 return cc/ll;
 end;
 
-function bottomscore(multiplicity,vectors)
-mat=zeros(type,d,d);
-for i in 1:n
-mat+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
+function bottomscore(multiplicity,matrixtable)
+parttrace=zeros(type,d,d);
+for j in 1:n
+parttrace+=multiplicity[j]*matrixtable[j]*adjoint(matrixtable[j]);
 end;
-return log(norm(mat))/2;
+newparttrace=(parttrace+adjoint(parttrace))/2;
+return log(abs(tr(newparttrace^power)))/(2*power);
 end;
 
 function gradtopvecscore(list,vectors)
@@ -59,21 +60,21 @@ vecscore=function(multiplicity,list,vectors)
 return topvecscore(list,vectors)-bottomscore(multiplicity,vectors);
 end;
 
-function gradbottomscore(multiplicity,vectors)
-grad=[];
+function gradbottomscore(multiplicity,matrixtable)
+prematabstwo=zeros(type,d,d);
 for i in 1:n
-#push!(grad,zeros(type,d));
-push!(grad,vectors[i]*0);
+prematabstwo+=multiplicity[i]*matrixtable[i]*adjoint(matrixtable[i]);
 end;
-cc=zeros(type,d,d);
+matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
+normmat=maximum(eigvals(matabstwo));
+normmatabstwo=matabstwo/normmat;
+leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
+gradtable=[];
 for i in 1:n
-cc+=multiplicity[i]*vectors[i]*adjoint(vectors[i]);
+push!(gradtable,multiplicity[i]*leftfactor*matrixtable[i]);
 end;
-mash=[];
-for i in 1:n
-push!(mash,cc*multiplicity[i]*vectors[i]);
-end;
-return mash/norm(cc)^2;
+
+return gradtable;
 end;
 
 function gradvecscore(multiplicity,list,vectors)
