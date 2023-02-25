@@ -65,6 +65,8 @@ end;
 ##################################################################################################
 ##################################################################################################
 
+# Here is the code for finding an LSRDR projector.
+
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
 bottomlefteigvec=randn(ComplexF64,d,d);
