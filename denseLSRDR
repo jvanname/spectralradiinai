@@ -162,10 +162,9 @@ ss=randn(ComplexF64,n,d);
 rrgrad=rr*0;
 ssgrad=ss*0;
 
-rate=.2;
+rate=.5;
 pp=0;
 qq=-20;
-ham=0;
 while true
 newtoplefteigvec=toplefteigvec*0;
 newtoprighteigvec=toprighteigvec*0;
@@ -174,10 +173,10 @@ newbottomlefteigvec=bottomlefteigvec*0;
 newbottomrighteigvec=bottomrighteigvec*0;
 
 for i in 1:k
-newtoplefteigvec+=adjoint(aa[i])*toplefteigvec*bb[i];
-newtoprighteigvec+=aa[i]*toprighteigvec*adjoint(bb[i]);
-newbottomlefteigvec+=adjoint(bb[i])*bottomlefteigvec*bb[i];
-newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i])
+newtoplefteigvec+=adjoint(aa[i,:,:])*toplefteigvec*bb[i,:,:];
+newtoprighteigvec+=aa[i,:,:]*toprighteigvec*adjoint(bb[i,:,:]);
+newbottomlefteigvec+=adjoint(bb[i,:,:])*bottomlefteigvec*bb[i,:,:];
+newbottomrighteigvec+=bb[i,:,:]*bottomrighteigvec*adjoint(bb[i,:,:])
 end;
 toplambda=dot(toprighteigvec,newtoprighteigvec);
 bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
@@ -195,11 +194,11 @@ rrgrad*=0.95;
 ssgrad*=0.95;
 
 for i in 1:k
-rrgrad+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2*adjoint(aa[i]*ss);
-ssgrad+=0.05*adjoint(rr*aa[i])*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
+rrgrad+=0.05*adjoint(toplefteigvec)*aa[i,:,:]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2*adjoint(aa[i,:,:]*ss);
+ssgrad+=0.05*adjoint(rr*aa[i,:,:])*adjoint(toplefteigvec)*aa[i,:,:]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
 
-rrgrad-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2*adjoint(aa[i]*ss);
-ssgrad-=0.05*adjoint(rr*aa[i])*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2;
+rrgrad-=0.05*bottomlefteigvec*bb[i,:,:]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2*adjoint(aa[i,:,:]*ss);
+ssgrad-=0.05*adjoint(rr*aa[i,:,:])*bottomlefteigvec*bb[i,:,:]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2;
 end;
 
 #display([gradient(super,aa,rr,ss)[2]-rrgrad,gradient(super,aa,rr,ss)[3]-ssgrad])
@@ -211,21 +210,13 @@ rr/=norm(rr);
 ss/=norm(ss);
 
 for i in 1:k
-bb[i]=rr*aa[i]*ss;
+bb[i,:,:]=rr*aa[i,:,:]*ss;
 end;
 
-qq=qq*0.9+0.1*pp;
+qq=pp;
 pp=log(abs(toplambda/bottomlambda^(1/2)));
 display([pp,rate]);
-if pp<qq && ham>10 rate*=0.50; 
-ham=0;
-qq=pp;
 end;
-rate*=1.01;
-ham+=1;
-end;
-
-
 
 
 
