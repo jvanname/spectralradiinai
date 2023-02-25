@@ -1,3 +1,5 @@
+# Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an LSRDR of aa.
+
 n=200;
 d=20;
 k=20;
