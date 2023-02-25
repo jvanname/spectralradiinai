@@ -13,92 +13,6 @@ for i in 1:k
 bb[i,:,:]=rr*aa[i,:,:]*ss;
 end;
 
-#function topsuper(aa,rr,ss)
-#cc=kron(aa[1],adjoint(transpose(rr*aa[1]*ss)));
-#for i in 2:k
-#cc+=kron(aa[i],adjoint(transpose(rr*aa[i]*ss)));
-#end;
-#return log(rad(cc));
-#end;
-
-#function bottomsuper(aa,rr,ss)
-#cc=kron(rr*aa[1]*ss,adjoint(transpose(rr*aa[1]*ss)));
-#for i in 2:k
-#cc+=kron(rr*aa[i]*ss,adjoint(transpose(rr*aa[i]*ss)));
-#end;
-#return log(rad(cc));
-#end;
-
-#function super(aa,rr,ss)
-#return topsuper(aa,rr,ss)-bottomsuper(aa,rr,ss)/2; 
-#end;
-
-#u=randn(ComplexF64,n,d);
-#v=randn(ComplexF64,n,d);
-
-#ubot=randn(ComplexF64,d,d);
-#vbot=randn(ComplexF64,d,d);
-
-
-#lambda=0;
-#for iak in 1:10000
-#newu=u*0;
-#newv=v*0;
-#for i in 1:k
-#newv+=aa[i]*v*adjoint(bb[i]);
-#newu+=adjoint(aa[i])*u*bb[i];
-#end;
-#lambda=dot(v,newv);
-#u=newu/norm(newu);
-#v=newv/norm(newv);
-#end;
-
-#lambdabot=0;
-#for iak in 1:10000
-#newu=ubot*0;
-#newv=vbot*0;
-#for i in 1:k
-#newv+=bb[i]*vbot*adjoint(bb[i]);
-#newu+=adjoint(bb[i])*ubot*bb[i];
-#end;
-#lambdabot=dot(vbot,newv);
-#ubot=newu/norm(newu);
-#vbot=newv/norm(newv);
-#end;
-
-
-#function rad(x) return maximum(abs.(eigvals(x))); end;
- 
-#function sr(aa,bb)
-#cc=kron(aa[1],adjoint(transpose(bb[1])));
-#for i in 2:k
-#cc+=kron(aa[i],adjoint(transpose(bb[i])));
-#end;
-#return log(rad(cc));
-#end;
- 
-#gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
-#gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
-
-#rrgrad=rr*0;
-#ssgrad=ss*0;
-
-#for i in 1:k
-#rrgrad+=adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2*adjoint(aa[i]*ss);
-#ssgrad+=adjoint(rr*aa[i])*adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
-
-#rrgrad-=ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2*adjoint(aa[i]*ss);
-#ssgrad-=adjoint(rr*aa[i])*ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2;
-
-#### The following two lines are turned off since they are equal to the above two lines.
-#####rrgrad+=adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2*adjoint(aa[i]*ss);
-#####ssgrad+=adjoint(rr*aa[i])*adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2;
-#end;
-
-#gradient(super,aa,rr,ss)[2]-rrgrad;
-#gradient(super,aa,rr,ss)[3]-ssgrad;
-
-
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
 bottomlefteigvec=randn(ComplexF64,d,d);
@@ -222,4 +136,90 @@ end;
 ##################################################################################################
 ##################################################################################################
 
+#The following code is not currently in use, but I do not want to delete it just yet.
+
+#function topsuper(aa,rr,ss)
+#cc=kron(aa[1],adjoint(transpose(rr*aa[1]*ss)));
+#for i in 2:k
+#cc+=kron(aa[i],adjoint(transpose(rr*aa[i]*ss)));
+#end;
+#return log(rad(cc));
+#end;
+
+#function bottomsuper(aa,rr,ss)
+#cc=kron(rr*aa[1]*ss,adjoint(transpose(rr*aa[1]*ss)));
+#for i in 2:k
+#cc+=kron(rr*aa[i]*ss,adjoint(transpose(rr*aa[i]*ss)));
+#end;
+#return log(rad(cc));
+#end;
+
+#function super(aa,rr,ss)
+#return topsuper(aa,rr,ss)-bottomsuper(aa,rr,ss)/2; 
+#end;
+
+#u=randn(ComplexF64,n,d);
+#v=randn(ComplexF64,n,d);
+
+#ubot=randn(ComplexF64,d,d);
+#vbot=randn(ComplexF64,d,d);
+
+
+#lambda=0;
+#for iak in 1:10000
+#newu=u*0;
+#newv=v*0;
+#for i in 1:k
+#newv+=aa[i]*v*adjoint(bb[i]);
+#newu+=adjoint(aa[i])*u*bb[i];
+#end;
+#lambda=dot(v,newv);
+#u=newu/norm(newu);
+#v=newv/norm(newv);
+#end;
+
+#lambdabot=0;
+#for iak in 1:10000
+#newu=ubot*0;
+#newv=vbot*0;
+#for i in 1:k
+#newv+=bb[i]*vbot*adjoint(bb[i]);
+#newu+=adjoint(bb[i])*ubot*bb[i];
+#end;
+#lambdabot=dot(vbot,newv);
+#ubot=newu/norm(newu);
+#vbot=newv/norm(newv);
+#end;
+
+
+#function rad(x) return maximum(abs.(eigvals(x))); end;
+ 
+#function sr(aa,bb)
+#cc=kron(aa[1],adjoint(transpose(bb[1])));
+#for i in 2:k
+#cc+=kron(aa[i],adjoint(transpose(bb[i])));
+#end;
+#return log(rad(cc));
+#end;
+ 
+#gradient(sr,aa,bb)[1][1]-u*bb[1]*adjoint(v)*dot(u,v)*lambda/abs(dot(u,v)*lambda)^2;
+#gradient(sr,aa,bb)[2][1]-adjoint(u)*aa[1]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+
+#rrgrad=rr*0;
+#ssgrad=ss*0;
+
+#for i in 1:k
+#rrgrad+=adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2*adjoint(aa[i]*ss);
+#ssgrad+=adjoint(rr*aa[i])*adjoint(u)*aa[i]*v*adjoint(lambda)*dot(v,u)/abs(lambda*dot(v,u))^2;
+
+#rrgrad-=ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2*adjoint(aa[i]*ss);
+#ssgrad-=adjoint(rr*aa[i])*ubot*bb[i]*adjoint(vbot)*dot(ubot,vbot)*lambdabot/abs(dot(ubot,vbot)*lambdabot)^2;
+
+#### The following two lines are turned off since they are equal to the above two lines.
+#####rrgrad+=adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2*adjoint(aa[i]*ss);
+#####ssgrad+=adjoint(rr*aa[i])*adjoint(ubot)*bb[i]*vbot*adjoint(lambdabot)*dot(vbot,ubot)/abs(lambdabot*dot(vbot,ubot))^2;
+#end;
+
+#gradient(super,aa,rr,ss)[2]-rrgrad;
+#gradient(super,aa,rr,ss)[3]-ssgrad;
 
