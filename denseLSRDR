@@ -1,4 +1,6 @@
-# Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an LSRDR of aa.
+# Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an LSRDR of aa. To run the code just copy and paste into Julia.
+
+using Statistics,LinearAlgebra;
 
 n=200;
 d=20;
@@ -106,7 +108,7 @@ bottomrighteigvec=randn(ComplexF64,d,d);
 rate=.2;
 grad=bb*0;
 pp=0;
-qq=-20;
+qq=0;
 ham=0;
 while true
 newtoplefteigvec=toplefteigvec*0;
@@ -132,28 +134,23 @@ toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
 toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
 bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
 bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
-# I have verified that the eigenvectors and eigenvalues are good.
+
 
 grad*=0.95;
 for i in 1:k
 grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
 grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2
-#The following line is commenting since it is equal to the above line.
+#The following line is commented since it is equal to the above line.
 #grad[i]-=0.05*adjoint(bottomlefteigvec)*bb[i]*bottomrighteigvec*adjoint(bottomlambda)*dot(bottomrighteigvec,bottomlefteigvec)/abs(bottomlambda*dot(bottomrighteigvec,bottomlefteigvec))^2
 end;
 
 bb+=rate*grad;
 
 bb/=mean(norm.(bb));
-qq=qq*0.9+0.1*pp;
+qq=pp;
 pp=log(abs(toplambda/bottomlambda^(1/2)));
 display([pp,rate]);
-if pp<qq && ham>10 rate*=0.50; 
-ham=0;
-qq=pp;
-end;
-rate*=1.01;
-ham+=1;
+if pp=qq break; end;
 end;
 
 ##################################################################################################
