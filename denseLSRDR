@@ -2,16 +2,15 @@
 
 using Statistics,LinearAlgebra;
 
-n=200;
+n=50;
 d=20;
-k=20;
-aa=[];
-bb=[];
-rr=randn(ComplexF64,d,n);
-ss=randn(ComplexF64,n,d);
+k=10;
+aa=randn(ComplexF64,k,n,n);;
+bb=Array{ComplexF64,3}(undef,k,d,d);;
+rr=randn(ComplexF64,d,n);;
+ss=randn(ComplexF64,n,d);;
 for i in 1:k
-push!(aa,randn(ComplexF64,n,n));
-push!(bb,rr*aa[i]*ss);
+bb[i,:,:]=rr*aa[i,:,:]*ss;
 end;
 
 #function topsuper(aa,rr,ss)
