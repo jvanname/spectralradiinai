@@ -16,6 +16,8 @@ aa[i]=randn(ComplexF64,n,n);
 bb[i]=rr*aa[i]*ss;
 end;
 
+# These will approximate the dominant eigenvectors needed to compute the gradients of the spectral radii.
+
 toplefteigvec=randn(ComplexF64,n,d);
 toprighteigvec=randn(ComplexF64,n,d);
 bottomlefteigvec=randn(ComplexF64,d,d);
@@ -50,6 +52,7 @@ while true
  bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
  grad*=0.95;
  for i in 1:k
+# This is the gradient.
 grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
  grad[i]-=0.05*bottomlefteigvec*bb[i]*adjoint(bottomrighteigvec)*dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda/abs(dot(bottomlefteigvec,bottomrighteigvec)*bottomlambda)^2;
 #The following line is commented since it is equal to the above line.
