@@ -1,4 +1,5 @@
-# Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an LSRDR of aa. To run the code just copy and paste into Julia.
+# Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an L_{2,d}-spectral radius dimensionality reduction of aa.
+# To run the code just copy and paste into Julia.
 
 
 using Statistics,LinearAlgebra;
