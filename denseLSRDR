@@ -23,8 +23,8 @@ grad=zeros(ComplexF64,k,d,d);
 pp=0;
 qq=0;
 while true
- newtoplefteigvec=randn(ComplexF64,n,d);
- newtoprighteigvec=randn(ComplexF64,n,d);
+ newtoplefteigvec=zeros(ComplexF64,n,d);
+ newtoprighteigvec=zeros(ComplexF64,n,d);
  newbottomlefteigvec=zeros(ComplexF64,d,d);
  newbottomrighteigvec=zeros(ComplexF64,d,d);
 # We use power iteration to update the left and right eigenvectors and eigenvalues.
