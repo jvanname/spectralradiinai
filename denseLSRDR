@@ -1,6 +1,5 @@
 # Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an LSRDR of aa. To run the code just copy and paste into Julia.
 
-# I am going to change aa back so that we can use sparse matrices.
 
 using Statistics,LinearAlgebra;
 
