@@ -58,7 +58,7 @@ grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot
 
  bb+=rate*grad;
 
- bb/=norm(bb);
+ bb/=mean(norm.(bb));
  qq=pp;
  pp=log(abs(toplambda/bottomlambda^(1/2)));
  display([pp,rate]);
