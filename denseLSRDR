@@ -147,6 +147,16 @@ end;
 ##################################################################################################
 ##################################################################################################
 
+#qh=bottomrighteigvec/tr(bottomrighteigvec);
+#qh+=adjoint(qh);
+#qh=qh^(1/2);
+#ph=qh^(-1);
+#for i in 1:k
+#bb[i]=ph*bb[i]*qh;
+#end;
+#rr=ph*rr
+#ss=ss*qh
+
 #The following code is not currently in use, but I do not want to delete it just yet.
 
 #function topsuper(aa,rr,ss)
