@@ -1,3 +1,5 @@
+# I need to clean up the code here. We need a more stable learning rate. 
+
 using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
 
 #tok=[];
