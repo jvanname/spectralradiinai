@@ -5,7 +5,7 @@ We observe that $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2=\sum_{u,v\in V}|\langle\
 
 **Desirable properties**
 
-Uniqueness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ is typically unique in the sense that if $f:V\rightarrow K_1^d,g:V\rightarrow K_2^d$ are two GMNO hypergraph embeddings with multiplicity functions $m$ that are positive for $v_0$ with $\\|f(v_0)\\|=\\|g(v_0)\\|=1$ and which have been trained with gradient descent but which have different initial conditions and possibly different optimizers, then we would typically have $f=g$. If $K_1=\mathbb{C},K_2=\mathbb{R}$, then by uniqueness, the GMNO hypergraph embedding $f$ will automatically be a real-valued function up to a unitary transformation. 
+Uniqueness of local optimum: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ is typically unique in the sense that if $f:V\rightarrow K_1^d,g:V\rightarrow K_2^d$ are two GMNO hypergraph embeddings with multiplicity functions $m$ that are positive for $v_0$ with $\\|f(v_0)\\|=\\|g(v_0)\\|=1$ and which have been trained with gradient descent but which have different initial conditions and possibly different optimizers, then we would typically have $f=g$. If $K_1=\mathbb{C},K_2=\mathbb{R}$, then by uniqueness, the GMNO hypergraph embedding $f$ will automatically be a real-valued function up to a unitary transformation. 
 
 Learned realization: There are several straightforward generalizations of GMNO hypergraph embeddings of the form $f:V\rightarrow L$. For example, we could have $L=\mathbb{H}^d$ (where $\mathbb{H}$ is the division algebra of quaternions) or $L=M_{de,e}(\mathbb{R}),L=M_{de,e}(\mathbb{C})$. However, in each of these cases, there will usually be a GMNO hypergraph embedding $g:V\rightarrow\mathbb{R}^d$ and a linear map $\iota:\mathbb{R}^d\rightarrow L$ where $f=\iota\circ g$. 
 
@@ -17,6 +17,8 @@ Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singulariti
 
 Interpretability: The GMNO hypergraph embedding $f$ is often highly interpretable. One can visually represent GMNO hypergraph embeddings using the compositions
 $\pi\circ f:V\rightarrow K^n$ where $\pi:K^d\rightarrow K^n$ is a projection onto $n$ of $d$ coordinates and where $n\in\\{2,3\\}$. If the original hypergraph has geometric structure, then it is often easy to visually see this geometric structure from the plot of $\pi\circ f$.
+
+Improved performance in high dimensions: By setting the dimension $d$ to be high, the GMNO hypergraph embeddings is more likely to satisfy desirable properties including learned realization and the uniqueness of local optimum property.
 
 **Other properties**
 
