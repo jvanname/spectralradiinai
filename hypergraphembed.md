@@ -9,11 +9,13 @@ Uniqueness of local optimum: The GMNO hypergraph embedding $f$ for multiplicity 
 
 Learned realization: There are several straightforward generalizations of GMNO hypergraph embeddings of the form $f:V\rightarrow L$. For example, we could have $L=\mathbb{H}^d$ (where $\mathbb{H}$ is the division algebra of quaternions) or $L=M_{de,e}(\mathbb{R}),L=M_{de,e}(\mathbb{C})$. However, in each of these cases, there will usually be a GMNO hypergraph embedding $g:V\rightarrow\mathbb{R}^d$ and a linear map $\iota:\mathbb{R}^d\rightarrow L$ where $f=\iota\circ g$. 
 
+Dynamicity: GMNO hypergraph embeddings can be quickly updated for dynamic hypergraphs where new nodes and edges are often added to the hypergraph or removed from the hypergraph.
+
 Smoothness: The GMNO hypergraph embedding $f$ for multiplicity function $m$ that is positive for $v_0$ with $\\|f(v_0)\\|=1$ changes moderately one changes the hypergraph $f$ slightly. Furthermore, the Gram matrix of $f$ will change even less since the process of selecting a canonical basis of $f$ is discontinuous. The quantity $L(f,m,w)$ will change even less as one modifies the hypergraph $f$.
 
 Sphericity: If $f$ is a GMNO hypergraph embedding for a suitable multiplicity function $m$, then $\|f(v)\|$ will typically have very low variance. Therefore, the set $f[V]$ will be near the sphere $S^{d-1}$ as long as $E(\|f(v)\|)=1$ even though the fitness function for $f$ does not explicitly require for $f[V]$ to be near the sphere $S^{d-1}$. 
 
-Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings. The lack of singularities in the expression $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ also helps ensure that the hypergraph embedding $f$ is unique since singularities produce many local maxima.
+Thin singularities: While the function $f\mapsto L(f,m,w)$ does have singularities, the singularities of this function are of a small dimension and quite thin due the logarithmic function. The singularities of this function therefore do not disrupt the usability of GMNO hypergraph embeddings. The lack of singularities in the expression $\\|\sum_{v\in V}m(v)f(v)f(v)^\ast\\|^2$ also helps ensure that the hypergraph embedding $f$ is unique since singularities sometimes produce many local maxima.
 
 Interpretability: The GMNO hypergraph embedding $f$ is often highly interpretable. One can visually represent GMNO hypergraph embeddings using the compositions
 $\pi\circ f:V\rightarrow K^n$ where $\pi:K^d\rightarrow K^n$ is a projection onto $n$ of $d$ coordinates and where $n\in\\{2,3\\}$. If the original hypergraph has geometric structure, then it is often easy to visually see this geometric structure from the plot of $\pi\circ f$.
