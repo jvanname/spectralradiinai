@@ -1,5 +1,9 @@
 # Here we give examples of graph embeddings constructed using ideas similar to L_{2,d}-spectral radius dimensionality reduction.
-#
+# It turns out that graph embeddings work better when they represent nodes as rank-1 matrices rather than higher rank matrices. This is in contrast with MPO word embeddings that
+# seem to work well when representing tokens as higher rank matrices. In the case of rank-1 matrices, the spectral radius is just the trace. It is difficult to calculate the
+# gradient of anything involving the spectral radius using automatic differentiation, so one must manually compute the gradients of that case. But since we have found that
+# the spectral radius is not that relevant, we can to a large extent just get away with using automatic differentiation, but if we are using automatic differentiation
+# for everything, and if we are testing many graph embedding fitness functions, then the code is probably not worth saving since it is easy to produce new fitness functions.
 
 #gradient(g,x,y)[1]-adjoint(u)*adjoint(v)*(u*v)*lambda/abs(u*v*lambda)^2*adjoint(y)
 
