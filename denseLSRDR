@@ -1,6 +1,7 @@
 # Here, aa will be a list of matrices. bb will be trained by gradient ascent to converge to an L_{2,d}-spectral radius dimensionality reduction (LSRDR) of aa.
 # To run the code just copy and paste into Julia.
 
+# If the type is real, since we are only approximating the dominant eigenvectors using power iteration, if the two largest eigenvalues of the spectral radius of sum(kron.(aa,adjoint.(transpose.(bb)))) are complex conjugates with one another, then the power iteration will not accurately approximate either of these dominant eigenvectors. This is a good thing. Since the gradient ascent process uses these dominant eigenvectors and the dominant eigenvectors are not accurate, the gradient ascent will only maximize the fitness in the case here sum(kron.(aa,adjoint.(transpose.(bb)))) has a single dominant eigenvalue. But when sum(kron.(aa,adjoint.(transpose.(bb)))) has a single dominant eigenvalue, the fitness of bb will be higher than if sum(kron.(aa,adjoint.(transpose.(bb)))) has two conjugate dominant eigenvalues. Therefore, our version of gradient ascent can avoid local maxima which are not global maxima in the case when sum(kron.(aa,adjoint.(transpose.(bb)))) has two conjugate dominant eigenvalues.
 
 using Statistics,LinearAlgebra;
 
@@ -9,14 +10,6 @@ d=20;
 k=10;
 
 type=ComplexF64;
-
-# If the type is real, since we are only approximating the dominant eigenvectors using power iteration, if the two largest eigenvalues of the spectral radius of
-# sum(kron.(aa,adjoint.(transpose.(bb)))) are complex conjugates with one another, then the power iteration will not accurately approximate either of these dominant
-# eigenvectors. This is a good thing. Since the gradient ascent process uses these dominant eigenvectors and the dominant eigenvectors are not accurate, the gradient ascent
-# will only maximize the fitness in the case here sum(kron.(aa,adjoint.(transpose.(bb)))) has a single dominant eigenvalue. But when sum(kron.(aa,adjoint.(transpose.(bb))))
-# has a single dominant eigenvalue, the fitness of bb will be higher than if sum(kron.(aa,adjoint.(transpose.(bb)))) has two conjugate dominant eigenvalues. Therefore,
-# our version of gradient ascent can avoid local maxima which are not global maxima in the case when sum(kron.(aa,adjoint.(transpose.(bb)))) has two conjugate dominant
-# eigenvalues.
 
 aa=Array{Array{type,2},1}(undef,k);
 bb=Array{Array{type,2},1}(undef,k);
