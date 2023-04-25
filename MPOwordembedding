@@ -104,7 +104,7 @@ end;
 
 
 
-# This function is used nowhere. It is considered for deletion.
+
 function ftopexp(leftvector,rightvector,matrixtable)
 testtopeigenvector=deepcopy(leftvector);
 for i in 1:n
@@ -127,7 +127,6 @@ end;
 return log(rad(mat));
 end;
 
-#This function is used nowhere. I will probably delete it soon.
 function ftop(matrixtable)
 testtopeigenvector=deepcopy(topeigenvector);
 
@@ -155,96 +154,10 @@ end;
 return (cc+log(abs((newleftvector*rightvector)[1])))/n;
 end;
 
-function ff(blocksize,offset,leftvector,rightvector,matrixtable)
-nn=Int((n-(n%blocksize))/blocksize)-1;
-newleftvector=deepcopy(leftvector);
-cc=0;
-for i in 1:nn
-templeftvector=newleftvector*0;
-for j in 1:blocksize
-templeftvector+=exp(1.01*2*pi*im*j/blocksize)*newleftvector*matrixtable[list[blocksize*(i-1)+j+offset]];
-end;
-dd=dumbnorm(templeftvector);
-cc+=log(dd);
-newleftvector=templeftvector/dd;
-end;
-return (cc+log(abs((newleftvector*rightvector)[1])))/nn;
-end;
-
-function ffaverage(blocksize,leftvector,rightvector,matrixtable)
-cq=0;
-for i in 1:blocksize
-cq+=ff(blocksize,(i-1),leftvector,rightvector,matrixtable);
-end;
-return cq/blocksize;
-end;
-
-function blockmanualgradient(blocksize,offset,leftvector,rightvector,matrixtable)
-	nn=Int((n-(n%blocksize))/blocksize)-1;
-	leftlist=Array{Matrix{type}}(undef,nn+1);
-	rightlist=Array{Vector{type}}(undef,nn+1);
-	leftscalar=Array{type}(undef,nn+1);
-	rightscalar=Array{type}(undef,nn+1);
-	grad=[];
-	leftlist[1]=leftvector/norm(leftvector);
-	rightlist[nn+1]=rightvector/norm(rightvector);
-	leftscalar[1]=0.;
-	rightscalar[nn+1]=0.;
-		for i in 1:nn
-		dd=leftlist[1]*0;
-		for j in 1:blocksize
-		dd+=exp(1.01*2*pi*im*j/blocksize)*leftlist[i]*matrixtable[list[blocksize*(i-1)+j+offset]];
-		end;
-		#dd=leftlist[i]*matrixtable[list[i]];
-		fdd=dumbnorm(dd);
-		leftlist[i+1]=dd/fdd;
-		leftscalar[i+1]=leftscalar[i]+log(fdd);
-		end;
-		for i in reverse(1:nn)
-		dd=rightlist[nn+1]*0;
-		for j in 1:blocksize
-		dd+=exp(1.01*2*pi*im*j/blocksize)*matrixtable[list[blocksize*(i-1)+j+offset]]*rightlist[i+1];
-		end;
-		fdd=dumbnorm(dd);
-		rightlist[i]=dd/fdd;
-		rightscalar[i]=rightscalar[i+1]+log(fdd);
-		end;
-
-	#logeval=log(abs((leftlist[1]*rightlist[1])[1]))+rightscalar[1];
-
-	umm=(leftlist[1]*rightlist[1])[1];
-	logeval=log(abs(umm))+rightscalar[1];
-
-	#logeval=log(leftlist[nn+1]*rightlist[nn+1])+leftscalar[nn+1];
-		for i in 1:r
-		push!(grad,zeros(type,d,d));
-		end;
-
-		for i in 1:nn
-		for j in 1:blocksize
-		grad[list[blocksize*(i-1)+j+offset]]+=exp(1.01*2*pi*im*j/blocksize)*rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
-		end;
-		#grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
-		end;
-	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
-
-	return pan*adjoint.(grad)/nn;
-end;
-
-function blockmanualgradientaverage(blocksize,leftvector,rightvector,matrixtable)
-grad=blockmanualgradient(blocksize,0,leftvector,rightvector,matrixtable);
-for i in 2:blocksize
-grad+=blockmanualgradient(blocksize,i-1,leftvector,rightvector,matrixtable);
-end;
-return grad/blocksize;
-end;
-
 function g(matrixtable)
 parttrace=zeros(type,d,d);
 for j in 1:r
-parttrace+=countlist[j]^2*matrixtable[j]*adjoint(matrixtable[j]);
-##The above line of code is untested.
-##oldcode. parttrace+=matrixtable[j]*adjoint(matrixtable[j]);
+parttrace+=matrixtable[j]*adjoint(matrixtable[j]);
 end;
 newparttrace=(parttrace+adjoint(parttrace))/2;
 return log(abs(tr(newparttrace^power)))/(2*power);
@@ -256,17 +169,15 @@ function h(leftvector,rightvector,matrixtable)
 return f(leftvector,rightvector,matrixtable)-g(matrixtable);
 end;
 
-function hh(blocksize,leftvector,rightvector,matrixtable)
-return ffaverage(blocksize,leftvector,rightvector,matrixtable)-g(matrixtable);
-end;
-
-
-
 # hh does not rely on the bottomeigenvector
-ggrad=function(leftvector,rightvector,matrixtable)
+
+
+truegrad=function(leftvector,rightvector,matrixtable)
+#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
+
 prematabstwo=zeros(type,d,d);
 for i in 1:r
-prematabstwo+=countlist[i]^2*matrixtable[i]*adjoint(matrixtable[i]);
+prematabstwo+=matrixtable[i]*adjoint(matrixtable[i]);
 end;
 matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
 normmat=maximum(eigvals(matabstwo));
@@ -274,26 +185,14 @@ normmatabstwo=matabstwo/normmat;
 leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
 gradtable=[];
 for i in 1:r
-push!(gradtable,countlist[i]^2*leftfactor*matrixtable[i]);
+push!(gradtable,leftfactor*matrixtable[i]);
 end;
 
-return gradtable;
-end;
+return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
 
-truegrad=function(leftvector,rightvector,matrixtable)
-#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
-return manualgradient(leftvector,rightvector,matrixtable)-ggrad(leftvector,rightvector,matrixtable);
 #return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
 #return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
 end;
-
-magicgrad=function(blocksize,leftvector,rightvector,matrixtable)
-#display(norm(gradient(g,matrixtable)[1]-matrixtable/sum(abs2.(norm.(matrixtable)))));
-return blockmanualgradientaverage(blocksize,leftvector,rightvector,matrixtable)-ggrad(leftvector,rightvector,matrixtable);
-#return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
-#return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
-end;
-
 
 # hh does not rely on the bottomeigenvector
 
@@ -319,82 +218,30 @@ rightvector=randn(type,d);
 leftvector=adjoint(randn(type,d));
 
 
-rate=10000;
-pink=true;
-beta=0.;
-while true
-display("new realization");
-
-leftvector=leftvector/norm(leftvector);
-rightvector=rightvector/norm(rightvector);
-
-old=h(leftvector,rightvector,matrixtable);
-new=old;
-
-#grad=truegrad(leftvector,rightvector,matrixtable);
-grad=magicgrad(blocksize,leftvector,rightvector,matrixtable);
-ttt=time();
-counter=[];
-	while true
-	rate=rate*0.99;
-	beta=0.9*beta+(0.1)*0.9;
-	push!(counter,new);
-	marsgrad=truegrad(leftvector,rightvector,matrixtable);
-grad=beta*grad+(1-beta)*marsgrad;
-       old=new;
-	if rand(1:30)==1
-	for i in max(1,n-2000):n
-	leftvector=leftvector*matrixtable[list[i]];
-	leftvector=leftvector/dumbnorm(leftvector);
-	end;
-	leftvector=leftvector/norm(leftvector);
-	rightvector=adjoint(leftvector);
-#	old=h(leftvector,rightvector,matrixtable);
-	old=hh(blocksize,leftvector,rightvector,matrixtable);
-	end;
-#       new=h(leftvector,rightvector,matrixtable+rate*grad);
-       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad);
-       if old>=new
-       while true
-       rate=rate/2;
-       grad=beta*grad+(1-beta)*marsgrad;
-#       new=h(leftvector,rightvector,matrixtable+rate*grad)
-       new=hh(blocksize,leftvector,rightvector,matrixtable+rate*grad)
-       if old<=new
-       matrixtable+=rate*grad;
-       matrixtable=matrixtable/mean(norm.(matrixtable));
-       display(["minus",old,new,rate,length(counter)/(time()-ttt)]);
-       break;
-       end;
-       end;
-       else
-       tartable=[[rate,new]];
-       while true
-       rate=rate*1.4;
-       new=h(leftvector,rightvector,matrixtable+rate*grad);
-       if (last(tartable)[2]<new)
-       push!(tartable,[rate,new]);
-       else
-       rate=last(tartable)[1];
-       new=last(tartable)[2];
-       matrixtable+=rate*grad;
-       matrixtable=matrixtable/mean(norm.(matrixtable));
-       display([old,new,rate]);
-       break;
-       end;
-       end;
-       end;
-if time()-ttt>3600
-normalize(matrixtable);
-#for i in 1:r
-#matrixtable[i]+=0.99999999999*adjoint(transpose(matrixtable[i]));
-#end;
-matrixtable=matrixtable/mean(norm.(matrixtable));
-break;
+matrixtable=[];
+for i in 1:r
+push!(matrixtable,rand(type,d,d));
 end;
-       end;
-break;
 
+rightvector=randn(type,d);
+leftvector=adjoint(randn(type,d));
+
+grad=matrixtable*0.1;
+rate=100;
+while true
+for i in 1:n
+rightvector=matrixtable[list[i]]*rightvector;
+rightvector/=norm(rightvector);
+end;
+for i in 1:n
+leftvector=leftvector*matrixtable[list[i]];
+leftvector/=norm(leftvector);
+end;
+marsgrad=truegrad(leftvector,rightvector,matrixtable);
+grad=0.9*grad+0.1*marsgrad;
+matrixtable+=rate*grad;
+matrixtable=matrixtable/mean(norm.(matrixtable));
+display(h(leftvector,rightvector,matrixtable));
 end;
 
 function truescore(table) cc=matrixtable[1]^0; for i in 1:length(table) amp=matrixtable[list[table[i]]]; cc=cc*amp/norm(amp); end; return norm(cc)^(1/(length(table)-1)); end;
