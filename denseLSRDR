@@ -121,7 +121,8 @@ bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
 
 rrgrad*=0.95;
 ssgrad*=0.95;
-
+oldrrgrad=deepcopy(rrgrad);
+oldssgrad=deepcopy(ssgrad);
 for i in 1:k
 rrgrad+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2*adjoint(aa[i]*ss);
 ssgrad+=0.05*adjoint(rr*aa[i])*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot(toprighteigvec,toplefteigvec)/abs(toplambda*dot(toprighteigvec,toplefteigvec))^2;
@@ -145,6 +146,12 @@ end;
 qq=pp;
 pp=log(abs(toplambda/bottomlambda^(1/2)));
 display([pp,rate]);
+
+if rand(0:1)==0
+if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+end;
+
 end;
 
 ##################################################################################################
