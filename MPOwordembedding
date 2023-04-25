@@ -13,29 +13,28 @@ using LinearAlgebra,Flux,Statistics,TextAnalysis,MLDatasets
 #push!(tok,".");
 #end;
 
-pathname = "C://Users//Joseph Van Name/corpus/thebible.txt";
+#pathname = "C://Users//Joseph Van Name/corpus/thebible.txt";
 
-blocksize=2;
 power=2;
 
-sd=StringDocument(read(pathname,String));
+#sd=StringDocument(read(pathname,String));
 
 type=ComplexF64;
 
-remove_corrupt_utf8!(sd);
-prepare!(sd, strip_numbers);
-remove_case!(sd);
-tok=tokens(sd);
+#remove_corrupt_utf8!(sd);
+#prepare!(sd, strip_numbers);
+#remove_case!(sd);
+#tok=tokens(sd);
 
-wordlist=unique(tok);
-dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
+#wordlist=unique(tok);
+#dick=Dict{String,Int64}(wordlist[i]=>i for i=1:length(wordlist))
 
-n=length(tok);
-r=length(wordlist);
-list=Array{Int64}(undef,n);
-for i in 1:n
-list[i]=dick[tok[i]];
-end;
+#n=length(tok);
+#r=length(wordlist);
+#list=Array{Int64}(undef,n);
+#for i in 1:n
+#list[i]=dick[tok[i]];
+#end;
 
 list=[1,1,2,1,2,3,1,2,3,4,1,2,3,1,2,1];
 
