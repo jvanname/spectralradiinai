@@ -71,7 +71,7 @@ grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot
  pp=log(abs(toplambda/bottomlambda^(1/2)));
  display([pp,rate]);
  if pp==qq break; end;
-if abs(dot(grad,oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
 end;
 
 ##################################################################################################
