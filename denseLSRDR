@@ -68,7 +68,7 @@ grad[i]+=0.05*adjoint(toplefteigvec)*aa[i]*toprighteigvec*adjoint(toplambda)*dot
 
  bb/=mean(norm.(bb));
  qq=pp;
- pp=log(abs(toplambda/bottomlambda^(1/2)));
+ pp=log(abs(toplambda/abs(bottomlambda)^(1/2)));
  display([pp,rate]);
  if pp==qq break; end;
 if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
@@ -144,7 +144,7 @@ bb[i]=rr*aa[i]*ss;
 end;
 
 qq=pp;
-pp=log(abs(toplambda/bottomlambda^(1/2)));
+pp=log(abs(toplambda/abs(bottomlambda)^(1/2)));
 display([pp,rate]);
 
 if rand(0:1)==0
