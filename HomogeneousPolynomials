@@ -41,10 +41,48 @@ qhh=norm(output);
 output/=qhh;
 lognorm+=qhh;
 end;
-return log(rad(output))+qhh;
+return log(rad(output[1]))+lognorm;
+end;
+
+inputs=[];
+weights=[];
+matrices=[];
+
+type=ComplexF64;
+depth=5;
+width=10;
+d=8;
+layerdeg=3;
+density=10;
+for i in 1:width
+push!(matrices,randn(type,d,d));
 end;
 
 
+inputs=[];
+weights=[];
+
+for ii in 1:depth
+
+layerinputs=[];
+layerweights=[];
+for i in 1:width
+
+neuroninput=[];
+neuronweight=[];
+for j in 1:density
+push!(neuroninput,[]);
+push!(neuronweight,randn(type));
+for k in 1:layerdeg
+push!(neuroninput[j],rand(1:width));
+end;
+end;
+push!(layerinputs,neuroninput);
+push!(layerweights,neuronweight);
+end;
+push!(inputs,layerinputs);
+push!(weights,layerweights);
+end;
 
 
 
