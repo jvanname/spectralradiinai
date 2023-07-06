@@ -30,12 +30,12 @@ end;
 return output;
 end;
 
-# Network is not working properly yet.
 function network(inputs,weights,matrices)
 n=length(inputs);
 output=matrices;
 lognorm=0;
 for i in 1:n
+lognorm*=length(inputs[i][1]);
 output=layer(inputs[i],weights[i],output);
 qhh=norm(output);
 output/=qhh;
