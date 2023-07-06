@@ -30,6 +30,7 @@ end;
 return output;
 end;
 
+# Network is not working properly yet.
 function network(inputs,weights,matrices)
 n=length(inputs);
 output=matrices;
