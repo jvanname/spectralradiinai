@@ -1,0 +1,44 @@
+# Here, we shall use the spectral radii of homogeneous non-commutative polynomials with matrices as inputs in order to construct machine learning models for AI safety purposes.
+# The code here shall be in the language Julia.
+
+function neuron(inputs,weights,matrices)
+n=size(matrices[1])[1];
+
+output=zeros(type,n,n);
+for i in 1:length(inputs)
+mix=Matrix(I,n,n);
+for a in inputs[i]
+mix=mix*matrices[a];
+end;
+output+=weights[i]*mix;
+end;
+
+return output;
+end;
+
+function layer(inputs,weights,matrices)
+output=[];
+n=length(inputs);
+for i in 1:n
+push!(output,neuron(inputs[i],weights[i],matrices));
+end;
+return output;
+end;
+
+function network(inputs,weights,matrices)
+n=length(inputs);
+output=matrices;
+lognorm=0;
+for i in 1:n
+output=layer(inputs[i],weights[i],output);
+qhh=norm(output);
+output/=qhh;
+lognorm+=qhh;
+end;
+return log(rad(output))+qhh;
+end;
+
+
+
+
+
