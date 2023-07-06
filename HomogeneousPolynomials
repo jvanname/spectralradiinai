@@ -1,5 +1,10 @@
 # Here, we shall use the spectral radii of homogeneous non-commutative polynomials with matrices as inputs in order to construct machine learning models for AI safety purposes.
+# Our goal is to maximize $\frac{\rho(p(X_1,\dots,X_r))^{1/r}}{\rho(X_1\otimes\overline{X_1}+\dots+X_r\otimes\overline{X_r})}$ where $p$ is some homogeneous non-commutative
+# polynomial.
+
 # The code here shall be in the language Julia.
+
+
 
 function neuron(inputs,weights,matrices)
 n=size(matrices[1])[1];
