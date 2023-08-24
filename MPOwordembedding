@@ -56,50 +56,76 @@ function dumbnorm(x)
 return sum(abs.(real.(x))); 
 end;
 
-
-
+# I am commenting the code for the gradient here since it does not work for quaternions.
+#function manualgradient(leftvector,rightvector,matrixtable)
+#	leftlist=Array{Matrix{type}}(undef,n+1);
+#	rightlist=Array{Vector{type}}(undef,n+1);
+#	leftscalar=Array{type}(undef,n+1);
+#	rightscalar=Array{type}(undef,n+1);
+#	grad=[];
+#	leftlist[1]=leftvector/norm(leftvector);
+#	rightlist[n+1]=rightvector/norm(rightvector);
+#	leftscalar[1]=0.;
+#	rightscalar[n+1]=0.;
+#		for i in 1:n
+#		dd=leftlist[i]*matrixtable[list[i]];
+#		fdd=dumbnorm(dd);
+#		leftlist[i+1]=dd/fdd;
+#		leftscalar[i+1]=leftscalar[i]+log(fdd);
+#		end;
+#		for i in reverse(1:n)
+#		dd=matrixtable[list[i]]*rightlist[i+1];
+#		fdd=dumbnorm(dd);
+#		rightlist[i]=dd/fdd;
+#		rightscalar[i]=rightscalar[i+1]+log(fdd);
+#		end;
+#
+#	#logeval=log(abs((leftlist[1]*rightlist[1])[1]))+rightscalar[1];
+#
+#	umm=(leftlist[1]*rightlist[1])[1];
+#	logeval=log(abs(umm))+rightscalar[1];
+#
+#	#logeval=log(leftlist[n+1]*rightlist[n+1])+leftscalar[n+1];
+#		for i in 1:r
+#		push!(grad,zeros(type,d,d));
+#		end;
+#
+#		for i in 1:n
+#		grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
+#		end;
+#	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
+#
+#	return pan*adjoint.(grad)/n;
+#end;
 
 function manualgradient(leftvector,rightvector,matrixtable)
 	leftlist=Array{Matrix{type}}(undef,n+1);
 	rightlist=Array{Vector{type}}(undef,n+1);
-	leftscalar=Array{type}(undef,n+1);
-	rightscalar=Array{type}(undef,n+1);
+	rightscalar=Array{Float64}(undef,n+1);
 	grad=[];
 	leftlist[1]=leftvector/norm(leftvector);
 	rightlist[n+1]=rightvector/norm(rightvector);
-	leftscalar[1]=0.;
-	rightscalar[n+1]=0.;
 		for i in 1:n
 		dd=leftlist[i]*matrixtable[list[i]];
 		fdd=dumbnorm(dd);
 		leftlist[i+1]=dd/fdd;
-		leftscalar[i+1]=leftscalar[i]+log(fdd);
 		end;
 		for i in reverse(1:n)
 		dd=matrixtable[list[i]]*rightlist[i+1];
 		fdd=dumbnorm(dd);
+        rightscalar[i]=fdd;
 		rightlist[i]=dd/fdd;
-		rightscalar[i]=rightscalar[i+1]+log(fdd);
 		end;
-
-	#logeval=log(abs((leftlist[1]*rightlist[1])[1]))+rightscalar[1];
-
-	umm=(leftlist[1]*rightlist[1])[1];
-	logeval=log(abs(umm))+rightscalar[1];
-
-	#logeval=log(leftlist[n+1]*rightlist[n+1])+leftscalar[n+1];
 		for i in 1:r
 		push!(grad,zeros(type,d,d));
 		end;
-
 		for i in 1:n
-		grad[list[i]]+=rightlist[i+1]*leftlist[i]*exp(leftscalar[i]+rightscalar[i+1]-logeval);
+cc=(leftlist[i]*rightlist[i])[1,1]*rightscalar[i]
+ccc=cc/abs(cc)^2;
+		grad[list[i]]+=adjoint(leftlist[i])*ccc*adjoint(rightlist[i+1]);
 		end;
-	pan=((leftlist[1]*rightlist[1])[1])/abs((leftlist[1]*rightlist[1])[1]);
-
-	return pan*adjoint.(grad)/n;
+return grad/n;
 end;
-
 
 
 
@@ -179,7 +205,7 @@ for i in 1:r
 prematabstwo+=matrixtable[i]*adjoint(matrixtable[i]);
 end;
 matabstwo=(prematabstwo+adjoint(prematabstwo))/2;
-normmat=maximum(eigvals(matabstwo));
+normmat=abs(tr(real.(matabstwo)));
 normmatabstwo=matabstwo/normmat;
 leftfactor=normmatabstwo^(power-1)/(tr(normmatabstwo^power)*normmat);
 gradtable=[];
@@ -189,8 +215,6 @@ end;
 
 return manualgradient(leftvector,rightvector,matrixtable)-gradtable;
 
-#return manualgradient(leftvector,rightvector,matrixtable)-matrixtable/sum(abs2.(norm.(matrixtable)));
-#return manualgradient(leftvector,rightvector,matrixtable)-gradient(g,matrixtable)[1];
 end;
 
 # hh does not rely on the bottomeigenvector
