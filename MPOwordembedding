@@ -252,11 +252,11 @@ leftvector=adjoint(randn(type,d));
 grad=matrixtable*0.1;
 rate=100;
 while true
-for i in 1:n
+for i in reverse(1:n)
 rightvector=matrixtable[list[i]]*rightvector;
 rightvector/=norm(rightvector);
 end;
-for i in reversed(1:n)
+for i in 1:n
 leftvector=leftvector*matrixtable[list[i]];
 leftvector/=norm(leftvector);
 end;
