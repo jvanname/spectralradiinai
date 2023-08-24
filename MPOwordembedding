@@ -256,7 +256,7 @@ for i in 1:n
 rightvector=matrixtable[list[i]]*rightvector;
 rightvector/=norm(rightvector);
 end;
-for i in 1:n
+for i in reversed(1:n)
 leftvector=leftvector*matrixtable[list[i]];
 leftvector/=norm(leftvector);
 end;
