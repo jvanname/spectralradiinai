@@ -266,7 +266,7 @@ matrixtable+=rate*grad;
 matrixtable=matrixtable/mean(norm.(matrixtable));
 display(h(leftvector,rightvector,matrixtable));
 
-if abs(dot(grad,marsgrad))<0.9999 rate*=0.99; else rate*=1.01; end;
+if abs(dot(grad,marsgrad))/(norm(grad)*norm(marsgrad))<0.9999 rate*=0.99; else rate*=1.01; end;
 end;
 
 function truescore(table) cc=matrixtable[1]^0; for i in 1:length(table) amp=matrixtable[list[table[i]]]; cc=cc*amp/norm(amp); end; return norm(cc)^(1/(length(table)-1)); end;
