@@ -98,6 +98,8 @@ end;
 #	return pan*adjoint.(grad)/n;
 #end;
 
+comptest=true;
+
 function manualgradient(leftvector,rightvector,matrixtable)
 	leftlist=Array{Matrix{type}}(undef,n+1);
 	rightlist=Array{Vector{type}}(undef,n+1);
@@ -121,8 +123,9 @@ function manualgradient(leftvector,rightvector,matrixtable)
 		end;
 		for i in 1:n
 cc=(leftlist[i]*rightlist[i])[1,1]*rightscalar[i]
+if type=Float64 && cc<=0 comptest=false; end;
 ccc=cc/abs(cc)^2;
-		grad[list[i]]+=adjoint(leftlist[i])*ccc*adjoint(rightlist[i+1]);
+grad[list[i]]+=adjoint(leftlist[i])*ccc*adjoint(rightlist[i+1]);
 		end;
 return grad/n;
 end;
