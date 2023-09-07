@@ -267,8 +267,10 @@ marsgrad=truegrad(leftvector,rightvector,matrixtable);
 grad=0.9*grad+0.1*marsgrad;
 matrixtable+=rate*grad;
 matrixtable=matrixtable/mean(norm.(matrixtable));
-display(h(leftvector,rightvector,matrixtable));
-
+qq=pp;
+pp=h(leftvector,rightvector,matrixtable);
+if pp==qq break; end;
+display(pp);
 if abs(dot(grad,marsgrad))/(norm(grad)*norm(marsgrad))<0.9999 rate*=0.99; else rate*=1.01; end;
 end;
 
