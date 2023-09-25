@@ -147,10 +147,8 @@ qq=pp;
 pp=log(abs(toplambda/abs(bottomlambda)^(1/2)));
 display([pp,rate]);
 
-if rand(0:1)==0
-if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.999 rate*=0.99; else rate*=1.01; end;
-if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.999 rate*=0.99; else rate*=1.01; end;
-end;
+if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.999 rate*=0.995; else rate*=1.005; end;
+if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.999 rate*=0.995; else rate*=1.005; end;
 
 end;
 
