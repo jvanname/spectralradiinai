@@ -184,7 +184,7 @@ vectors/=mean(norm.(vectors));
 vectors+=rate*grad;
 pp=vecscore(multiplicity,list,vectors);
 display([pp,rate]);
-if qq>pp rate*=0.5; end;
+#if qq>pp rate*=0.5; end;
 qq=pp;
 end;
 
