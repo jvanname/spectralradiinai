@@ -174,7 +174,7 @@ grad=vectors*0;
 pp=1;
 qq=1;
 while true
-rate=rate*1.05;
+#rate=rate*1.05;
 #grad=0.95*grad+0.05*gradvecscore(multiplicity,list,vectors);
 newgrad=gradvecscore(multiplicity,list,vectors);
 for i in 1:length(grad)
