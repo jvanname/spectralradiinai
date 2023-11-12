@@ -1,0 +1,150 @@
+# LSRSLEMs are L_2 spectral radius similarity log expected maximizers. 
+# LSRSLEMs can be used to solve classification and clustering problems in machine learning. If you are lucky, the process of obtaining your LSRSLEM will be pseudodeterministic, and the resulting
+# matrices will be positive semidefinite.
+# For LSRSLEMs each data value must be written as a collection of square matrices, and for best performance, these matrices should be nearly positive semidefinite.
+# LSRSLEMs are not deep. It is unclear how one can generalize LSRSLEMs to deep machine learning algorithms with many layers of learning.
+
+using Statistics,LinearAlgebra,Flux;
+
+n=1;
+d=7;
+k=10;
+ll=100;
+
+rate=0.0001;
+type=Float64;
+
+aa=[];
+bb=Array{Array{type,2},1}(undef,k);
+for i in 1:2*ll
+push!(aa,[]);
+for j in 1:k
+xx=randn(type,n,n);
+yy=randn(type,n,n);
+zz=randn(type,n,n);
+ww=randn(type,n,n);
+push!(aa[length(aa)],xx*adjoint(xx)*rand(0:1));
+end;
+if length(aa)>=ll
+aa=unique(aa);
+end;
+if length(aa)==ll break; end;
+end;
+
+if minimum(norm.(aa))<0.1 aa=[]; end;
+
+bb=Array{Array{type,2},1}(undef,k);
+for i in 1:k
+bb[i]=randn(type,d,d)^0+randn(type,d,d)*0.0000001;
+end;
+
+power=2;
+
+function f(xx)
+cc=zeros(type,d,d);
+for i in 1:k
+cc+=xx[i]*adjoint(xx[i]);
+end;
+return log(norm(cc^power))/(2*power);
+end;
+
+function g(x)
+nar=x*mar*adjoint(x);
+return norm(x*adjoint(x)-Matrix(I,d,d))^2+norm(nar-Diagonal(nar))^2;
+end;
+
+# These will approximate the dominant eigenvectors needed to compute the gradients of the spectral radii.
+toplefteigvec=[];
+toprighteigvec=[];
+for i in 1:ll
+push!(toplefteigvec,randn(type,n,d));
+push!(toprighteigvec,randn(type,n,d));
+end;
+#toplefteigvec=randn(type,n,d);
+#toprighteigvec=randn(type,n,d);
+
+grad=bb*0;
+pp=0;
+qq=0;
+
+dd=0;
+ddlist=[];
+omm=0;
+panic=[];
+rate=0.00001;
+yy=randn(d,d)^0;
+grady=yy*0;
+arm=0;
+while true
+#mar=bb[1]*0; for i in 1:length(bb) mar+=bb[i]*adjoint(bb[i]); end;
+#for i in 1:100
+#grady=0.95*grady+0.05*gradient(g,yy)[1];
+#yy-=arm*grady;
+#end;
+#arm=0.99*arm+0.01*1;
+
+if rate<0.00001 rate*=1.02; end;
+#bbb=deepcopy(bb);
+#makebasis(bbb);
+#cash=[sqrt.(abs.(bbb[1])),sqrt.(abs.(bbb[2])),sqrt.(abs.(bbb[3]))];
+#for i in 1:3
+#cash[i]/=maximum(cash[i]);
+#cash[i]*=256;
+#cash[i]=ceil.(cash[i])-ones(d,d);
+#end;
+#newcash=[UInt8.(cash[1]),UInt8.(cash[2]),UInt8.(cash[3])];
+#push!(panic,newcash);
+
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+toplambda=dot.(toprighteigvec,newtoprighteigvec);
+for iqm in 1:4
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+for i in 1:k
+for j in 1:ll
+if aa[j][i]==0 continue; end;
+newtoplefteigvec[j]+=adjoint(aa[j][i])*toplefteigvec[j]*bb[i];
+newtoprighteigvec[j]+=aa[j][i]*toprighteigvec[j]*adjoint(bb[i]);
+end;
+end;
+toplambda=dot.(toprighteigvec,newtoprighteigvec);
+ #The following two lines of code are needed if we want the average of the toplefteigvec and 
+ # toprighteigvec to be zero. This is useful for cryptography applications.
+ #newtoplefteigvec-=ones(n)*(adjoint(ones(n))*(newtoplefteigvec/n));
+ #newtoprighteigvec-=ones(n)*(adjoint(ones(n))*(newtoprighteigvec/n));
+
+for i in 1:ll
+ toplefteigvec[i]=newtoplefteigvec[i]/norm(newtoplefteigvec[i]);
+ toprighteigvec[i]=newtoprighteigvec[i]/norm(newtoprighteigvec[i]);
+end;
+end;
+#poom=[];
+#for a in toplefteigvec
+#push!(poom,Float16.(deepcopy(yy*vec(a))));
+#end;
+#push!(panic,poom);
+
+ grad*=0.95;
+ oldgrad=deepcopy(grad);
+for i in 1:k
+for j in 1:ll
+if aa[j][i]==0 continue; end;
+grad[i]+=0.05*adjoint(toplefteigvec[j])*aa[j][i]*toprighteigvec[j]*adjoint(toplambda[j])*dot(toprighteigvec[j],toplefteigvec[j])/abs(toplambda[j]*dot(toprighteigvec[j],toplefteigvec[j]))^2/ll;
+end;
+end;
+grad-=0.05*gradient(f,bb)[1];
+
+ bb+=rate*grad;
+
+ bb/=mean(norm.(bb));
+ qq=pp;
+pp=mean(log.(abs.(toplambda)))-f(bb);
+# pp=log(abs(toplambda/abs(bottomlambda)^(1/2)));
+arf=abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad));
+ display([pp,rate,arf,norm(grad),dd,g(yy)]);
+if pp==qq break; end;
+#if pp==qq if norm(grad)<10^(-14) break; end; end;
+if arf<0.99999 rate*=0.99; else rate*=1.01; end;
+#push!(ddlist,tr(sum(bb)));
+end;
