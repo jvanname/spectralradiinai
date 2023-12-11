@@ -109,6 +109,12 @@ newbottomrighteigvec+=bb[i]*bottomrighteigvec*adjoint(bb[i])
 end;
 toplambda=dot(toprighteigvec,newtoprighteigvec);
 bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
+# newtoplefteigvec-=ones(n)*(adjoint(ones(n))*(newtoplefteigvec/n));
+# newtoprighteigvec-=ones(n)*(adjoint(ones(n))*(newtoprighteigvec/n));
+#for i in 1:d
+#rr[i,:]-=ones(n)*mean(rr[i,:]);
+#ss[:,i]-=ones(n)*mean(ss[:,i]);
+#end;
 
 toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
 toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
@@ -147,8 +153,8 @@ qq=pp;
 pp=log(abs(toplambda/abs(bottomlambda)^(1/2)));
 display([pp,rate]);
 
-if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.999 rate*=0.995; else rate*=1.005; end;
-if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.999 rate*=0.995; else rate*=1.005; end;
+if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.9999 rate*=0.995; else rate*=1.005; end;
+if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.9999 rate*=0.995; else rate*=1.005; end;
 
 end;
 
