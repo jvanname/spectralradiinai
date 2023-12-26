@@ -1,0 +1,118 @@
+#CLSRDR stands for compositional L_2-spectral radius dimensionality reduction.
+
+using LinearAlgebra,Flux;
+
+type=ComplexF64;
+
+tendim=[5,5,5,5];
+aalist=[20,20,20,20];
+bblist=[20,15,15,15]
+aa=[];
+
+function onemodulo(x,y) return (y+x-1)%y+1; end;
+
+
+for i in 1:length(tendim)
+push!(aa,[]);
+for j in 1:tendim[i]
+push!(aa[i],randn(aalist[i],aalist[onemodulo(i+1,length(tendim))]));
+end;
+end;
+
+
+bb=[];
+for i in 1:length(tendim)
+push!(bb,[]);
+for j in 1:tendim[i]
+push!(bb[i],randn(type,bblist[i],bblist[onemodulo(i+1,length(tendim))]));
+end;
+end;
+
+
+toplefteigvec=[];
+toprighteigvec=[];
+bottomlefteigvec=[];
+bottomrighteigvec=[];
+for i in 1:length(tendim)
+push!(toprighteigvec,randn(type,aalist[onemodulo(i+1,length(tendim))],bblist[onemodulo(i+1,length(tendim))]));
+push!(toplefteigvec,randn(type,aalist[i],bblist[i]));
+push!(bottomrighteigvec,randn(type,bblist[onemodulo(i+1,length(tendim))],bblist[onemodulo(i+1,length(tendim))]));
+push!(bottomlefteigvec,randn(type,bblist[i],bblist[i]));
+end;
+
+
+grad=bb*0.001;
+pp=0;
+qq=1;
+rate=1;
+
+function rad(x) return maximum(abs.(eigvals(x))); end;
+
+function h(aa,bb) return sum(kron.(aa,adjoint.(transpose.(bb)))); end;
+
+function hh(aa,bb) return log(rad(prod(h.(aa,bb)))); end;
+function fitness(bb) return hh(aa,bb)-hh(bb,bb)/2; end;
+
+#while true
+#newgrad=gradient(fitness,bb)[1];
+#grad=0.9*grad+0.1*newgrad;
+#bb+=grad;
+#if abs(dot(grad,newgrad))/(norm(grad)*norm(newgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+#for i in 1:length(tendim)
+#bb[i]/=norm(bb[i]);
+#end;
+#display(fitness(bb));
+#end;
+
+count=0;
+ook=0;
+while true
+count+=1;
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
+
+for i in 1:length(tendim)
+for j in 1:tendim[i];
+newtoprighteigvec[onemodulo(i-1,length(tendim))]+=aa[i][j]*toprighteigvec[i]*adjoint(bb[i][j]);
+newbottomrighteigvec[onemodulo(i-1,length(tendim))]+=bb[i][j]*bottomrighteigvec[i]*adjoint(bb[i][j]);
+newtoplefteigvec[onemodulo(i+1,length(tendim))]+=adjoint(aa[i][j])*toplefteigvec[i]*bb[i][j];
+newbottomlefteigvec[onemodulo(i+1,length(tendim))]+=adjoint(bb[i][j])*bottomlefteigvec[i]*bb[i][j];
+end;
+end;
+
+toplambda=[];
+bottomlambda=[];
+for i in 1:length(tendim)
+push!(toplambda,dot(toprighteigvec[i],newtoprighteigvec[i]));
+push!(bottomlambda,dot(bottomrighteigvec[i],newbottomrighteigvec[i]));
+end;
+
+grad*=0.9;
+oldgrad=deepcopy(grad);
+
+for i in 1:length(tendim)
+for j in 1:tendim[i];
+grad[i][j]+=0.1*adjoint(toplefteigvec[i])*aa[i][j]*toprighteigvec[i]/dot(newtoplefteigvec[onemodulo(i+1,length(tendim))],toprighteigvec[i]);
+
+grad[i][j]-=0.1*adjoint(bottomlefteigvec[i])*bb[i][j]*bottomrighteigvec[i]/dot(newbottomlefteigvec[onemodulo(i+1,length(tendim))],bottomrighteigvec[i])
+end;
+end;
+bb+=rate*grad;
+for i in 1:length(tendim)
+bb[i]/=mean(norm(bb[i]));
+end;
+for i in 1:length(tendim)
+toplefteigvec[i]=newtoplefteigvec[i]/norm(newtoplefteigvec[i]);
+toprighteigvec[i]=newtoprighteigvec[i]/norm(newtoprighteigvec[i]);
+bottomlefteigvec[i]=newbottomlefteigvec[i]/norm(newbottomlefteigvec[i]);
+bottomrighteigvec[i]=newbottomrighteigvec[i]/norm(newbottomrighteigvec[i]);
+end;
+
+qq=pp;
+pp=sum(log.(abs.(toplambda)))-sum(log.(abs.(bottomlambda)))/2;
+display([pp,rate]);
+if pp==qq break; end;
+if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+end;
