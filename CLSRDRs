@@ -116,3 +116,95 @@ display([pp,rate]);
 if pp==qq break; end;
 if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
 end;
+
+############################################################################################################################################
+############################################################################################################################################
+############################################################################################################################################
+
+rr=[];
+ss=[];
+for i in 1:length(tendim)
+push!(rr,randn(type,bblist[i],aalist[i]));
+push!(ss,randn(type,aalist[onemodulo(i+1,length(tendim))],bblist[onemodulo(i+1,length(tendim))]));
+end;
+
+toplefteigvec=[];
+toprighteigvec=[];
+bottomlefteigvec=[];
+bottomrighteigvec=[];
+for i in 1:length(tendim)
+push!(toprighteigvec,randn(type,aalist[onemodulo(i+1,length(tendim))],bblist[onemodulo(i+1,length(tendim))]));
+push!(toplefteigvec,randn(type,aalist[i],bblist[i]));
+push!(bottomrighteigvec,randn(type,bblist[onemodulo(i+1,length(tendim))],bblist[onemodulo(i+1,length(tendim))]));
+push!(bottomlefteigvec,randn(type,bblist[i],bblist[i]));
+end;
+
+
+rrgrad=rr*0.001;
+ssgrad=ss*0.001;
+pp=0;
+qq=1;
+rate=1;
+
+count=0;
+ook=0;
+while true
+count+=1;
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
+
+for i in 1:length(tendim)
+for j in 1:tendim[i];
+newtoprighteigvec[onemodulo(i-1,length(tendim))]+=aa[i][j]*toprighteigvec[i]*adjoint(bb[i][j]);
+newbottomrighteigvec[onemodulo(i-1,length(tendim))]+=bb[i][j]*bottomrighteigvec[i]*adjoint(bb[i][j]);
+newtoplefteigvec[onemodulo(i+1,length(tendim))]+=adjoint(aa[i][j])*toplefteigvec[i]*bb[i][j];
+newbottomlefteigvec[onemodulo(i+1,length(tendim))]+=adjoint(bb[i][j])*bottomlefteigvec[i]*bb[i][j];
+end;
+end;
+
+toplambda=[];
+bottomlambda=[];
+for i in 1:length(tendim)
+push!(toplambda,dot(toprighteigvec[i],newtoprighteigvec[i]));
+push!(bottomlambda,dot(bottomrighteigvec[i],newbottomrighteigvec[i]));
+end;
+
+rrgrad*=0.9;
+ssgrad*=0.9;
+oldrrgrad=deepcopy(rrgrad);
+oldssgrad=deepcopy(ssgrad);
+
+for i in 1:length(tendim)
+for j in 1:tendim[i];
+rrgrad[i]+=0.1*adjoint(toplefteigvec[i])*aa[i][j]*toprighteigvec[i]*adjoint(ss[i])*adjoint(aa[i][j])/dot(newtoplefteigvec[onemodulo(i+1,length(tendim))],toprighteigvec[i]);
+ssgrad[i]+=0.1*adjoint(aa[i][j])*adjoint(rr[i])*adjoint(toplefteigvec[i])*aa[i][j]*toprighteigvec[i]/dot(newtoplefteigvec[onemodulo(i+1,length(tendim))],toprighteigvec[i]);
+rrgrad[i]-=0.1*adjoint(bottomlefteigvec[i])*bb[i][j]*bottomrighteigvec[i]*adjoint(ss[i])*adjoint(aa[i][j])/dot(newbottomlefteigvec[onemodulo(i+1,length(tendim))],bottomrighteigvec[i]);
+ssgrad[i]-=0.1*adjoint(aa[i][j])*adjoint(rr[i])*adjoint(bottomlefteigvec[i])*bb[i][j]*bottomrighteigvec[i]/dot(newbottomlefteigvec[onemodulo(i+1,length(tendim))],bottomrighteigvec[i]);
+end;
+end;
+rr+=rate*rrgrad;
+ss+=rate*ssgrad;
+for i in 1:length(tendim)
+rr[i]/=norm(rr[i]);
+ss[i]/=norm(ss[i]);
+for j in 1:tendim[i]
+bb[i][j]=rr[i]*aa[i][j]*ss[i];
+end;
+end;
+for i in 1:length(tendim)
+toplefteigvec[i]=newtoplefteigvec[i]/norm(newtoplefteigvec[i]);
+toprighteigvec[i]=newtoprighteigvec[i]/norm(newtoprighteigvec[i]);
+bottomlefteigvec[i]=newbottomlefteigvec[i]/norm(newbottomlefteigvec[i]);
+bottomrighteigvec[i]=newbottomrighteigvec[i]/norm(newbottomrighteigvec[i]);
+end;
+qq=pp;
+pp=sum(log.(abs.(toplambda)))-sum(log.(abs.(bottomlambda)))/2;
+display([pp,rate]);
+if pp==qq break; end;
+if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.999 rate*=0.995; else rate*=1.005; end;
+if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.999 rate*=0.995; else rate*=1.005; end;
+end;
+
+
