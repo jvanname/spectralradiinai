@@ -1,6 +1,6 @@
 #CLSRDR stands for compositional L_2-spectral radius dimensionality reduction.
 
-using LinearAlgebra,Flux;
+using LinearAlgebra;
 
 type=ComplexF64;
 
