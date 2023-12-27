@@ -89,6 +89,13 @@ push!(toplambda,dot(toprighteigvec[i],newtoprighteigvec[i]));
 push!(bottomlambda,dot(bottomrighteigvec[i],newbottomrighteigvec[i]));
 end;
 
+for i in 1:length(tendim)
+na=size(newtoplefteigvec)[1];
+nb=size(newtoprighteigvec)[1];
+#newtoplefteigvec[i]-=ones(na)*(adjoint(ones(na))*(newtoplefteigvec[i]/na));
+#newtoprighteigvec[i]-=ones(nb)*(adjoint(ones(nb))*(newtoprighteigvec[i]/nb));
+end;
+
 grad*=0.9;
 oldgrad=deepcopy(grad);
 
