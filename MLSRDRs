@@ -1,0 +1,103 @@
+THIS CODE IS UNDER CONSTRUCTION AND NOT MEANT TO BE IMPLEMENTED.
+
+using LinearAlgebra;
+
+type=ComplexF64;
+
+k=4;
+aalist=[20,19,18,17];
+bblist=[16,15,14,13];
+
+#legend=[];
+#for i in 1:5
+#for j in 1:3
+#for k in 1:3
+#push!(legend,[j,k]); 
+#end;
+#end;
+#end;
+legend=[[1,2],[2,3],[3,4],[4,1],[2,4],[3,1],[2,3],[2,4],[1,4],[4,1],[4,2],[2,1]];
+
+aa=[];
+bb=[];
+
+for i in 1:length(legend)
+push!(aa,randn(type,aalist[legend[i][1]],aalist[legend[i][2]]));
+push!(bb,randn(type,bblist[legend[i][1]],bblist[legend[i][2]]));
+end;
+
+toplefteigvec=[];
+toprighteigvec=[];
+bottomlefteigvec=[];
+bottomrighteigvec=[];
+
+for i in 1:k
+push!(toplefteigvec,randn(type,aalist[i],bblist[i]));
+push!(toprighteigvec,randn(type,aalist[i],bblist[i]));
+push!(bottomlefteigvec,randn(type,bblist[i],bblist[i]));
+push!(bottomrighteigvec,randn(type,bblist[i],bblist[i]));
+end;
+
+
+grad=bb*0.001;
+pp=0;
+qq=1;
+rate=1;
+
+#function rad(x) return maximum(abs.(eigvals(x))); end;
+
+#function h(aa,bb,cc) return sum(kron.(aa,adjoint.(transpose.(bb)),cc)); end;
+#function h(aa,bb,cc,dd) return sum(kron.(aa,adjoint.(transpose.(bb)),cc,bb)); end;
+
+#function hh(aa,bb,cc) return log(rad(h(aa,bb,cc))); end;
+#function hh(aa,bb,cc,dd) return log(rad(h(aa,bb,cc,dd))); end;
+
+#function fitness(bb) return hh(aa,bb,cc)-hh(bb,bb,ccc)/2; end;
+
+count=0;
+ook=0;
+while true
+toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
+toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
+bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
+bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
+
+for i in 1:length(legend)
+newtoprighteigvec[legend[i][1]]+=aa[i]*toprighteigvec[legend[i][2]]*adjoint(bb[i]);
+newtoplefteigvec[legend[i][2]]+=adjoint(aa[i])*toplefteigvec[legend[i][1]]*bb[i];newbottomrighteigvec[legend[i][1]]+=bb[i]*bottomrighteigvec[legend[i][2]]*adjoint(bb[i])
+newbottomlefteigvec[legend[i][2]]+=adjoint(bb[i])*bottomlefteigvec[legend[i][1]]*bb[i]
+end;
+toplambda=dot(toprighteigvec,newtoprighteigvec);
+bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
+display(abs.(toplambda));
+display(norm.(toprighteigvec));
+if rand(0:1000)==0 break; end;
+end;
+
+grad*=0.9;
+oldgrad=deepcopy(grad);
+
+for i in 1:length(legend)
+grad[i]+=0.1*adjoint(toplefteigvec[legend[i][1]])*aa[i]*toprighteigvec[legend[i][2]]/dot()
+
+grad[i]-=0.1*adjoint(bottomlefteigvec[legend[i][1]])*bb[i]*bottomrighteigvec[legend[i][2]]/dot()
+end;
+bb+=rate*grad;
+
+bb/=norm.(bb);
+
+toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
+toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
+bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
+bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
+
+qq=pp;
+pp=log(abs(toplambda))-log(abs(bottomlambda))/2;
+display([pp,rate]);
+if pp==qq break; end;
+if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
+end;
