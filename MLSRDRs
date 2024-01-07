@@ -98,3 +98,94 @@ display([pp,rate]);
 if pp==qq break; end;
 if abs(dot(grad,oldgrad))/(norm(grad)*norm(oldgrad))<0.999 rate*=0.99; else rate*=1.01; end;
 end;
+
+##################################################################################
+##################################################################################
+##################################################################################
+
+bb=[];
+
+for i in 1:length(legend)
+push!(bb,randn(type,bblist[legend[i][1]],bblist[legend[i][2]]));
+end;
+
+rr=[];
+ss=[];
+for i in 1:k
+push!(rr,randn(type,bblist[i],aalist[i]));
+push!(ss,randn(type,aalist[i],bblist[i]));
+end;
+toplefteigvec=[];
+toprighteigvec=[];
+bottomlefteigvec=[];
+bottomrighteigvec=[];
+rrgrad=rr*0;
+ssgrad=ss*0;
+
+for i in 1:k
+push!(toplefteigvec,randn(type,aalist[i],bblist[i]));
+push!(toprighteigvec,randn(type,aalist[i],bblist[i]));
+push!(bottomlefteigvec,randn(type,bblist[i],bblist[i]));
+push!(bottomrighteigvec,randn(type,bblist[i],bblist[i]));
+end;
+
+
+
+while true
+count+=1;
+newtoplefteigvec=toplefteigvec*0;
+newtoprighteigvec=toprighteigvec*0;
+newbottomlefteigvec=bottomlefteigvec*0;
+newbottomrighteigvec=bottomrighteigvec*0;
+
+for i in 1:length(legend)
+newtoprighteigvec[legend[i][1]]+=aa[i]*toprighteigvec[legend[i][2]]*adjoint(bb[i]);
+newtoplefteigvec[legend[i][2]]+=adjoint(aa[i])*toplefteigvec[legend[i][1]]*bb[i];newbottomrighteigvec[legend[i][1]]+=bb[i]*bottomrighteigvec[legend[i][2]]*adjoint(bb[i])
+newbottomlefteigvec[legend[i][2]]+=adjoint(bb[i])*bottomlefteigvec[legend[i][1]]*bb[i]
+end;
+toplambda=dot(toprighteigvec,newtoprighteigvec);
+bottomlambda=dot(bottomrighteigvec,newbottomrighteigvec);
+#display(abs.(toplambda));
+#display(norm.(toprighteigvec));
+
+rrgrad*=0.9;
+ssgrad*=0.9;
+oldrrgrad=deepcopy(rrgrad);
+oldssgrad=deepcopy(ssgrad);
+
+ca=dot(newtoplefteigvec,toprighteigvec);
+da=dot(newbottomlefteigvec,bottomrighteigvec);
+
+for i in 1:length(legend)
+rrgrad[legend[i][1]]+=0.1*adjoint(toplefteigvec[legend[i][1]])*aa[i]*toprighteigvec[legend[i][2]]*adjoint(ss[legend[i][2]])*adjoint(aa[i])/ca
+
+ssgrad[legend[i][2]]+=0.1*adjoint(aa[i])*adjoint(rr[legend[i][1]])*adjoint(toplefteigvec[legend[i][1]])*aa[i]*toprighteigvec[legend[i][2]]/ca
+
+rrgrad[legend[i][1]]-=0.1*adjoint(bottomlefteigvec[legend[i][1]])*bb[i]*bottomrighteigvec[legend[i][2]]*adjoint(ss[legend[i][2]])*adjoint(aa[i])/da
+
+ssgrad[legend[i][2]]-=0.1*adjoint(aa[i])*adjoint(rr[legend[i][1]])*adjoint(bottomlefteigvec[legend[i][1]])*bb[i]*bottomrighteigvec[legend[i][2]]/da
+end;
+
+rr+=rate*rrgrad;
+ss+=rate*ssgrad;
+rr/=norm(rr);
+ss/=norm(ss);
+
+for i in 1:length(bb)
+bb[i]=rr[legend[i][1]]*aa[i]*ss[legend[i][2]];
+end;
+
+toplefteigvec=newtoplefteigvec/norm(newtoplefteigvec);
+toprighteigvec=newtoprighteigvec/norm(newtoprighteigvec);
+bottomlefteigvec=newbottomlefteigvec/norm(newbottomlefteigvec);
+bottomrighteigvec=newbottomrighteigvec/norm(newbottomrighteigvec);
+
+qq=pp;
+pp=log(abs(toplambda))-log(abs(bottomlambda))/2;
+display([pp,rate,norm(rrgrad)+norm(ssgrad)]);
+if pp==qq break; end;
+
+if abs(dot(rrgrad,oldrrgrad))/(norm(rrgrad)*norm(oldrrgrad))<0.9999 rate*=0.995; else rate*=1.005; end;
+if abs(dot(ssgrad,oldssgrad))/(norm(ssgrad)*norm(oldssgrad))<0.9999 rate*=0.995; else rate*=1.005; end;
+end;
+
