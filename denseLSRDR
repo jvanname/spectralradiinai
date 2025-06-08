@@ -23,6 +23,10 @@ end;
 #######################################################################################################################################################
 # Here we compute LSRDRs without gradient descent.
 
+# The function f is a low degree polynomial function with an attractive fixed point at 0 and 1. Iteratively applying this function to a matrix produces a projection matrix.
+function f(x) return 3*x^2-2*x^3; end;
+
+
 function quantop(x) 
 return sum(map(v->v*x*adjoint(v),aa)); end;
 
