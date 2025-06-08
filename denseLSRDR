@@ -20,6 +20,85 @@ aa[i]=randn(type,n,n);
 bb[i]=rr*aa[i]*ss;
 end;
 
+#######################################################################################################################################################
+# Here we compute LSRDRs without gradient descent.
+
+function quantop(x) 
+return sum(map(v->v*x*adjoint(v),aa)); end;
+
+function adjointquantop(x) 
+return sum(map(v->adjoint(v)*x*v,aa)); end;
+
+##############################################
+# Here, proj has low rank, but we do not factorize proj.
+
+proj=randn(type,n,n)*0;
+for i in 1:d proj[i,i]=1; end;
+va=randn(type,n,n);
+va-=adjoint(va);
+va=exp(va);
+proj=va*proj*adjoint(va);
+
+G=randn(type,n,n); H=randn(type,n,n); 
+rate=0.0001;
+vf=proj;
+oldvf=proj;
+while true
+GG=adjointquantop(G*proj)*proj;
+G=GG/tr(GG);
+HH=quantop(H*adjoint(proj))*adjoint(proj);
+H=HH/tr(HH);
+oldproj=proj
+proj=f(f(f(f(f(f(f(f(proj+rate*(proj*adjoint(G)+H*proj)))))))));
+qh=norm(proj-oldproj);
+oldvf=vf;
+vf=proj-oldproj;
+if abs(dot(oldvf,vf))/(norm(oldvf)*norm(vf))<0.99998 rate*=0.99; else rate*=1.01; end;
+display([rate,qh]);
+if qh<10^(-14) break; end;
+end;
+
+####################################################
+# Here, we keep proj factorized as a product ss*rr of low rank matrices during training.
+# Note. I have not used any adaptive learning rate here, so one may need to adjust the learning rate.
+
+rr=Matrix(I,d,n);
+ss=Matrix(I,n,d);
+G=randn(type,n,n); H=randn(type,n,n); 
+rate=0.0001;
+cc=0;
+rrgrad=rr;
+ssgrad=ss;
+panic=[];
+while true
+GG=sum(map(v->adjoint(v)*G*ss*rr*v*ss*rr,aa));
+G=GG/tr(GG);
+HH=sum(map(v->v*H*adjoint(ss*rr*v*ss*rr),aa));
+H=HH/tr(HH);
+rate=0.2;
+oldss=deepcopy(ss);
+oldrr=deepcopy(rr);
+ss+=rate*H*ss;
+rr+=rate*rr*adjoint(G);
+for jj in 1:8
+rr=3*rr*ss*rr-2*rr*ss*rr*ss*rr;
+ss=3*ss*rr*ss-2*ss*rr*ss*rr*ss;
+ss,rr=ss*rr*ss,3*rr-2*rr*ss*rr;
+ss,rr=3*ss-2*ss*rr*ss,rr*ss*rr;
+end;
+vv=adjoint(ss)*ss-rr*adjoint(rr);
+ss=ss*(Matrix(I,d,d)+rate*vv/10)^(-1)
+rr=(Matrix(I,d,d)+rate*vv/10)*rr;
+display(abs(dot(oldrr*adjoint(rr),adjoint(ss)*ss)));
+end;
+
+
+
+
+#######################################################################################################################################################
+#######################################################################################################################################################
+# Below we use gradient descent to produce LSRDRs.
+
 # These will approximate the dominant eigenvectors needed to compute the gradients of the spectral radii.
 
 toplefteigvec=randn(type,n,d);
